@@ -1,0 +1,7 @@
+{
+  "agent_steps": 20000,
+  "frames": 80000,
+  "seconds": 8.91,
+  "agent_steps_per_second": 2245,
+  "threads": 1
+}

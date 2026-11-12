@@ -55,7 +55,8 @@ run. No parameters were fitted.
 
 - **Facts:** ALE/Breakout-v5 has actions NOOP, FIRE, RIGHT, LEFT; frameskip 4;
   sticky 0.25 by default; modes 0, 4, …, 44; difficulties 0/1. The paddle is
-  24 px wide at difficulty 0 and 20 px at difficulty 1.
+  16 px wide at difficulty 0 and 12 px at difficulty 1 (measured inside the side
+  walls; the first run wrongly counted a red wall marker, giving 24/20 px).
 - **RAM verified against pixels** (3,000 random steps each in mode 0 diff 0,
   mode 0 diff 1 and mode 44): ball x = ram[99] − 49 and ball y = ram[101] + 9
   (r = 1.000; ≥99.9% within 2 px); paddle x = ram[72] − 47 (r ≈ 0.92–0.93,
@@ -68,20 +69,29 @@ run. No parameters were fitted.
   Random pre-launch paddle moves (0–30) gave 29 distinct trajectories in 50
   lives. Provisional: every setting starts with 0–30 random paddle moves drawn
   from the episode seed.
-- **Calibration per life:** a random policy hits a median of 0 bricks in 27
-  steps (p90 1 brick). 0 of 400 random lives reached 3 bricks. The tracking
-  rule hits exactly 5 bricks every time at p = 0 (178 steps). At p = 0.25 it
-  hits a median of 4 bricks (43% reach 5, 11% reach 10). The longest life was
-  720 steps.
-  Provisional: **K = 5** (impossible at random, reachable but not guaranteed
-  with sticky actions) and **T = 2,000** agent steps (about 3× the longest
-  life; catches a policy that never presses FIRE).
-- **Modes differ in dynamics:** in modes 16–28 a random policy always hits at
-  least 1 brick. In modes 32–44 the share reaching 1 and 5 bricks is equal
-  (bricks are cleared in bursts). Difficulty 1 changes the tracking rule's
-  success at K = 5 only a little (39% vs 43%). Setting D candidates: difficulty
-  1 and/or one unseen mode, chosen in Part 2.
-- Candidate-state frames S1–S3 are in `results/inspection/frames/`.
+- **Calibration per life** (200 random lives and 100 tracking-rule lives per
+  condition): a random policy hits a median of 0 bricks in 27 steps. 10.5% /
+  14% of random lives reach 1 brick and 1% / 4.5% reach 2 (p = 0 / 0.25). The
+  tracking rule (paddle centre under the ball, fixed ±4 px dead zone) hits 19
+  bricks every time at p = 0 (618 steps). At p = 0.25 it reaches 2 bricks in 89%
+  of lives, 5 in 48% and 10 in 19%. The longest life was 1,041 steps.
+- **K amended 5 → 2 (Eivind/Claude, 2026-11-12, before any learning):** the
+  first draft chose K = 5, but 0 of 400 random lives reach 5 bricks. With a
+  terminal-only success reward, an agent learns nothing until it has seen a
+  success, so K = 5 would make learning depend on luck. **K = 2** is reached by
+  random play in 1–4.5% of lives (a learning signal exists) and by the
+  tracking rule in 89% under sticky actions (room to improve beyond random).
+  **T = 2,000** agent steps (about 2× the longest life; catches a policy that
+  never presses FIRE).
+- **Setting D candidates:** difficulty 1 (12 px paddle) lowers the tracking
+  rule's success at K = 2 from 89% to 72% with the same RAM layout. Modes also
+  change dynamics: in modes 16–28 a random policy always hits at least 1 brick;
+  in modes 32–44 the share reaching 1 and 5 bricks is equal (bricks clear in
+  bursts). Chosen in Part 2.
+- **Throughput:** 2,251 agent steps/s (env step + RAM read, one thread). A
+  500k-step run needs about 4 min of environment time before learning costs.
+- Candidate-state frames S1–S3 are in `results/inspection/frames/`. A first
+  S2 capture was discarded because it used the wrong paddle width.
 
 ## Open questions
 

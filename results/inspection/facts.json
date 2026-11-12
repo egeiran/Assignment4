@@ -39,7 +39,7 @@
     3
   ],
   "paddle_width_px_by_difficulty": {
-    "0": 24,
-    "1": 20
+    "0": 16,
+    "1": 12
   }
 }

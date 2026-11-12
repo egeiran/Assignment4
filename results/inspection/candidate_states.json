@@ -7,20 +7,20 @@
     "dx": 0,
     "dy": 0
   },
+  "S2_ball_falling_at_paddle_edge": {
+    "in_play": true,
+    "paddle_x": 34,
+    "ball_x": 35,
+    "ball_y": 165,
+    "dx": -1,
+    "dy": 1
+  },
   "S3_ball_rising_mid_field": {
     "in_play": true,
-    "paddle_x": 39,
+    "paddle_x": 49,
     "ball_x": 51,
     "ball_y": 103,
     "dx": 1,
     "dy": -1
-  },
-  "S2_ball_falling_far_from_paddle_near_wall": {
-    "in_play": true,
-    "paddle_x": 79,
-    "ball_x": 138,
-    "ball_y": 154,
-    "dx": 1,
-    "dy": 1
   }
 }

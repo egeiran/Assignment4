@@ -11,7 +11,8 @@ facts about ALE Breakout rather than guesses:
 5. calibration: outcomes per life for a uniform-random policy and a scripted
    ball-tracking heuristic (fixed rules, no parameters fitted), used only to
    choose provisional values of K (bricks for success) and T (step cap);
-6. frames of the candidate states S1-S3 and of the two difficulties.
+6. frames of the candidate states S1-S3 and of the two difficulties;
+7. throughput: raw environment steps per second, to size the training budget.
 
 Writes results/inspection/. Re-running overwrites that directory's files.
 """
@@ -19,6 +20,7 @@ import json
 import platform
 import subprocess
 import sys
+import time
 from datetime import datetime, timezone
 from importlib.metadata import version
 from pathlib import Path
@@ -40,6 +42,7 @@ NOOP, FIRE, RIGHT, LEFT = 0, 1, 2, 3
 PADDLE_RED = np.array([200, 72, 72])  # paddle and ball colour
 PLAY_ROWS = slice(93, 189)            # between the bricks and the paddle
 PADDLE_ROWS = slice(189, 194)
+FIELD_COLS = slice(8, 152)            # inside the side walls (the walls carry red markers)
 STEP_CAP = 5000                       # calibration cap per life (agent steps)
 
 
@@ -92,7 +95,7 @@ def facts():
         e = make_env(difficulty=d)
         e.reset(seed=SEED)
         obs, *_ = e.step(NOOP)
-        widths[str(d)] = int(np.all(obs[PADDLE_ROWS] == PADDLE_RED, axis=2).any(axis=0).sum())
+        widths[str(d)] = int(np.all(obs[PADDLE_ROWS, FIELD_COLS] == PADDLE_RED, axis=2).any(axis=0).sum())
         Image.fromarray(obs).resize((480, 630), Image.NEAREST).save(OUT / "frames" / f"difficulty{d}.png")
         e.close()
     out["paddle_width_px_by_difficulty"] = widths
@@ -110,7 +113,7 @@ def ram_check(mode=0, difficulty=0, steps=3000):
         obs, _, term, trunc, _ = env.step(FIRE if t % 50 == 0 else int(rng.integers(4)))
         r = ram(env)
         ball = np.argwhere(np.all(obs[PLAY_ROWS] == PADDLE_RED, axis=2))
-        pad = np.argwhere(np.all(obs[PADDLE_ROWS] == PADDLE_RED, axis=2))
+        pad = np.argwhere(np.all(obs[PADDLE_ROWS, FIELD_COLS] == PADDLE_RED, axis=2)) + [0, FIELD_COLS.start]
         ball_low = len(ball) and ball[:, 0].max() + PLAY_ROWS.start >= 185
         rows.append((ball[:, 1].min() if len(ball) else np.nan,
                      ball[:, 0].min() + PLAY_ROWS.start if len(ball) else np.nan,
@@ -188,7 +191,7 @@ def play_life(env, policy, rng, width, seed=None, pre_moves=0, frames=None):
             "outcome": "cap", "path": tuple(path)}
 
 
-def start_variation():
+def start_variation(width):
     """Can a deterministic policy see different episodes when p = 0?"""
     out = {}
     env = make_env()
@@ -205,7 +208,7 @@ def start_variation():
         noop_paths.add(tuple(path))
     out["distinct_ball_paths_after_0_to_30_noops"] = len(noop_paths)
     rng = np.random.default_rng(SEED)
-    lives = [play_life(env, "heuristic", rng, 24, seed=SEED, pre_moves=int(rng.integers(0, 31)))
+    lives = [play_life(env, "heuristic", rng, width, seed=SEED, pre_moves=int(rng.integers(0, 31)))
              for _ in range(50)]
     out["heuristic_50_lives_random_0_to_30_paddle_moves"] = {
         "distinct_trajectories": len({l["path"] for l in lives}),
@@ -249,13 +252,12 @@ def calibration(facts_cache, captures):
     return out
 
 
-def state_capturer():
+def state_capturer(width):
     """Save the first frame matching each candidate state S1-S3."""
     tests = {
         "S1_ball_not_launched": lambda f: not f["in_play"],
-        "S2_ball_falling_far_from_paddle_near_wall": lambda f: f["in_play"] and f["dy"] > 0
-            and f["ball_y"] > 150 and abs(f["ball_x"] - (f["paddle_x"] + 12)) > 40
-            and (f["ball_x"] < 30 or f["ball_x"] > 130),
+        "S2_ball_falling_at_paddle_edge": lambda f: f["in_play"] and f["dy"] > 0
+            and f["ball_y"] >= 165 and width / 2 - 4 <= abs(f["ball_x"] - (f["paddle_x"] + width / 2)) <= width / 2,
         "S3_ball_rising_mid_field": lambda f: f["in_play"] and f["dy"] < 0
             and 100 <= f["ball_y"] <= 150 and 50 <= f["ball_x"] <= 110,
     }
@@ -270,16 +272,36 @@ def state_capturer():
     return capture, found
 
 
+def throughput(steps=20000):
+    """Agent steps per second for env.step + RAM read, uniform-random actions, p = 0.25."""
+    env = make_env(p=0.25)
+    rng = np.random.default_rng(SEED)
+    acts = rng.integers(4, size=steps)
+    env.reset(seed=SEED)
+    start = time.perf_counter()
+    for a in acts:
+        _, _, term, trunc, _ = env.step(int(a))
+        ram(env)
+        if term or trunc:
+            env.reset()
+    seconds = time.perf_counter() - start
+    env.close()
+    return {"agent_steps": steps, "frames": steps * 4, "seconds": round(seconds, 2),
+            "agent_steps_per_second": round(steps / seconds), "threads": 1}
+
+
 def main():
     (OUT / "frames").mkdir(parents=True, exist_ok=True)
     results = {"environment": environment()}
     facts_cache = results["facts"] = facts()
     results["ram_check"] = [ram_check(0, 0), ram_check(0, 1), ram_check(facts_cache["modes"][-1], 0)]
     results["determinism"] = determinism()
-    results["start_variation"] = start_variation()
-    capture, found = state_capturer()
+    width = facts_cache["paddle_width_px_by_difficulty"]["0"]
+    results["start_variation"] = start_variation(width)
+    capture, found = state_capturer(width)
     results["calibration"] = calibration(facts_cache, capture)
     results["candidate_states"] = found
+    results["throughput"] = throughput()
     for name, value in results.items():
         (OUT / f"{name}.json").write_text(json.dumps(value, indent=2) + "\n")
     print(json.dumps({k: v for k, v in results.items() if k != "calibration"}, indent=1))

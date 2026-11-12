@@ -3,7 +3,9 @@
   "heuristic_50_lives_random_0_to_30_paddle_moves": {
     "distinct_trajectories": 29,
     "distinct_brick_counts": [
-      5
+      3,
+      14,
+      19
     ]
   }
 }
