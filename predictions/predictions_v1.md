@@ -4,7 +4,7 @@
 
 These predictions were written before the assessed experiments. Prior work was limited to environment inspection without learning.
 
-**Finalised [date, time, CET]**
+**Finalised 12 November 2026, 21:45**
 
 ## 0. Provisional setup
 
