@@ -116,7 +116,7 @@ Test S1–S3 on final B agents, with S3 also checked at saved checkpoints. Log r
 
 We preserve the submitted sheet. Later interpretations are dated and keyed to prediction IDs, explaining what changed and why; results are compared with the original.
 
-Claude helped draft; OpenAI Codex helped review the reasoning, tests and wording. Checks used the assignment, environment inspection and discounted-return calculations. No trained-agent results informed these predictions.
+Claude (Anthropic) and Codex (OpenAI) were used as assistants while we worked on the prediction sheet. They helped with the draft and served as sounding boards as we discussed our assumptions and how to test them. We led the work and own the final predictions, reasoning, and experimental choices.
 
 ## References
 
