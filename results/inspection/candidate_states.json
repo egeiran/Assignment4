@@ -1,0 +1,26 @@
+{
+  "S1_ball_not_launched": {
+    "in_play": false,
+    "paddle_x": 99,
+    "ball_x": null,
+    "ball_y": null,
+    "dx": 0,
+    "dy": 0
+  },
+  "S3_ball_rising_mid_field": {
+    "in_play": true,
+    "paddle_x": 39,
+    "ball_x": 51,
+    "ball_y": 103,
+    "dx": 1,
+    "dy": -1
+  },
+  "S2_ball_falling_far_from_paddle_near_wall": {
+    "in_play": true,
+    "paddle_x": 79,
+    "ball_x": 138,
+    "ball_y": 154,
+    "dx": 1,
+    "dy": 1
+  }
+}

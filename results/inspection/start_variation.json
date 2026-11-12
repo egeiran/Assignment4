@@ -1,0 +1,9 @@
+{
+  "distinct_ball_paths_after_0_to_30_noops": 1,
+  "heuristic_50_lives_random_0_to_30_paddle_moves": {
+    "distinct_trajectories": 29,
+    "distinct_brick_counts": [
+      5
+    ]
+  }
+}

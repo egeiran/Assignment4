@@ -1,0 +1,7 @@
+{
+  "actions": "400 uniform-random actions, generated once with seed 42",
+  "p0_seed0_vs_seed1_identical": true,
+  "p0_seed0_rerun_identical": true,
+  "p025_seed0_vs_seed1_identical": false,
+  "p025_seed0_rerun_identical": true
+}

@@ -1,0 +1,14 @@
+{
+  "timestamp_utc": "2026-11-12T07:47:41+00:00",
+  "git_commit": "4da39e7d7fda1908a6bce8de0cc07e9e6baad75b",
+  "python": "3.12.14",
+  "platform": "macOS-26.4.1-arm64-arm-64bit",
+  "machine": "arm64",
+  "packages": {
+    "gymnasium": "1.4.0",
+    "ale-py": "0.12.1",
+    "numpy": "2.5.4",
+    "pillow": "13.0.0"
+  },
+  "seed": 42
+}

@@ -1,0 +1,80 @@
+[
+  {
+    "mode": 0,
+    "difficulty": 0,
+    "steps": 3000,
+    "ball_x": {
+      "ram_byte": 99,
+      "n": 2120,
+      "r": 1.0,
+      "offset_median": 49.0,
+      "share_within_2px_of_median": 1.0
+    },
+    "ball_y": {
+      "ram_byte": 101,
+      "n": 2120,
+      "r": 1.0,
+      "offset_median": -9.0,
+      "share_within_2px_of_median": 0.9991
+    },
+    "paddle_x": {
+      "ram_byte": 72,
+      "n": 2869,
+      "r": 0.9269,
+      "offset_median": 47.0,
+      "share_within_2px_of_median": 0.9554
+    }
+  },
+  {
+    "mode": 0,
+    "difficulty": 1,
+    "steps": 3000,
+    "ball_x": {
+      "ram_byte": 99,
+      "n": 2075,
+      "r": 1.0,
+      "offset_median": 49.0,
+      "share_within_2px_of_median": 1.0
+    },
+    "ball_y": {
+      "ram_byte": 101,
+      "n": 2075,
+      "r": 1.0,
+      "offset_median": -9.0,
+      "share_within_2px_of_median": 0.9995
+    },
+    "paddle_x": {
+      "ram_byte": 72,
+      "n": 2863,
+      "r": 0.9184,
+      "offset_median": 47.0,
+      "share_within_2px_of_median": 0.9521
+    }
+  },
+  {
+    "mode": 44,
+    "difficulty": 0,
+    "steps": 3000,
+    "ball_x": {
+      "ram_byte": 99,
+      "n": 1932,
+      "r": 1.0,
+      "offset_median": 49.0,
+      "share_within_2px_of_median": 1.0
+    },
+    "ball_y": {
+      "ram_byte": 101,
+      "n": 1932,
+      "r": 1.0,
+      "offset_median": -9.0,
+      "share_within_2px_of_median": 0.9995
+    },
+    "paddle_x": {
+      "ram_byte": 72,
+      "n": 2875,
+      "r": 0.9272,
+      "offset_median": 47.0,
+      "share_within_2px_of_median": 0.9537
+    }
+  }
+]
