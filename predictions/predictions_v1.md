@@ -2,11 +2,13 @@
 
 **Eivind Systad Geiran and Trym Andreas Johnsen** · IT3212 · Option 2: Breakout
 
-This v1 candidate was written before training, using only environment inspection (`src/inspect_env.py`, `results/inspection/`). AI assistance is recorded in `AI_RECORD.md`. **Unfrozen candidate; no submission recorded:** team approval, timestamp and git tag `predictions-v1` remain pending. After submission, dated interpretations go in `predictions/annotations.md`, keyed to the IDs below.
+These predictions were written before the assessed experiments. Prior work was limited to environment inspection without learning.
+
+**Finalised [date, time, CET]**
 
 ## 0. Provisional setup
 
-This is our current interpretation. Part 2 may change details. Any change is recorded as an annotation.
+This provisional setup may change in Part 2; later changes are annotated.
 
 | Item              | Provisional choice                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -14,7 +16,7 @@ This is our current interpretation. Part 2 may change details. Any change is rec
 | State             | Both see the same compact RAM features. In play: ball y (8 bins), ball direction (dx, dy), bricks hit (0/1), a coarse paddle zone (left/centre/right), and signed horizontal error Δx = ball x − paddle centre. Δx uses 11 non-uniform bins with boundaries −24, −16, −12, −8, −4, 4, 8, 12, 16 and 24 px, giving fine resolution near the paddle edge and coarse tails. Before launch, the state uses the 8-bin paddle position. About 2,100 cells for nonzero directions; zero handling provisional. PPO gets the same bin indices scaled to [0, 1] |
 | Episode           | One life from a fresh game, after 0–30 random paddle moves drawn from the episode seed                                                                                                                                                                                                                                                                                                                                                                                                              |
 | Outcomes          | **Success:** 2 bricks hit (terminal, reward +1). **Failure:** ball lost (reward 0). **Timeout:** 2,000 agent steps, reported separately                                                                                                                                                                                                                                                                                                                                                             |
-| Settings          | **A:** sticky actions off (deterministic). **B:** sticky probability 0.25. **C:** B plus a step penalty c = 0.001. **D:** unseen brick layout under investigation; 12 px paddle is a separate probe (P7)                                                                                                                                                                                                                                                                                                  |
+| Settings          | **A:** sticky actions off (deterministic). **B:** sticky probability 0.25. **C:** B plus a step penalty c = 0.001. **D:** provisional brick layout with a 32 px gap; evaluate B agents without further training. Narrower paddle is separate (P7)                                                                                                                                                                                                                                                                                                  |
 | Budget            | Same for both agents, counted in agent steps (1 step = 4 frames). Provisionally 500k steps per run. **Small budget** = the first 10%                                                                                                                                                                                                                                                                                                                                                                |
 | Defaults          | γ = 0.99 for both. Q-learning: zero-initialised table, α = 0.1, ε falls linearly from 1.0 to 0.05 over the first half. PPO: learning rate 3·10⁻⁴, entropy 0.01, 4 epochs, clip 0.2, GAE λ = 0.95. Both get the same tuning allowance                                                                                                                                                                                                                                                                                        |
 | Evaluation        | Separate evaluation seeds. 200 episodes every 10% of the budget, with no updates. Primary policy: greedy Q (ties broken at random) and most-probable PPO action. Sampled PPO is reported separately                                                                                                                                                                                                                                                                                                 |
@@ -23,7 +25,7 @@ This is our current interpretation. Part 2 may change details. Any change is rec
 
 Inspection facts: random play reaches 2 bricks in 1% (A) and 4.5% (B) of lives; median full-life lengths are 27/28 steps. Tracking reaches 2 bricks in 100% (A, 20 lives) and 89% (B, 100 lives). These runs had no random start moves. In A, the tested seeds gave identical trajectories for the same actions.
 
-**D unresolved:** Part 2 requires an "unseen map". A 32 px wall-gap candidate has pixel/collision evidence, but reset integration remains unvalidated (`results/inspection/transfer_probe/`). Narrower paddle (P7) and other modes alone do not establish a new map. See `WORKLOG.md`.
+D's provisional "unseen map" candidate has a 32 px gap in the brick wall. Inspection confirms changed pixels and collisions; compatibility with fresh-life starts still needs validation. A narrower paddle or another game mode alone does not establish a new map.
 
 For multi-part predictions, classify each part separately; report mixed results when they disagree. The SD rule is descriptive, not a significance test; equality is inconclusive unless an explicit threshold below says otherwise. No occurrences of a state/outcome means untested, not supported.
 
@@ -50,7 +52,7 @@ In Breakout, a route is how the paddle moves relative to the ball.
 
 ### P4. How does a step penalty change success rate and episode length?
 - **Prediction:** With c = 0.001 per step (C vs B): (a) failed episodes are shorter in C, for both agents; (b) PPO's success rate is lower in C; (c) Q-learning's success rate changes little (inconclusive under our rule); (d) the median successful episode is at least 5% shorter in C.
-- **Why:** Before success, all C rewards are negative; losing quickly ends the penalties. PPO may settle into short failures. Untried zero-valued Q-actions may partly oppose this in the table. With γ = 0.99, fast failure can even beat sufficiently delayed success in discounted return (calculation in `WORKLOG.md`). Future K = 2 episode lengths are unknown: inspection records full lives, not time to success. Shorter successful episodes and the different success-rate effects are hypotheses, not necessary consequences of the penalty. Conditioning on success can also change which trajectories remain.
+- **Why:** Before success, C rewards are negative; quick failure ends the penalties, while discounting weakens the delayed +1. With γ = 0.99 and c = 0.001 on every step, including termination, success at 300 steps returns −0.0456; loss at 27 returns −0.0238 (discounted). These lengths are hypothetical. PPO may settle into short failures; untried zero-valued Q-actions may partly oppose this. Inspection records full lives, not time to K = 2. Shorter successes and the different success-rate effects remain hypotheses; conditioning on success can change which trajectories remain.
 - **Test:** Success and failure rates (not returns, which use different rewards), and median lengths of failed and of successful episodes. B vs C, per agent.
 - **Contradicted if:** (a) failures are longer or (b) PPO success is higher, beyond the pooled seed SD; (c) Q success changes beyond that SD in either direction; (d) the successful-length ratio C/B is > 0.95. Support (d) at ≤ 0.95; classify every part per agent. No successes/failures leaves the corresponding length test untested.
 
@@ -110,9 +112,11 @@ Test S1–S3 on final B agents, with S3 also checked at saved checkpoints. Log r
 - **Why:** The four Q-values are almost equal here, so small estimation errors decide the argmax, and a table has nothing to smooth them with. PPO's network shares parameters with nearby states where the action does matter, so its preference here follows those.
 - **Test / contradicted if:** Q's switch rate within S3 or checkpoint change rate on shared cells is lower beyond the pooled SD; Q has a larger share of cells with seed agreement; or PPO favours moving towards the ball in ≤ half the shared cases. Agreement = ≥80% of seeds choose the same movement category. Classify each part; count exact ties separately.
 
-## 3. Change policy
+## 3. Preservation and AI assistance
 
-This sheet is not edited after submission. When our interpretation changes, we add a dated entry to `predictions/annotations.md`. The entry names the prediction ID and says what changed and why. Results are compared with this original text.
+We preserve the submitted sheet. Later interpretations are dated and keyed to prediction IDs, explaining what changed and why; results are compared with the original.
+
+Claude helped draft; OpenAI Codex helped review the reasoning, tests and wording. Checks used the assignment, environment inspection and discounted-return calculations. No trained-agent results informed these predictions.
 
 ## References
 

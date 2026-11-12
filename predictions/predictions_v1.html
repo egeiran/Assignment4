@@ -7,9 +7,10 @@ img{max-width:100%} em{color:#555} hr{border:0;border-top:1px solid #ccc}
 @media print{body{margin:0;max-width:none} h1,h2,h3{break-after:avoid} tr,img{break-inside:avoid}}
 </style><h1>Assignment 4, Part 1: Prediction sheet</h1>
 <p><strong>Eivind Systad Geiran and Trym Andreas Johnsen</strong> · IT3212 · Option 2: Breakout</p>
-<p>This v1 candidate was written before training, using only environment inspection (<code>src/inspect_env.py</code>, <code>results/inspection/</code>). AI assistance is recorded in <code>AI_RECORD.md</code>. <strong>Unfrozen candidate; no submission recorded:</strong> team approval, timestamp and git tag <code>predictions-v1</code> remain pending. After submission, dated interpretations go in <code>predictions/annotations.md</code>, keyed to the IDs below.</p>
+<p>These predictions were written before the assessed experiments. Prior work was limited to environment inspection without learning.</p>
+<p><strong>Finalised [date, time, CET]</strong></p>
 <h2>0. Provisional setup</h2>
-<p>This is our current interpretation. Part 2 may change details. Any change is recorded as an annotation.</p>
+<p>This provisional setup may change in Part 2; later changes are annotated.</p>
 <table>
 <thead>
 <tr>
@@ -36,7 +37,7 @@ img{max-width:100%} em{color:#555} hr{border:0;border-top:1px solid #ccc}
 </tr>
 <tr>
 <td>Settings</td>
-<td><strong>A:</strong> sticky actions off (deterministic). <strong>B:</strong> sticky probability 0.25. <strong>C:</strong> B plus a step penalty c = 0.001. <strong>D:</strong> unseen brick layout under investigation; 12 px paddle is a separate probe (P7)</td>
+<td><strong>A:</strong> sticky actions off (deterministic). <strong>B:</strong> sticky probability 0.25. <strong>C:</strong> B plus a step penalty c = 0.001. <strong>D:</strong> provisional brick layout with a 32 px gap; evaluate B agents without further training. Narrower paddle is separate (P7)</td>
 </tr>
 <tr>
 <td>Budget</td>
@@ -61,7 +62,7 @@ img{max-width:100%} em{color:#555} hr{border:0;border-top:1px solid #ccc}
 </tbody>
 </table>
 <p>Inspection facts: random play reaches 2 bricks in 1% (A) and 4.5% (B) of lives; median full-life lengths are 27/28 steps. Tracking reaches 2 bricks in 100% (A, 20 lives) and 89% (B, 100 lives). These runs had no random start moves. In A, the tested seeds gave identical trajectories for the same actions.</p>
-<p><strong>D unresolved:</strong> Part 2 requires an "unseen map". A 32 px wall-gap candidate has pixel/collision evidence, but reset integration remains unvalidated (<code>results/inspection/transfer_probe/</code>). Narrower paddle (P7) and other modes alone do not establish a new map. See <code>WORKLOG.md</code>.</p>
+<p>D's provisional "unseen map" candidate has a 32 px gap in the brick wall. Inspection confirms changed pixels and collisions; compatibility with fresh-life starts still needs validation. A narrower paddle or another game mode alone does not establish a new map.</p>
 <p>For multi-part predictions, classify each part separately; report mixed results when they disagree. The SD rule is descriptive, not a significance test; equality is inconclusive unless an explicit threshold below says otherwise. No occurrences of a state/outcome means untested, not supported.</p>
 <h2>1. Predictions</h2>
 <h3>P1. Which agent improves fastest with a small interaction budget?</h3>
@@ -88,7 +89,7 @@ img{max-width:100%} em{color:#555} hr{border:0;border-top:1px solid #ccc}
 <h3>P4. How does a step penalty change success rate and episode length?</h3>
 <ul>
 <li><strong>Prediction:</strong> With c = 0.001 per step (C vs B): (a) failed episodes are shorter in C, for both agents; (b) PPO's success rate is lower in C; (c) Q-learning's success rate changes little (inconclusive under our rule); (d) the median successful episode is at least 5% shorter in C.</li>
-<li><strong>Why:</strong> Before success, all C rewards are negative; losing quickly ends the penalties. PPO may settle into short failures. Untried zero-valued Q-actions may partly oppose this in the table. With γ = 0.99, fast failure can even beat sufficiently delayed success in discounted return (calculation in <code>WORKLOG.md</code>). Future K = 2 episode lengths are unknown: inspection records full lives, not time to success. Shorter successful episodes and the different success-rate effects are hypotheses, not necessary consequences of the penalty. Conditioning on success can also change which trajectories remain.</li>
+<li><strong>Why:</strong> Before success, C rewards are negative; quick failure ends the penalties, while discounting weakens the delayed +1. With γ = 0.99 and c = 0.001 on every step, including termination, success at 300 steps returns −0.0456; loss at 27 returns −0.0238 (discounted). These lengths are hypothetical. PPO may settle into short failures; untried zero-valued Q-actions may partly oppose this. Inspection records full lives, not time to K = 2. Shorter successes and the different success-rate effects remain hypotheses; conditioning on success can change which trajectories remain.</li>
 <li><strong>Test:</strong> Success and failure rates (not returns, which use different rewards), and median lengths of failed and of successful episodes. B vs C, per agent.</li>
 <li><strong>Contradicted if:</strong> (a) failures are longer or (b) PPO success is higher, beyond the pooled seed SD; (c) Q success changes beyond that SD in either direction; (d) the successful-length ratio C/B is &gt; 0.95. Support (d) at ≤ 0.95; classify every part per agent. No successes/failures leaves the corresponding length test untested.</li>
 </ul>
@@ -150,8 +151,9 @@ img{max-width:100%} em{color:#555} hr{border:0;border-top:1px solid #ccc}
 <li><strong>Why:</strong> The four Q-values are almost equal here, so small estimation errors decide the argmax, and a table has nothing to smooth them with. PPO's network shares parameters with nearby states where the action does matter, so its preference here follows those.</li>
 <li><strong>Test / contradicted if:</strong> Q's switch rate within S3 or checkpoint change rate on shared cells is lower beyond the pooled SD; Q has a larger share of cells with seed agreement; or PPO favours moving towards the ball in ≤ half the shared cases. Agreement = ≥80% of seeds choose the same movement category. Classify each part; count exact ties separately.</li>
 </ul>
-<h2>3. Change policy</h2>
-<p>This sheet is not edited after submission. When our interpretation changes, we add a dated entry to <code>predictions/annotations.md</code>. The entry names the prediction ID and says what changed and why. Results are compared with this original text.</p>
+<h2>3. Preservation and AI assistance</h2>
+<p>We preserve the submitted sheet. Later interpretations are dated and keyed to prediction IDs, explaining what changed and why; results are compared with the original.</p>
+<p>Claude helped draft; OpenAI Codex helped review the reasoning, tests and wording. Checks used the assignment, environment inspection and discounted-return calculations. No trained-agent results informed these predictions.</p>
 <h2>References</h2>
 <ul>
 <li>Machado, M. C. et al. (2018). Revisiting the Arcade Learning Environment. <em>JAIR</em> 61. (Sticky actions, p = 0.25.)</li>
