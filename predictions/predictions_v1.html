@@ -1,0 +1,158 @@
+<meta charset='utf-8'><style>
+body{font-family:Helvetica,Arial,sans-serif;font-size:11pt;line-height:1.45;max-width:17cm;margin:2cm auto;color:#222}
+h1,h2{border-bottom:1px solid #ccc;padding-bottom:.2em} h2{page-break-before:auto}
+table{border-collapse:collapse;margin:1em 0;font-size:9.5pt} th,td{border:1px solid #ccc;padding:4px 8px;text-align:left}
+th{background:#f2f2f2} code{background:#f4f4f4;padding:1px 4px;font-size:9.5pt} pre{background:#f4f4f4;padding:8px;font-size:9pt}
+img{max-width:100%} em{color:#555} hr{border:0;border-top:1px solid #ccc}
+</style><h1>Assignment 4, Part 1: Prediction sheet</h1>
+<p><strong>Eivind Systad Geiran and Trym Andreas Johnsen</strong> · IT3212 · Option 2: Breakout</p>
+<p>This is the original prediction sheet (v1), written on 2026-11-12 before any agent was trained; the only prior work was environment inspection without learning (<code>src/inspect_env.py</code>, results in <code>results/inspection/</code>). It is frozen at git tag <code>predictions-v1</code> on <em>(freeze time)</em>, later interpretations go in <code>predictions/annotations.md</code>, dated and keyed to the IDs below, and AI assistance is recorded in <code>AI_RECORD.md</code>.</p>
+<p><strong>TODO before submission:</strong> v1 candidate. Freeze at git tag <code>predictions-v1</code> after team review and fill in the freeze time. <strong>TODO:</strong> record Trym's review before the freeze.</p>
+<h2>0. Provisional setup</h2>
+<p>This is our current interpretation. Part 2 may change details. Any change is recorded as an annotation.</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Provisional choice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agents</td>
+<td>Tabular one-step Q-learning (ε-greedy) and clipped PPO (small MLP actor-critic)</td>
+</tr>
+<tr>
+<td>State</td>
+<td>Both see the same compact RAM features. In play: ball y (8 bins), ball direction (dx, dy), bricks hit (0/1), a coarse paddle zone (left/centre/right), and signed horizontal error Δx = ball x − paddle centre. Δx uses 11 non-uniform bins with boundaries −24, −16, −12, −8, −4, 4, 8, 12, 16 and 24 px, giving fine resolution near the paddle edge and coarse tails. Before launch, the state uses the 8-bin paddle position. About 2,100 cells. PPO gets the same bin indices scaled to [0, 1]</td>
+</tr>
+<tr>
+<td>Episode</td>
+<td>One life from a fresh game, after 0–30 random paddle moves drawn from the episode seed</td>
+</tr>
+<tr>
+<td>Outcomes</td>
+<td><strong>Success:</strong> 2 bricks hit (terminal, reward +1). <strong>Failure:</strong> ball lost (reward 0). <strong>Timeout:</strong> 2,000 agent steps, reported separately</td>
+</tr>
+<tr>
+<td>Settings</td>
+<td><strong>A:</strong> sticky actions off (deterministic). <strong>B:</strong> sticky probability 0.25. <strong>C:</strong> B plus a step penalty c = 0.001. <strong>D:</strong> B agents evaluated with the 12 px paddle (difficulty 1) instead of 16 px</td>
+</tr>
+<tr>
+<td>Budget</td>
+<td>Same for both agents, counted in agent steps (1 step = 4 frames). Provisionally 500k steps per run. <strong>Small budget</strong> = the first 10%</td>
+</tr>
+<tr>
+<td>Defaults</td>
+<td>γ = 0.99 for both. Q-learning: α = 0.1, ε falls linearly from 1.0 to 0.05 over the first half. PPO: learning rate 3·10⁻⁴, entropy 0.01, 4 epochs, clip 0.2, GAE λ = 0.95. Both get the same tuning allowance</td>
+</tr>
+<tr>
+<td>Evaluation</td>
+<td>Separate evaluation seeds. 200 episodes every 10% of the budget, with no updates. Primary policy: greedy Q (ties broken at random) and most-probable PPO action. Sampled PPO is reported separately</td>
+</tr>
+<tr>
+<td>Seeds</td>
+<td>At least 5 training seeds per agent, the same list for both</td>
+</tr>
+<tr>
+<td><strong>Decision rule</strong></td>
+<td>Each metric is computed per training seed. <strong>Supported:</strong> the mean difference is in the predicted direction and larger than the pooled between-seed SD. <strong>Contradicted:</strong> larger than the pooled SD in the opposite direction. <strong>Inconclusive:</strong> otherwise</td>
+</tr>
+</tbody>
+</table>
+<p>Inspection facts used below: random play reaches 2 bricks in 1% (A) and 4.5% (B) of lives, with a median of 27 steps. The tracking rule reaches 2 bricks in 100% (A) and 89% (B) of lives. In A, different seeds give identical trajectories for the same actions.</p>
+<h2>1. Predictions</h2>
+<h3>P1. Which agent improves fastest with a small interaction budget?</h3>
+<ul>
+<li><strong>Prediction:</strong> PPO. At 10% of the budget, PPO's evaluation success rate is higher than Q-learning's in both A and B.</li>
+<li><strong>Why:</strong> Success mainly requires keeping the horizontal error between the ball and paddle small. The relative-error representation exposes that geometry to both agents, but the Q-table still learns each combination of error, height, direction and paddle zone separately and propagates the terminal reward only one visited transition at a time. PPO can share what it learns between neighbouring error and height bins, while GAE distributes the delayed success signal across earlier steps in a rollout. Q-learning can learn from exploratory transitions towards its greedy target, but we expect PPO's parameter sharing to matter more within the small budget.</li>
+<li><strong>Test:</strong> In A and B, evaluation success rate at 10% of the budget, plus the area under the success curve over that first 10%.</li>
+<li><strong>Contradicted if:</strong> Q-learning's success rate at 10% is higher by more than the pooled seed SD in A or B.</li>
+</ul>
+<h3>P2. Which agent shows the largest performance variation across seeds?</h3>
+<ul>
+<li><strong>Prediction:</strong> PPO. At the full budget, its between-seed SD of evaluation success rate is at least 1.5 times Q-learning's in both A and B.</li>
+<li><strong>Why:</strong> PPO's result depends on network initialisation, sampled actions, rollout composition and stochastic gradient updates. With a sparse terminal reward, an early lucky success can update the shared network across many states and change which trajectories that seed collects next. This can amplify an early difference between seeds. Q-learning also depends on discovering the reward, and a partly filled table can produce brittle greedy behaviour. However, its updates remain local to visited state-action pairs, and with the compact relative-error state, persistent ε-exploration and 500k interactions, we expect repeated visits to average out more of this variation.</li>
+<li><strong>Test:</strong> For each setting, compute the SD and range of final evaluation success rate across at least five trained agents. Classify A and B separately. The prediction is supported in a setting if SD_PPO ≥ 1.5 × SD_Q, contradicted if SD_Q ≥ 1.5 × SD_PPO, and inconclusive otherwise. The overall result is supported or contradicted only if A and B agree; otherwise it is mixed. Because an SD from five seeds is noisy, we also report every seed and the range.</li>
+</ul>
+<h3>P3. How will stochastic transitions change the routes agents learn?</h3>
+<p>In Breakout, a route is how the paddle moves relative to the ball.</p>
+<ul>
+<li><strong>Prediction:</strong> Compared with agents trained in A, agents trained in B (a) succeed less often, (b) are already under the ball earlier when it comes down, and (c) change effective paddle direction less often. This holds for both algorithms.</li>
+<li><strong>Why:</strong> With probability 0.25 the previous action is repeated, so a last-moment correction can fail and rapid left-right switching is unreliable. A paddle that is already under the falling ball is robust to that. In A exact timing always works, so nothing pushes an agent to be early. Even the tracking rule drops from 100% to 89% success, so B is harder for a sensible policy too.</li>
+<li><strong>Test:</strong> In evaluation, per seed: success rate; mean |ball x − paddle centre| while the ball is falling in the lower field (ball y ≥ 150); and the share of steps whose requested movement category differs from the previous step. The categories are LEFT, RIGHT and STATIONARY, with NOOP and FIRE grouped as STATIONARY while the ball is in play. We also record changes in observed paddle direction, because sticky actions can make executed movement differ from the requested action. A vs B, per agent.</li>
+<li><strong>Contradicted if:</strong> B agents are not closer to the ball in the lower field, or they change requested and observed movement direction at least as often as A agents.</li>
+</ul>
+<h3>P4. How does a step penalty change success rate and episode length?</h3>
+<ul>
+<li><strong>Prediction:</strong> With c = 0.001 per step (C vs B): (a) failed episodes are shorter in C, for both agents; (b) PPO's success rate is lower in C; (c) Q-learning's success rate changes little (inconclusive under our rule); (d) the median successful episode is at least 5% shorter in C.</li>
+<li><strong>Why:</strong> Until an agent succeeds, every observed reward in C is negative, and the quickest way to stop accumulating penalties is to lose the ball. This gives a dense early learning signal towards short episodes, even if deliberate failure is not the reward-optimal final policy. Because γ = 0.99, the relevant comparison uses discounted returns rather than the undiscounted shortcut c × (success length − failure length) &gt; 1. We expect the terminal +1 to outweigh c = 0.001 for ordinary successful K = 2 trajectories, but we will verify this from their observed lengths before interpreting a success-rate drop as an optimisation effect rather than optimal reward-seeking. PPO updates directly from its current trajectories and may settle into short failures. In a zero-initialised Q-table, tried actions become negative while untried actions remain at zero, which may partly oppose this effect.</li>
+<li><strong>Test:</strong> Success and failure rates (not returns, which use different rewards), and median lengths of failed and of successful episodes. B vs C, per agent.</li>
+<li><strong>Contradicted if:</strong> failed episodes are not shorter in C, or PPO's success rate in C is at least as high as in B.</li>
+</ul>
+<h3>P5. Will the agent with the highest training return also perform best in evaluation?</h3>
+<ul>
+<li><strong>Prediction:</strong> Not reliably. In at least one of A, B and C, the order by training return and the order by evaluation success differ. Q-learning's evaluation success exceeds its training success by more than PPO's does.</li>
+<li><strong>Why:</strong> Q-learning trains with ε-greedy actions, and the random actions lose balls, so its training return understates its greedy policy. The cliff-walking example in Sutton &amp; Barto shows the same effect: the online return of Q-learning is lower than its greedy policy deserves. PPO's training return comes from its own sampled policy, so evaluating its most probable action changes less. It can even hurt, if the sampling was doing useful work.</li>
+<li><strong>Test:</strong> Per seed: success rate over the last 10% of training episodes against the final evaluation success rate. In each of A, B and C, rank the two agents by mean final training return and by mean evaluation success.</li>
+<li><strong>Contradicted if:</strong> the two rankings agree in all three settings, and Q-learning's evaluation-minus-training gap is not larger than PPO's.</li>
+</ul>
+<h3>P6. Which agent would we initially recommend, and what would change our mind?</h3>
+<ul>
+<li><strong>Prediction:</strong> For repeated operation under uncertainty we initially recommend PPO because we expect it to learn faster (P1) and lose less performance after the paddle change (P7), but P2 makes this recommendation provisional: we expect greater variation between PPO seeds. For a quick classroom demonstration we expect tabular Q-learning to be better because its table can be inspected directly and each run is cheap.</li>
+<li><strong>We would change our mind if:</strong><ol>
+<li>Q-learning's failure rate in B is lower than PPO's by more than the pooled seed SD at the full budget.</li>
+<li>PPO's worst seed is worse than Q-learning's worst seed in B. Reliability matters more than the mean.</li>
+<li>At equal wall-clock time, Q-learning is ahead because PPO's cost per step is much higher.</li>
+<li>P7 is contradicted.</li>
+</ol>
+</li>
+</ul>
+<h3>P7 (extra). What survives the change to a narrower paddle (Setting D)?</h3>
+<ul>
+<li><strong>Prediction:</strong> Both B agents succeed less often with the 12 px paddle, but PPO loses fewer percentage points than Q-learning.</li>
+<li><strong>Why:</strong> The relative-error feature keeps the same meaning in D, but the safe catch interval becomes narrower: an offset that is safe for the 16 px paddle can miss the 12 px paddle. Neither agent is told the paddle width. We expect Q-learning to accept more edge states that succeeded during training, while PPO's stochastic training may favour a larger centring margin. The tracking rule's drop from 89% to 72% shows that the change is difficult even for a sensible fixed policy.</li>
+<li><strong>Test:</strong> Success in B minus success in D for the same trained agents, per seed.</li>
+<li><strong>Contradicted if:</strong> Q-learning's drop is smaller than PPO's by more than the pooled seed SD.</li>
+</ul>
+<h2>2. States where we expect the approaches to differ</h2>
+<p>
+<img src="../results/inspection/frames/S1_ball_not_launched.png" width="150" alt="S1">
+<img src="../results/inspection/frames/S2_ball_falling_at_paddle_edge.png" width="150" alt="S2">
+<img src="../results/inspection/frames/S3_ball_rising_mid_field.png" width="150" alt="S3">
+</p>
+
+<p><em>Examples of S1, S2 and S3 (left to right), captured during inspection with the tracking rule.</em></p>
+<p>The states below are identified from the raw RAM trace, even when several raw states map to the same agent observation. For every occurrence we log the binned observation, chosen action, Q-values or policy probabilities, raw ball and paddle positions, and observed transition. This lets us test both the policy prediction and any limitation caused by state aggregation. Part 4 uses the same logs.</p>
+<h3>S1. Ball not launched</h3>
+<p><em>Definition:</em> ball not in play (RAM bytes 99 and 101 are 0), any paddle position. Only FIRE makes progress.</p>
+<ul>
+<li><strong>Q-learning:</strong> FIRE in the paddle positions that are common at launch (central bins). In rarely visited edge bins the values are still tied near zero, so the launch is delayed.</li>
+<li><strong>PPO:</strong> FIRE is the most probable action in every paddle position, with P(FIRE) &gt; 0.9.</li>
+<li><strong>Why:</strong> Every episode starts here, but the random start moves mostly leave the paddle near the centre. The table learns each cell separately, while the network can generalise "ball not in play → FIRE" across paddle positions.</li>
+<li><strong>Contradicted if:</strong> Q-learning's greedy action is FIRE in all 8 paddle bins for every seed, or PPO's P(FIRE) &lt; 0.5 in any bin. We also compare the number of steps from the start to the launch.</li>
+</ul>
+<h3>S2. Ball falling at the paddle edge</h3>
+<p><em>Definition:</em> ball falling (dy &gt; 0), ball y ≥ 165, and ball x over the paddle's outer 4 px (4–8 px from the paddle centre).</p>
+<ul>
+<li><strong>Q-learning:</strong> a stationary action, either NOOP or FIRE. It stays because the 16 px paddle can catch the ball at this offset.</li>
+<li><strong>PPO:</strong> moves towards the ball, centring the paddle under it.</li>
+<li><strong>Why:</strong> Q-learning's target assumes greedy future requested actions, so it may value an edge catch that succeeds when later actions are controlled. PPO updates under its sampled policy, so its own future action variability can make a centring margin valuable. This resembles the off-policy/on-policy contrast in cliff walking (Sutton &amp; Barto, Example 6.6), but sticky transitions affect both algorithms and are not ignored by Q-learning. The previous executed sticky action is not observed, so the state remains partially observable; the predicted difference is a hypothesis, not a necessary consequence of the algorithms.</li>
+<li><strong>Contradicted if:</strong> at ball contact, Q-learning's mean |ball x − paddle centre| is not larger than PPO's, or PPO's most probable movement category is STATIONARY in most S2 cells and seeds.</li>
+</ul>
+<h3>S3. Ball rising in mid-field</h3>
+<p><em>Definition:</em> ball rising (dy &lt; 0), 100 ≤ ball y ≤ 150, 50 ≤ ball x ≤ 110. The next paddle contact is many steps away, so the action matters little for now.</p>
+<ul>
+<li><strong>Q-learning:</strong> no stable preference. The greedy action changes between checkpoints and seeds, and often between consecutive steps.</li>
+<li><strong>PPO:</strong> a stable choice, typically moving the paddle towards the ball's x position. Consecutive actions rarely switch.</li>
+<li><strong>Why:</strong> The four Q-values are almost equal here, so small estimation errors decide the argmax, and a table has nothing to smooth them with. PPO's network shares parameters with nearby states where the action does matter, so its preference here follows those.</li>
+<li><strong>Contradicted if:</strong> Q-learning's movement-category switch rate in S3 is not higher than PPO's, or Q-learning's seeds agree on the greedy movement category in S3 cells as often as PPO's seeds (agreement: at least 4 of 5 seeds choose the same category).</li>
+</ul>
+<h2>3. Change policy</h2>
+<p>This sheet is not edited after submission. When our interpretation changes, we add a dated entry to <code>predictions/annotations.md</code>. The entry names the prediction ID and says what changed and why. Results are compared with this original text.</p>
+<h2>References</h2>
+<ul>
+<li>Machado, M. C. et al. (2018). Revisiting the Arcade Learning Environment. <em>JAIR</em> 61. (Sticky actions, p = 0.25.)</li>
+<li>Schulman, J. et al. (2017). Proximal Policy Optimization Algorithms. arXiv:1707.06347.</li>
+<li>Sutton, R. S. and Barto, A. G. (2018). <em>Reinforcement Learning: An Introduction</em>, 2nd ed. (Q-learning; Example 6.6, cliff walking.)</li>
+</ul>

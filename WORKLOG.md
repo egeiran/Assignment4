@@ -17,15 +17,15 @@ the submission is complete. Planned work has no results.
 
 ## Requirement status
 
-| Part | Requirement | Points | Status |
-|---|---|---|---|
-| 1 | Timestamped prediction sheet: 6 questions + 3 states | 30 | In progress |
-| 2 | Settings A–D, comparison rules, required evidence | 20 | Not started |
-| 3 | Mechanisms: epsilon, gamma, entropy, learning rate, PPO epochs; ≥5 seeds | 20 | Not started |
-| 4 | Ten annotated episodes | 20 | Not started |
-| 5 | Human review within the team (≤1,000 words) | 30 | Not started |
-| 6 | Three recommendations | 30 | Not started |
-| – | Code, experiment records, evidence brief (≤2,000 words), AI record | – | Not started |
+| Part | Requirement                                                              | Points | Status      |
+| ---- | ------------------------------------------------------------------------ | ------ | ----------- |
+| 1    | Timestamped prediction sheet: 6 questions + 3 states                     | 30     | In progress |
+| 2    | Settings A–D, comparison rules, required evidence                        | 20     | Not started |
+| 3    | Mechanisms: epsilon, gamma, entropy, learning rate, PPO epochs; ≥5 seeds | 20     | Not started |
+| 4    | Ten annotated episodes                                                   | 20     | Not started |
+| 5    | Human review within the team (≤1,000 words)                              | 30     | Not started |
+| 6    | Three recommendations                                                    | 30     | Not started |
+| –    | Code, experiment records, evidence brief (≤2,000 words), AI record       | –      | Not started |
 
 ## Decisions so far (provisional, 2026-11-12)
 
@@ -34,17 +34,22 @@ interpretation. Final values are fixed in a Part 2 plan before training starts.
 
 - **Game: Breakout.** Small state (ball and paddle), 4 actions, cheap enough
   for the 100+ training runs that Parts 2–3 require, and easy to explain.
-- **Q-learning: tabular, on binned RAM features** (ball x/y, paddle x, ball
-  direction, ball-in-play). Matches the task's "Q-table" wording and makes the
-  Q-values readable in Part 4. **PPO gets the same features** (small MLP), so the
-  comparison concerns the algorithms, not their inputs.
+- **Q-learning: tabular, on compact RAM features.** In play, the state uses
+  signed ball-to-paddle horizontal error (fine 4 px bins near the paddle), ball
+  y, ball direction, bricks hit and a coarse paddle zone; before launch it uses
+  the paddle position. This keeps about 2,100 readable states while preserving
+  the distinction between centred and edge catches. Matches the task's
+  "Q-table" wording and makes the Q-values readable in Part 4. **PPO gets the
+  same information** as ordered, scaled bin values (small MLP), so the
+  comparison does not give either agent extra observations.
 - **Stochastic transitions = sticky actions:** `repeat_action_probability` 0.0
   (A) and 0.25 (B, the ALE v5 default; Machado et al., 2018).
 - **Episode = one life.** Success = K bricks hit before the ball is lost;
   failure = ball lost; timeout = truncation after T agent steps (reported
   separately). Reward +1 on success (A/B); −c per step added in C.
-- **Setting D = an unseen ALE mode or difficulty**, depending on what the
-  inspection shows exists.
+- **Setting D = difficulty 1**, an unseen compatible configuration with a
+  12 px rather than 16 px paddle and the same RAM layout. This tests whether a
+  policy trained in B retains a safety margin when the catch tolerance narrows.
 - Interactions are counted in agent steps (frameskip noted separately).
 
 ## Environment inspection (Eivind, 2026-11-12; no learning)
@@ -96,5 +101,4 @@ run. No parameters were fitted.
 ## Open questions
 
 1. Deadline time for Part 1 on Blackboard.
-2. Which unseen condition Setting D uses (difficulty 1, a mode, or both).
-3. PPO implementation (SB3 or our own): decided in Part 2, not needed for Part 1.
+2. PPO implementation (SB3 or our own): decided in Part 2, not needed for Part 1.
