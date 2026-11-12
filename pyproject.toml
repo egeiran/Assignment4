@@ -1,0 +1,12 @@
+[project]
+name = "it3212-assignment4"
+version = "0.1.0"
+description = "IT3212 Assignment 4: Q-learning vs PPO on Breakout"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "ale-py>=0.12.1",
+    "gymnasium>=1.4.0",
+    "markdown>=3.11.3",
+    "numpy>=2.5.4",
+    "pillow>=13.0.0",
+]
