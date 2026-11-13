@@ -4,7 +4,7 @@
 
 These predictions were written before the assessed experiments. Prior work was limited to environment inspection without learning.
 
-**Finalised 12 November 2026, 21:45**
+**Finalised 13 November 2026, 10:15 CET**
 
 ## 0. Provisional setup
 
@@ -116,7 +116,7 @@ Test S1–S3 on final B agents, with S3 also checked at saved checkpoints. Log r
 
 We preserve the submitted sheet. Later interpretations are dated and keyed to prediction IDs, explaining what changed and why; results are compared with the original.
 
-Claude (Anthropic) and Codex (OpenAI) were used as assistants while we worked on the prediction sheet. They helped with the draft and served as sounding boards as we discussed our assumptions and how to test them. We led the work and own the final predictions, reasoning, and experimental choices.
+Claude (Anthropic) and Codex (OpenAI) were used as assistants while we worked on the prediction sheet. Claude drafted the first version from the setup we had chosen, Codex reviewed it, and both served as sounding boards as we discussed our assumptions and how to test them. We led the work and own the final predictions, reasoning, and experimental choices.
 
 ## References
 
