@@ -1,0 +1,116 @@
+{
+  "status": "candidate only; not adopted as Setting D",
+  "learning": false,
+  "packages": {
+    "ale-py": "0.12.1",
+    "gymnasium": "1.4.0",
+    "numpy": "2.5.4",
+    "pillow": "13.0.0"
+  },
+  "mode": 0,
+  "difficulty": 0,
+  "sticky_probability": 0.25,
+  "frameskip": 4,
+  "seed": 42,
+  "cleared_RAM_addresses": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ],
+  "mode_checks": [
+    {
+      "mode": 0,
+      "same_initial_brick_RAM_as_mode0": true
+    },
+    {
+      "mode": 4,
+      "same_initial_brick_RAM_as_mode0": true
+    },
+    {
+      "mode": 8,
+      "same_initial_brick_RAM_as_mode0": true
+    },
+    {
+      "mode": 12,
+      "same_initial_brick_RAM_as_mode0": true
+    },
+    {
+      "mode": 16,
+      "same_initial_brick_RAM_as_mode0": true
+    },
+    {
+      "mode": 20,
+      "same_initial_brick_RAM_as_mode0": true
+    },
+    {
+      "mode": 24,
+      "same_initial_brick_RAM_as_mode0": true
+    },
+    {
+      "mode": 28,
+      "same_initial_brick_RAM_as_mode0": true
+    },
+    {
+      "mode": 32,
+      "same_initial_brick_RAM_as_mode0": true
+    },
+    {
+      "mode": 36,
+      "same_initial_brick_RAM_as_mode0": true
+    },
+    {
+      "mode": 40,
+      "same_initial_brick_RAM_as_mode0": true
+    },
+    {
+      "mode": 44,
+      "same_initial_brick_RAM_as_mode0": true
+    }
+  ],
+  "initial_pixel_check": {
+    "changed_pixel_bounds_xyxy": [
+      48,
+      57,
+      79,
+      92
+    ],
+    "removed_brick_pixels": 1152,
+    "same_actions": true,
+    "same_observation_shape": true
+  },
+  "scripted_collision_check": {
+    "seed": 42,
+    "step": 11,
+    "actions": [
+      0,
+      0,
+      2,
+      0,
+      0,
+      0,
+      0,
+      2,
+      0,
+      3,
+      0
+    ],
+    "previous_ball_RAM_xy": [
+      104,
+      88
+    ],
+    "original_reward": 1.0,
+    "gap_reward": 0.0,
+    "original_ball_RAM_xy": [
+      108,
+      85
+    ],
+    "gap_ball_RAM_xy": [
+      108,
+      82
+    ]
+  },
+  "limits": "Patch applied after 20 tracking-rule steps, not at fresh reset. A pre-launch patch was overwritten during game initialisation. No training, agent performance or full-episode wrapper validation. Map acceptance and final D choice remain with the team."
+}

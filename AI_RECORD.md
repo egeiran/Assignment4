@@ -3,7 +3,29 @@
 Claude (Anthropic, via Claude Code) and OpenAI Codex were used as sparring
 partners and coding assistants. The decisions below were ours. The record
 lists where an AI suggestion shaped the work, what we did with it and how it
-was checked. Routine autocomplete is not logged.
+was checked. New proposals explicitly marked pending are not approved decisions.
+Routine autocomplete is not logged.
+
+## Trym-requested Codex review (2026-11-12; approval pending)
+
+Codex proposed component-wise tests for P3–P5/P7 and S1–S3, a common-environment
+A/B policy diagnostic, a discounted-return correction in P4, and keeping the
+narrow-paddle probe separate from the unresolved unseen-map requirement. It kept
+the predicted agent winners, corrected stale freeze status, and adapted the
+export script to local Chrome/Chromium. Checks used the assignment PDF, git state,
+inspection source/JSON/CSV, arithmetic and regenerated document inspection; no
+trained-agent results were available or produced. External checks used ALE's
+[specification](https://ale.farama.org/env-spec/),
+[Breakout documentation](https://ale.farama.org/environments/breakout/) and the
+[original Atari manual](https://www.atariage.com/manual_html_page.php?SoftwareID=889).
+
+Trym chose to investigate a changed brick layout before selecting D. Codex's
+environment-only probe verified a wall gap against pixels and a paired collision;
+the reset-integration limitation is recorded in `WORKLOG.md` and
+`results/inspection/transfer_probe/`. This is not a learning experiment.
+Edits are implemented locally for review. **Trym and Eivind have not yet recorded
+academic acceptance or rejection of these changes.** No human feedback, approval,
+freeze timestamp, tag or submission is inferred from this AI review.
 
 ## Part 1: prediction sheet (2026-11-12)
 

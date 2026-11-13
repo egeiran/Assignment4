@@ -11,10 +11,11 @@ Consequential AI assistance is logged in [AI_RECORD.md](AI_RECORD.md).
 
 ## Part 1: prediction sheet
 
-The prediction sheet is in [predictions/](predictions/). The original
-`predictions_v1.md` is frozen at git tag `predictions-v1` and is never edited
-after submission. Later interpretations go in `predictions/annotations.md`,
-dated and keyed to the prediction IDs (P1–P6, S1–S3).
+The [prediction sheet PDF](predictions/predictions_v1.pdf) is a **candidate**,
+generated from [Markdown](predictions/predictions_v1.md). Team approval, the
+submission timestamp and git tag `predictions-v1` are still pending; no submission
+is recorded in the repository. After submission, preserve the original and put
+dated interpretations in `predictions/annotations.md`, keyed to P1–P7 and S1–S3.
 
 No agent is trained before the sheet is frozen. Before then the repository
 contains only environment inspection, which involves no learning.
@@ -34,6 +35,10 @@ Pinned versions are in `uv.lock`. The ALE ROMs ship with `ale-py`.
 ```bash
 uv run python -B src/inspect_env.py   # environment inspection, no learning
 uv run python -B src/export_md.py predictions/predictions_v1.md   # Markdown -> HTML/PDF
+uv run python -B src/inspect_transfer_layout.py   # optional D candidate probe, no learning
 ```
 
-`export_md.py` uses the same stylesheet and headless Chrome export as the A1/A3 reports.
+`export_md.py` uses the A1/A3 stylesheet and headless Chrome. It detects Chrome on
+macOS/Linux; set `CHROME` to an executable path if needed. Setting D remains open:
+the narrower paddle alone does not establish the required unseen map. See the
+candidate layout investigation and export verification in [WORKLOG.md](WORKLOG.md).
