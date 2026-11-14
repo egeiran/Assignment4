@@ -11,14 +11,14 @@ Consequential AI assistance is logged in [AI_RECORD.md](AI_RECORD.md).
 
 ## Part 1: prediction sheet
 
-The [prediction sheet PDF](predictions/predictions_v1.pdf) is a **candidate**,
-generated from [Markdown](predictions/predictions_v1.md). Team approval, the
-submission timestamp and git tag `predictions-v1` are still pending; no submission
-is recorded in the repository. After submission, preserve the original and put
-dated interpretations in `predictions/annotations.md`, keyed to P1–P7 and S1–S3.
+The [prediction sheet PDF](predictions/predictions_v1.pdf) was submitted on
+13 November 2026 as it stands in merge commit `61bcabe`, generated from
+[Markdown](predictions/predictions_v1.md). The submitted sheet is preserved
+unchanged. Dated interpretations go in
+[predictions/annotations.md](predictions/annotations.md), keyed to P1–P7 and S1–S3.
 
-No agent is trained before the sheet is frozen. Before then the repository
-contains only environment inspection, which involves no learning.
+No agent was trained before the sheet was submitted. Until then the repository
+contained only environment inspection, which involves no learning.
 
 ## Setup
 
@@ -35,10 +35,10 @@ Pinned versions are in `uv.lock`. The ALE ROMs ship with `ale-py`.
 ```bash
 uv run python -B src/inspect_env.py   # environment inspection, no learning
 uv run python -B src/export_md.py predictions/predictions_v1.md   # Markdown -> HTML/PDF
-uv run python -B src/inspect_transfer_layout.py   # optional D candidate probe, no learning
+uv run python -B src/inspect_transfer_layout.py   # Setting D layout probe and calibration, no learning
 ```
 
 `export_md.py` uses the A1/A3 stylesheet and headless Chrome. It detects Chrome on
-macOS/Linux; set `CHROME` to an executable path if needed. Setting D remains open:
-the narrower paddle alone does not establish the required unseen map. See the
-candidate layout investigation and export verification in [WORKLOG.md](WORKLOG.md).
+macOS/Linux; set `CHROME` to an executable path if needed. Setting D is the 32 px
+gap layout from the submitted sheet; the narrower paddle (P7) is a separate probe.
+See the layout investigation and calibration in [WORKLOG.md](WORKLOG.md).

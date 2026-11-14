@@ -5,22 +5,24 @@ the submission is complete. Planned work has no results.
 
 ## Current handover
 
-- Eivind (from 2026-11-12): repository, environment inspection, prediction sheet
-  draft. Claude drafts the predictions; Eivind edits and approves them (logged in
-  AI_RECORD.md).
-- Trym requested a Codex review before the freeze. Proposed clarifications are
-  now in the candidate; Trym and Eivind's academic approval remains pending.
-  Keep any disagreement about which agent wins as a team choice or *Dissent*.
-- **Part 1 is due Friday 2026-11-13** and is mandatory: without it the main
-  submission is not graded. Check the deadline time on Blackboard.
-- **No training before the freeze** (tag `predictions-v1`). Predictions
-  reconstructed after seeing results do not count.
+- **Part 1 was submitted on 2026-11-13**: the sheet in merge commit `61bcabe`
+  (Trym's PR #1), unchanged. Never edit `predictions/predictions_v1.*`;
+  interpretations go in `predictions/annotations.md`.
+- **Parts 2–6 (from 2026-11-14):** Eivind builds code, runs and the brief draft
+  with Claude (logged in AI_RECORD.md). Trym reviews. The Part 5 review record
+  is written by Trym and Eivind, not by an AI.
+- **Setting D is the 32 px gap layout** from the submitted sheet (Eivind,
+  2026-11-14). The narrower paddle (P7) is reported as a separate probe.
+- **No training before `plans/part2_3_plan.md` is committed.** It fixes the
+  choices the sheet left open, so they cannot be fitted to results.
+- Sections below dated 2026-11-12 are the record from before the submission;
+  where they say "pending" or "candidate", this handover is the current status.
 
 ## Requirement status
 
 | Part | Requirement                                                              | Points | Status      |
 | ---- | ------------------------------------------------------------------------ | ------ | ----------- |
-| 1    | Timestamped prediction sheet: 6 questions + 3 states                     | 30     | In progress |
+| 1    | Timestamped prediction sheet: 6 questions + 3 states                     | 30     | Done        |
 | 2    | Settings A–D, comparison rules, required evidence                        | 20     | Not started |
 | 3    | Mechanisms: epsilon, gamma, entropy, learning rate, PPO epochs; ≥5 seeds | 20     | Not started |
 | 4    | Ten annotated episodes                                                   | 20     | Not started |
@@ -216,3 +218,29 @@ including headings, table markup, image markup and references: 2,601 before,
 unstated Part 1 word limit. `git diff --check` passed without output. The
 submission candidate is `predictions/predictions_v1.pdf`, subject to human review;
 its source is `predictions/predictions_v1.md`. No freeze or submission is recorded.
+
+## After the Part 1 submission (Eivind with Claude, 2026-11-14)
+
+- The submitted sheet is the one in `61bcabe`. Claude's freeze proposals (PR #2:
+  placeholder timestamp, reworded AI statement, revised P4 rationale, new P8)
+  were **not adopted**. The sheet therefore has no prediction for the gap
+  layout; D results are reported without a prior prediction and say so.
+- Kept from that proposal branch, because Part 2 needs it: the fixed-rule
+  **layout calibration** in `src/inspect_transfer_layout.py` (`layout_calibration`
+  in `probe.json`; no learning). Fixed rules, p = 0.25, 16 px paddle, no random
+  start moves, paired seeds for both layouts, patch to RAM 18–23 re-applied
+  before every step from reset, pixel check at step 30.
+
+  | Policy (lives) | Original: K≥2 | Gap: K≥2 | Steps to K=2 (orig / gap, median) | Ball above wall (gap) |
+  | --- | --- | --- | --- | --- |
+  | Tracking (100) | 80% | 86% | 76.5 / 55 | 5% |
+  | Random (200) | 1.5% | 3% | 80 / 88.5 | 0.5% |
+
+  The 80% here and the 89% in the first calibration come from different seed
+  lists; 100 lives leave several percentage points of sampling noise. At K = 2
+  the gap seldom matters, and the state holds no brick information. The team
+  keeps the gap as D anyway: it is the layout named in the submitted sheet, and
+  the task asks us to explain whether the representation can generalise.
+- Tracking successes take 63–93 steps to K = 2 in B. P4's 300-step example in
+  the sheet is hypothetical and lies beyond the 267-step break-even against a
+  27-step loss; this is noted for the P4 annotation, not changed in the sheet.

@@ -112,5 +112,47 @@
       82
     ]
   },
-  "limits": "Patch applied after 20 tracking-rule steps, not at fresh reset. A pre-launch patch was overwritten during game initialisation. No training, agent performance or full-episode wrapper validation. Map acceptance and final D choice remain with the team."
+  "layout_calibration": {
+    "heuristic|original": {
+      "lives": 100,
+      "share_reaching_K2": 0.8,
+      "steps_to_K2_min_median_max": [
+        63,
+        76.5,
+        93
+      ],
+      "share_with_ball_above_wall": 0.0
+    },
+    "heuristic|gap": {
+      "lives": 100,
+      "share_reaching_K2": 0.86,
+      "steps_to_K2_min_median_max": [
+        52,
+        55.0,
+        98
+      ],
+      "share_with_ball_above_wall": 0.05
+    },
+    "random|original": {
+      "lives": 200,
+      "share_reaching_K2": 0.015,
+      "steps_to_K2_min_median_max": [
+        79,
+        80.0,
+        88
+      ],
+      "share_with_ball_above_wall": 0.0
+    },
+    "random|gap": {
+      "lives": 200,
+      "share_reaching_K2": 0.03,
+      "steps_to_K2_min_median_max": [
+        55,
+        88.5,
+        96
+      ],
+      "share_with_ball_above_wall": 0.005
+    }
+  },
+  "limits": "Collision check: patch applied after 20 tracking-rule steps, not at fresh reset; a single pre-launch patch was overwritten during game initialisation. Layout calibration re-applies the patch before every step, from reset, for fixed rules only and without random start moves. No training or agent performance. Map acceptance and final D choice remain with the team."
 }
