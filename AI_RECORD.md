@@ -6,6 +6,15 @@ lists where an AI suggestion shaped the work, what we did with it and how it
 was checked. New proposals explicitly marked pending are not approved decisions.
 Routine autocomplete is not logged.
 
+## Parts 2–3: plan and experiment code (2026-11-14 to 2026-11-16)
+
+| Topic | AI contribution | Our decision and how it was checked |
+| --- | --- | --- |
+| Experiment plan | Claude proposed the open details of the setup: bin boundaries, zero ball direction as its own value, Stable-Baselines3 PPO, seed lists, tuning grid, Part 3 grid and the Part 4 selection rule | Eivind approved each choice. He rejected the first draft as too tentative and had it rewritten. He agreed that the proposed tuning (2 seeds, 200k steps) was too coarse; it became 3 seeds at the full budget. He kept the 32 px gap as Setting D and added a fallback rule for the case that neither agent learns. The plan was committed before any training |
+| Freeze proposals for Part 1 | Claude proposed changes to the sheet before submission (timestamp placeholder, reworded AI statement, revised P4 rationale, new P8) | Rejected: the sheet was submitted unchanged. Only the fixed-rule layout calibration was kept |
+| Experiment code | Claude wrote the environment wrapper, Q-learning, the PPO setup, evaluation, run records, analysis and video scripts | Checked with `src/verify.py` (7 checks, all pass), by comparing the tracking rule through the new environment with the Part 1 inspection (100%/90% against 100%/89% in A/B), by exact replay of seeded episodes, and by viewing recorded episodes |
+| Cost estimate | Claude first estimated 2–3 hours for all runs, then 4–12 hours after the smoke test | The first estimate was wrong: it ignored the cost of seeded resets and timeout episodes in evaluation. Measured times replace both after tuning |
+
 ## Trym-requested Codex review (2026-11-12; approval pending)
 
 Codex proposed component-wise tests for P3–P5/P7 and S1–S3, a common-environment

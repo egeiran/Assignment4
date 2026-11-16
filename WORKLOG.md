@@ -13,8 +13,10 @@ the submission is complete. Planned work has no results.
   is written by Trym and Eivind, not by an AI.
 - **Setting D is the 32 px gap layout** from the submitted sheet (Eivind,
   2026-11-14). The narrower paddle (P7) is reported as a separate probe.
-- **No training before `plans/part2_3_plan.md` is committed.** It fixes the
-  choices the sheet left open, so they cannot be fitted to results.
+- **`plans/part2_3_plan.md` (commit `be8831c`, 2026-11-16) fixes the setup.** It
+  was committed before any agent was trained. Deviations are dated here.
+- **Next:** `run_all.py tune`, then `select`, `main`, `transfer`, `mechanisms`
+  (see README). No assessed run exists yet.
 - Sections below dated 2026-11-12 are the record from before the submission;
   where they say "pending" or "candidate", this handover is the current status.
 
@@ -23,7 +25,7 @@ the submission is complete. Planned work has no results.
 | Part | Requirement                                                              | Points | Status      |
 | ---- | ------------------------------------------------------------------------ | ------ | ----------- |
 | 1    | Timestamped prediction sheet: 6 questions + 3 states                     | 30     | Done        |
-| 2    | Settings A–D, comparison rules, required evidence                        | 20     | Not started |
+| 2    | Settings A–D, comparison rules, required evidence                        | 20     | Code built; no assessed runs |
 | 3    | Mechanisms: epsilon, gamma, entropy, learning rate, PPO epochs; ≥5 seeds | 20     | Not started |
 | 4    | Ten annotated episodes                                                   | 20     | Not started |
 | 5    | Human review within the team (≤1,000 words)                              | 30     | Not started |
@@ -244,3 +246,56 @@ its source is `predictions/predictions_v1.md`. No freeze or submission is record
 - Tracking successes take 63–93 steps to K = 2 in B. P4's 300-step example in
   the sheet is hypothetical and lies beyond the 267-step break-even against a
   27-step loss; this is noted for the P4 annotation, not changed in the sheet.
+
+## Experiment code and smoke test (Eivind with Claude, 2026-11-16)
+
+Code for Parts 2–3 is in `src/`: `breakout_env.py` (one-life environment and
+state encoder), `q_learning.py`, `ppo.py`, `evaluate.py`, `run.py`,
+`run_all.py`, `analyze.py`, `verify.py`, `make_video.py`. Part 4 tooling
+(probes for S1–S3, episode selection, alternative-action replay) is not written.
+
+**Measurements behind the plan** (fixed rules, no learning): the paddle position
+is 99 at reset on a range of 8–144, so it starts right of centre, and more than a
+quarter of the starts end at the right wall. The ball direction is zero on at
+least one axis in about 3% of steps. A seeded reset takes 63 ms, an unseeded one
+6 ms, an agent step 0.4 ms.
+
+**Verification** (`uv run python -B src/verify.py`, `results/verification/verify.json`):
+all 7 checks pass. All 4,760 cells are reachable by the encoder; seeded Setting A
+episodes repeat exactly; Setting B episodes replay exactly from seed and action
+sequence; the gap is empty 30 steps after reset in D; rewards and outcomes follow
+the plan; the Q-learning update converges to the known values on a toy chain.
+
+Tracking rule through the new environment, 100 seeded episodes each (with the
+random start moves, unlike the Part 1 calibration):
+
+| Setting | Success | Median steps to success | Distinct trajectories |
+| --- | --- | --- | --- |
+| A | 100% | 79 | 25 |
+| B | 90% | 72 | 100 |
+| C | 90% | 72 | 100 |
+| D (gap) | 94% | 55 | 100 |
+| P7 (12 px paddle) | 79% | 71 | 100 |
+
+**Implementation notes to carry into the brief:**
+
+- PPO stops at exactly 500,000 steps. The last 288 steps are collected but not
+  used in an update, because 500,000 is not a multiple of the 1,024-step rollout.
+- Stable-Baselines3 builds separate 2 × 64 networks for the actor and the critic.
+- In D the game redraws the full wall for one step when the ball is launched;
+  the gap is restored before the next step. The ball is then near the paddle.
+- The encoder always assumes the 16 px paddle, also in P7, so the observation
+  format is unchanged.
+- In A, 100 episodes gave 25 distinct trajectories. The A tables report the
+  number of distinct trajectories.
+
+**Smoke test** (`run_all.py smoke`: 20,000 steps, Setting B, seed 999, 50
+evaluation episodes per point). Purpose: check that the code runs and measure
+speed. Its output is not evidence, is excluded from git and did not change the
+plan. Training ran at 1,271 steps/s (Q-learning) and 930 steps/s (PPO) with two
+processes. Evaluation is the larger cost: 0.12 s per normal episode, mostly the
+seeded reset, and 1.1 s per timeout episode. PPO's most probable action did not
+launch the ball at 10 of 12 points in this short run, so its evaluation took
+553 s. If that persists in full runs, the 166 planned runs take about 11–12
+hours on 8 processes; otherwise about 4–5 hours. Both figures are extrapolated
+from this one run and will be replaced by measured times after tuning.

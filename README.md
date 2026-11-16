@@ -30,7 +30,41 @@ uv sync
 
 Pinned versions are in `uv.lock`. The ALE ROMs ship with `ale-py`.
 
-## Commands
+## Experiments (Parts 2–4)
+
+The setup is fixed in [plans/part2_3_plan.md](plans/part2_3_plan.md), committed
+before any agent was trained. Run the groups in this order; finished runs are
+skipped, so a group can be stopped and resumed.
+
+```bash
+uv run python -B src/verify.py              # environment and plumbing checks (about 1 min)
+uv run python -B src/run_all.py tune        # 6 configurations x 3 seeds per agent, Setting B
+uv run python -B src/run_all.py select      # choose each agent's configuration
+uv run python -B src/run_all.py main        # Settings A, B, C x 2 agents x 10 seeds
+uv run python -B src/run_all.py transfer    # final B agents on the gap layout (D) and 12 px paddle (P7)
+uv run python -B src/run_all.py mechanisms  # Part 3, one factor at a time, 5 seeds
+uv run python -B src/analyze.py main        # tables and learning curves for one group
+```
+
+`run_all.py` uses 8 processes by default (`--workers N`). `run_all.py smoke` is a
+20,000-step code check on seed 999; its output is not evidence and is not in git.
+
+| Path | Content |
+| --- | --- |
+| `results/runs/<group>/<run>/` | One trained agent: `config.json`, `environment.json` (versions, hardware, commit), `train_episodes.csv`, `eval_checkpoints.csv`, `eval_episodes.csv` (seed and action sequence of every evaluation episode), `checkpoints/`, `runtime.json` |
+| `results/analysis/<group>/` | `summary.md`, `per_run.csv`, `eval_curves.png`, `training_curves.png`, and `sources.txt` listing the runs behind them |
+| `results/verification/verify.json` | Output of `verify.py` |
+| `results/videos/` | Recorded episodes (GIF) |
+
+A run is named `<agent>_<setting>_<configuration>_s<seed>`, for example
+`ppo_B_selected_s3`. Any evaluation episode can be replayed from its seed:
+
+```bash
+uv run python -B src/make_video.py tracking --setting D --seed 10000              # fixed tracking rule
+uv run python -B src/make_video.py results/runs/main/q_B_selected_s0 --seed 10003  # a trained agent
+```
+
+## Other commands
 
 ```bash
 uv run python -B src/inspect_env.py   # environment inspection, no learning
