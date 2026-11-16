@@ -34,6 +34,11 @@
       "check": "Epsilon schedule",
       "passed": true,
       "detail": "epsilon at 0/25/50/100% = [1.0, 0.525, 0.050000000000000044, 0.050000000000000044]"
+    },
+    {
+      "check": "PPO environment seeds",
+      "passed": true,
+      "detail": "104 environment seeds over 13 training seeds, none shared"
     }
   ],
   "tracking_reference": {

@@ -11,6 +11,18 @@ from breakout_env import BreakoutLife
 N_ENVS, N_STEPS, MINIBATCHES = 8, 128, 4
 
 
+def env_seeds(seed, n=N_ENVS):
+    """One independent environment seed per parallel environment. Stable-Baselines3 would use
+    seed, seed + 1, ..., so training seeds 0 and 1 would share 7 of their 8 environments."""
+    return [int(np.random.SeedSequence([seed, i]).generate_state(1)[0]) for i in range(n)]
+
+
+class _VecEnv(DummyVecEnv):
+    def seed(self, seed=None):
+        self._seeds = [None] * self.num_envs if seed is None else env_seeds(seed, self.num_envs)
+        return self._seeds
+
+
 class PPOPolicy:
     kind = "ppo"
 
@@ -67,7 +79,7 @@ def train(cfg, eval_points, on_eval, log_episode):
     hp, budget, seed = cfg["hp"], cfg["budget"], cfg["seed"]
     assert all(p % N_ENVS == 0 for p in eval_points), "evaluation points must be multiples of the 8 environments"
     torch.set_num_threads(1)
-    venv = DummyVecEnv([lambda: BreakoutLife(cfg["setting"], k=cfg["k"]) for _ in range(N_ENVS)])
+    venv = _VecEnv([lambda: BreakoutLife(cfg["setting"], k=cfg["k"]) for _ in range(N_ENVS)])
     model = PPO("MlpPolicy", venv, learning_rate=hp["learning_rate"], n_steps=N_STEPS,
                 batch_size=N_ENVS * N_STEPS // MINIBATCHES, n_epochs=hp["epochs"], gamma=hp["gamma"],
                 gae_lambda=0.95, clip_range=0.2, ent_coef=hp["entropy"],

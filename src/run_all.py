@@ -83,6 +83,7 @@ def experiments(name, k):
     if name == "mechanisms":
         q, p = hp["q"], hp["ppo"]
         variants = [("q", f"eps_{n}", with_hp(q, epsilon=e)) for n, e in (
+            ("linear0.05", SHEET["q"]["epsilon"]),
             ("constant0.1", {"kind": "constant", "value": 0.1}),
             ("fast0.01", {"kind": "linear", "start": 1.0, "end": 0.01, "fraction": 0.1}))]
         variants += [(a, f"gamma{g}", with_hp(hp[a], gamma=g)) for a in ("q", "ppo") for g in (0.9, 0.99, 0.999)]
@@ -150,6 +151,7 @@ def main():
     if args.experiment == "select":
         return select(args.k)
     if args.experiment == "transfer":
+        assert selected()["k"] == args.k, f"configuration was selected with k={selected()['k']}"
         sources = sorted(d for d in (RUNS / "main").glob("*_B_selected_s*") if (d / "runtime.json").exists())
         if len(sources) != 20:
             sys.exit(f"Expected 20 finished Setting B runs in main, found {len(sources)}.")

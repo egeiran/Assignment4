@@ -299,3 +299,28 @@ launch the ball at 10 of 12 points in this short run, so its evaluation took
 553 s. If that persists in full runs, the 166 planned runs take about 11–12
 hours on 8 processes; otherwise about 4–5 hours. Both figures are extrapolated
 from this one run and will be replaced by measured times after tuning.
+
+## Code review fixes before the assessed runs (Eivind with Claude, 2026-11-16)
+
+A second AI pass read the code without having written it and reported the
+points below. Eivind decided to fix them, because correctness matters more than
+the lost run time. A first tuning job had started at 10:58 on commit `bdc8ab5`;
+it was stopped and all tuning runs are repeated on the fixed code, so every
+assessed run uses one code version.
+
+| Finding | Fix |
+| --- | --- |
+| Stable-Baselines3 seeds the 8 PPO environments as seed, seed + 1, …, so training seeds 0 and 1 shared 7 of 8 environment seeds. P2 concerns variation between seeds | `ppo.env_seeds`: each environment gets an independent seed derived from (training seed, environment number). `verify.py` checks that the 13 training seeds share none |
+| Q-tables were saved in single precision but trained in double. Near-equal values could become ties and change a greedy action in transfer or replay | Saved at full precision (`.npz`). `make_video.py` replays the logged action sequence and checks it against the logged trajectory |
+| The sheet's ε schedule was not an explicit Part 3 variant. Had tuning selected final ε = 0.01, it would never have been run | Added as `eps_linear0.05`; skipped only when it equals the selected configuration |
+| `git_dirty` was true for every run, because new result files counted | It now looks only at `src/`, `pyproject.toml` and `uv.lock` |
+| `transfer` did not check `--k` against the selected configuration | Checked |
+
+Left as they are: PPO is evaluated at the policy of its last completed update
+(at 25,000 steps that is the policy after 24,576); a run that crashes writes no
+logs and is repeated from the start. `analyze.py` reads one group at a time, so
+the Part 3 analysis must add the reference runs from `main`; not yet written.
+
+Q-learning's training code did not change, and a run is deterministic given its
+seed. The Q-learning runs finished by the first job are therefore kept outside
+the repository to compare with the repeated runs, as a check of reproducibility.

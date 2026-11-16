@@ -34,7 +34,7 @@ def environment():
             return subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True, check=True).stdout.strip()
         except (OSError, subprocess.CalledProcessError):
             return None
-    return {"git_commit": sh("git", "rev-parse", "HEAD"), "git_dirty": bool(sh("git", "status", "--porcelain")),
+    return {"git_commit": sh("git", "rev-parse", "HEAD"), "git_dirty": bool(sh("git", "status", "--porcelain", "--", "src", "pyproject.toml", "uv.lock")),
             "python": platform.python_version(), "platform": platform.platform(),
             "cpu": sh("sysctl", "-n", "machdep.cpu.brand_string") or platform.processor(),
             "packages": {p: version(p) for p in

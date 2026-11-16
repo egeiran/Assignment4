@@ -10,6 +10,7 @@ import sys
 
 import numpy as np
 
+import ppo
 import q_learning
 from breakout_env import N_CELLS, SETTINGS, BreakoutLife, cell_index, encode, tracking_action
 from evaluate import run_episode, summarise
@@ -116,12 +117,22 @@ def check_epsilon():
     return np.allclose(values, [1.0, 0.525, 0.05, 0.05]), f"epsilon at 0/25/50/100% = {values}"
 
 
+def check_ppo_seeds():
+    seeds = {s: ppo.env_seeds(s) for s in list(range(10)) + [100, 101, 102]}
+    flat = [x for v in seeds.values() for x in v]
+    venv = ppo._VecEnv([lambda: BreakoutLife("B") for _ in range(2)])
+    used = venv.seed(3) == ppo.env_seeds(3, 2)
+    venv.close()
+    return used and len(set(flat)) == len(flat), f"{len(flat)} environment seeds over 13 training seeds, none shared"
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     checks = [("State cells", check_cells), ("Setting A deterministic", check_deterministic_a),
               ("Setting B replay", check_replay_b), ("Gap layout", check_gap),
               ("Outcomes and rewards", check_outcomes), ("Q-learning update (toy chain)", check_toy_q),
-              ("Epsilon schedule", check_epsilon)]
+              ("Epsilon schedule", check_epsilon),
+              ("PPO environment seeds", check_ppo_seeds)]
     results, failed = [], False
     print(f"| {'Check':32} | Result | Detail")
     for name, fn in checks:

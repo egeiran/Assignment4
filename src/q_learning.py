@@ -33,11 +33,11 @@ class QPolicy:
         return hash(self.table.tobytes())
 
     def save(self, path):
-        np.save(path.with_suffix(".npy"), self.table.astype(np.float32))
+        np.savez_compressed(path.with_suffix(".npz"), table=self.table)  # full precision: near-ties must survive
 
     @staticmethod
     def load(path):
-        return QPolicy(np.load(path.with_suffix(".npy")).astype(np.float64))
+        return QPolicy(np.load(path.with_suffix(".npz"))["table"])
 
 
 def train(cfg, eval_points, on_eval, log_episode):
