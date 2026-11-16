@@ -9,6 +9,7 @@ Reads results/runs/<experiment>/ and writes results/analysis/<experiment>/:
   training_curves.png        training success in consecutive windows of 10,000 interactions
   sources.txt                the run directories behind every table and figure
 Evaluation episodes are never pooled across seeds: each seed is one trained agent.
+For `mechanisms`, the Setting B runs of `main` with the same seeds are included as configuration `selected`.
 """
 import argparse
 import json
@@ -27,12 +28,14 @@ LABEL = {"q": "Q-learning", "ppo": "PPO"}
 SURFACE, INK, MUTED, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#e6e5e0"
 
 
-def load(experiment):
+def load(experiment, keep=lambda cfg: True):
     runs = []
     for d in sorted((RUNS / experiment).iterdir()):
         if not (d / "eval_checkpoints.csv").exists():
             continue
         cfg = json.loads((d / "config.json").read_text())
+        if not keep(cfg):
+            continue
         runtime = json.loads((d / "runtime.json").read_text()) if (d / "runtime.json").exists() else {}
         train = pd.read_csv(d / "train_episodes.csv") if (d / "train_episodes.csv").exists() else None
         runs.append({"dir": d, "cfg": cfg, "runtime": runtime, "train": train,
@@ -50,8 +53,8 @@ def per_run_table(runs):
             final = c[(c["mode"] == mode) & (c["step"] == c["step"].max())].iloc[0]
             rows.append({"agent": cfg["agent"], "setting": cfg["setting"], "configuration": cfg["tag"],
                          "policy": mode, "seed": cfg["seed"], "run": r["dir"].name,
-                         "interactions": r["runtime"].get("interactions", 0),
-                         "train_seconds": r["runtime"].get("train_seconds", 0.0),
+                         "interactions": r["runtime"].get("interactions", cfg["budget"]),
+                         "train_seconds": r["runtime"].get("train_seconds", np.nan),
                          **final.drop(["step", "mode", "train_seconds", "episodes"]).to_dict()})
     return pd.DataFrame(rows)
 
@@ -144,8 +147,8 @@ def curves(runs, kind, window, path, experiment):
     fig.suptitle(measure, x=0.01, y=0.99, ha="left", va="top", fontsize=11, color=INK)
     fig.supxlabel("Environment interactions (agent steps)", fontsize=9, color=MUTED, y=0.105)
     fig.text(0.01, 0.012, f"Thick line: mean across trained agents (seeds). Band: ± 1 SD between seeds. Thin lines: individual seeds.\n"
-             f"Source runs: results/runs/{experiment}/ ({len(runs)} runs, listed in "
-             f"results/analysis/{experiment}/sources.txt)", fontsize=7.5, color=MUTED, va="bottom")
+             f"Source runs: {len(runs)} runs, listed in results/analysis/{experiment}/sources.txt",
+             fontsize=7.5, color=MUTED, va="bottom")
     fig.tight_layout(rect=(0, 0.12, 1, 0.9))
     fig.savefig(path, dpi=160, facecolor=SURFACE)
     plt.close(fig)
@@ -157,6 +160,9 @@ def main():
     parser.add_argument("--window", type=int, default=10_000)
     args = parser.parse_args()
     runs = load(args.experiment)
+    if args.experiment == "mechanisms":  # the selected value of every factor reuses the Part 2 runs in B
+        seeds = {r["cfg"]["seed"] for r in runs}
+        runs += load("main", lambda cfg: cfg["setting"] == "B" and cfg["seed"] in seeds)
     out = ROOT / "results" / "analysis" / args.experiment
     out.mkdir(parents=True, exist_ok=True)
     per_run = per_run_table(runs)

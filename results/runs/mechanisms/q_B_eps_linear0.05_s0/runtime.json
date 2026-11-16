@@ -1,0 +1,8 @@
+{
+  "interactions": 500000,
+  "train_seconds": 344.9,
+  "eval_seconds": 673.5,
+  "train_steps_per_second": 1450,
+  "training_episodes": 9030,
+  "start_move_steps_not_counted": 135749
+}

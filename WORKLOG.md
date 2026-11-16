@@ -382,3 +382,48 @@ to the same runs in the repeated job.
 Part 3 with the selected configurations has 85 runs: the grid values in the
 plan, the sheet's ε schedule, and the selected α = 0.3 and learning rate 1·10⁻³
 taken from the Part 2 runs (seeds 0–4).
+
+## Runs for Parts 2 and 3 (2026-11-16)
+
+All 145 training runs used commit `7ce3f82` with unchanged code (`git_dirty`
+is false in every `environment.json`). They ran on 8 processes and none failed.
+
+| Group | Content | Started | Finished |
+| --- | --- | --- | --- |
+| `main` | 60 runs: Settings A, B, C × 2 agents × 10 seeds | 14:41 | 17:04 |
+| `transfer` | 40 evaluations: the final B agents on the gap layout (D) and the 12 px paddle (P7) | 17:04 | 17:06 |
+| `mechanisms` | 85 runs: Part 3, Setting B, 5 seeds per value | 17:06 | 21:19 |
+
+Tables and curves are in `results/analysis/main/`, `transfer/` and
+`mechanisms/`. `analyze.py mechanisms` includes the Setting B runs of `main`
+with seeds 0–4 as configuration `selected`, as the plan specifies.
+
+**Final evaluation, greedy policy** (success rate, mean ± between-seed SD, 10
+trained agents per cell, 200 episodes each):
+
+| Setting | Q-learning | PPO |
+| --- | --- | --- |
+| A | 100.0 ± 0.0% | 99.4 ± 2.1% |
+| B | 75.9 ± 16.7% | 87.8 ± 17.5% |
+| C | 79.1 ± 21.8% | 93.7 ± 3.6% |
+| D (B agents, gap layout) | 51.5 ± 16.5% | 83.4 ± 27.8% |
+| P7 (B agents, 12 px paddle) | 53.4 ± 9.3% | 68.9 ± 21.6% |
+
+**Observations, not yet assessed against the predictions:**
+
+- Setting A does not separate the agents. In B, nine PPO seeds reach 86–97% and
+  one 39%; Q-learning is spread evenly from 46% to 95%.
+- Q-learning's mean in B was 87.7% at 400,000 steps and 75.9% at 500,000.
+- On the gap layout Q-learning falls from 75.9% to 51.5%. PPO keeps 83.4%, but
+  two seeds drop to 24% and 39%.
+- The selected configurations rarely fail to launch at the final evaluation
+  (one Q-learning agent in B with 33% timeouts). During training it still
+  happens: every episode timed out at 73 of 360 evaluation points for PPO and
+  31 of 360 for Q-learning.
+- Tuning selected α = 0.3 for Q-learning from 3 seeds (83.7% against 53.5% for
+  α = 0.1 with the same ε schedule). On seeds 0–4 the order is reversed: α = 0.1
+  reaches 86.4 ± 10.9% and α = 0.3 67.2 ± 18.4%. The selected configuration
+  stays, as fixed in the plan; the brief reports both numbers.
+- In Part 3, PPO with γ = 0.9 (10.5%) and with learning rate 3·10⁻⁵ (0.0%)
+  scores far higher with sampled actions (52.1% and 29.2%): the most probable
+  action often does not launch the ball.

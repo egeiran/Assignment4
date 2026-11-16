@@ -1,0 +1,23 @@
+{
+  "experiment": "transfer",
+  "run_id": "ppo_B_selected_s8_on_D",
+  "agent": "ppo",
+  "setting": "D",
+  "tag": "on_D",
+  "seed": 8,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "all",
+  "hp": {
+    "learning_rate": 0.001,
+    "entropy": 0.01,
+    "epochs": 4,
+    "gamma": 0.99
+  },
+  "trained_in": "B",
+  "source_run": "results/runs/main/ppo_B_selected_s8"
+}

@@ -1,0 +1,21 @@
+{
+  "experiment": "mechanisms",
+  "run_id": "ppo_B_lr0.0003_s0",
+  "agent": "ppo",
+  "setting": "B",
+  "tag": "lr0.0003",
+  "seed": 0,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "final",
+  "hp": {
+    "learning_rate": 0.0003,
+    "entropy": 0.01,
+    "epochs": 4,
+    "gamma": 0.99
+  }
+}
