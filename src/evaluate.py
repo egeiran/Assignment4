@@ -22,6 +22,7 @@ def run_episode(env, policy, seed, mode="greedy", actions=None, on_step=None):
             end = info["episode_end"]
             return {"seed": seed, "outcome": end["outcome"], "steps": end["steps"],
                     "return": round(end["return"], 6), "start_moves": end["start_moves"],
+                    "launch_bin": end["launch_bin"], "launch_step": end["launch_step"],
                     "trajectory": digest.hexdigest()[:12], "actions": "".join(map(str, taken))}
 
 

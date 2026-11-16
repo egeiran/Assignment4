@@ -11,6 +11,11 @@ or **untested**, classified per component for multi-part predictions.
 
 ## Setup changes
 
+- **2026-11-16, selected configurations.** Tuning in Setting B (plan, section 4)
+  selected Q-learning α = 0.3 with final ε = 0.01, and PPO learning rate 1·10⁻³
+  with entropy 0.01. The sheet's defaults were α = 0.1 with final ε = 0.05, and
+  learning rate 3·10⁻⁴ with entropy 0.01. Settings A, B and C use the selected
+  values; the sheet's values are run in Part 3.
 - **2026-11-16, state size.** The state has 4,760 cells, not "about 2,100": a
   zero ball direction is kept as its own value (plan, section 2).
 - **2026-11-16, open details fixed.** Bin boundaries, PPO implementation, seeds,

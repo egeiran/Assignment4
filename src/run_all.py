@@ -137,7 +137,7 @@ def transfer_one(job):
     (out / "config.json").write_text(json.dumps(
         {**cfg, "experiment": "transfer", "run_id": out.name, "setting": target, "trained_in": cfg["setting"],
          "source_run": str(source.relative_to(ROOT)), "tag": f"on_{target}"}, indent=2) + "\n")
-    write_csv(out / "eval_episodes.csv", [{"step": step, "mode": "greedy", **r} for r in rows])
+    write_csv(out / "eval_episodes.csv.gz", [{"step": step, "mode": "greedy", **r} for r in rows])
     write_csv(out / "eval_checkpoints.csv", [{"step": step, "mode": "greedy", "train_seconds": 0, **summarise(rows)}])
     return f"done {out.name}: success {summarise(rows)['success_rate']:.2f}"
 
@@ -160,8 +160,16 @@ def main():
         jobs, worker = experiments(args.experiment, args.k), run
     print(f"{args.experiment}: {len(jobs)} jobs on {args.workers} workers")
     with ProcessPoolExecutor(args.workers) as pool:
+        failed = 0
         for n, future in enumerate(as_completed([pool.submit(worker, j) for j in jobs]), 1):
-            print(f"[{n}/{len(jobs)}] {future.result()}", flush=True)
+            try:
+                message = future.result()
+            except Exception as error:  # report and go on; the run is repeated on the next start
+                failed += 1
+                message = f"FAILED: {type(error).__name__}: {error}"
+            print(f"[{n}/{len(jobs)}] {message}", flush=True)
+    if failed:
+        sys.exit(f"{failed} of {len(jobs)} jobs failed. Start the same command again to repeat them.")
 
 
 if __name__ == "__main__":

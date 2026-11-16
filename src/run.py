@@ -5,11 +5,13 @@ results/runs/<experiment>/<run_id>/
   environment.json      software versions, hardware, git commit
   train_episodes.csv    every training episode (end step, outcome, length, return)
   eval_checkpoints.csv  one row per evaluation point and policy mode
-  eval_episodes.csv     every evaluation episode, with its seed and action sequence
+  eval_episodes.csv.gz  every evaluation episode, with its seed and action sequence
   checkpoints/          saved agents (step_<interactions>)
   runtime.json          written last; marks the run as complete
 """
 import csv
+import gzip
+import io
 import json
 import platform
 import subprocess
@@ -42,7 +44,10 @@ def environment():
 
 
 def write_csv(path, rows):
-    with open(path, "w", newline="") as f:
+    """Plain CSV, or gzip for a .gz path (mtime 0, so the same rows give the same bytes)."""
+    raw = open(path, "wb")
+    binary = gzip.GzipFile(filename="", fileobj=raw, mode="wb", mtime=0) if path.suffix == ".gz" else raw
+    with raw, binary, io.TextIOWrapper(binary, newline="") as f:
         if rows:
             writer = csv.DictWriter(f, fieldnames=list(rows[0]))
             writer.writeheader()
@@ -96,7 +101,7 @@ def run(cfg):
     total = time.perf_counter() - clock["start"]
     write_csv(out / "train_episodes.csv", train_rows)
     write_csv(out / "eval_checkpoints.csv", checkpoint_rows)
-    write_csv(out / "eval_episodes.csv", episode_rows)
+    write_csv(out / "eval_episodes.csv.gz", episode_rows)
     train_seconds = total - clock["eval"]
     (out / "runtime.json").write_text(json.dumps({
         "interactions": budget, "train_seconds": round(train_seconds, 1),

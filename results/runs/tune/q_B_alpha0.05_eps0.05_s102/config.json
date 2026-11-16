@@ -1,0 +1,25 @@
+{
+  "experiment": "tune",
+  "run_id": "q_B_alpha0.05_eps0.05_s102",
+  "agent": "q",
+  "setting": "B",
+  "tag": "alpha0.05_eps0.05",
+  "seed": 102,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    20000,
+    200
+  ],
+  "checkpoints": "final",
+  "hp": {
+    "alpha": 0.05,
+    "gamma": 0.99,
+    "epsilon": {
+      "kind": "linear",
+      "start": 1.0,
+      "end": 0.05,
+      "fraction": 0.5
+    }
+  }
+}

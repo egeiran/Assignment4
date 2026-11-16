@@ -51,8 +51,10 @@ uv run python -B src/analyze.py main        # tables and learning curves for one
 
 | Path | Content |
 | --- | --- |
-| `results/runs/<group>/<run>/` | One trained agent: `config.json`, `environment.json` (versions, hardware, commit), `train_episodes.csv`, `eval_checkpoints.csv`, `eval_episodes.csv` (seed and action sequence of every evaluation episode), `checkpoints/`, `runtime.json` |
+| `results/runs/<group>/<run>/` | One trained agent: `config.json`, `environment.json` (versions, hardware, commit), `train_episodes.csv`, `eval_checkpoints.csv`, `eval_episodes.csv.gz` (seed and action sequence of every evaluation episode), `checkpoints/`, `runtime.json` |
 | `results/analysis/<group>/` | `summary.md`, `per_run.csv`, `eval_curves.png`, `training_curves.png`, and `sources.txt` listing the runs behind them |
+| `results/selected_config.json` | The configuration chosen for each agent, with the tuning means behind it |
+| `results/logs/` | Console log of each group, with start and end time |
 | `results/verification/verify.json` | Output of `verify.py` |
 | `results/videos/` | Recorded episodes (GIF) |
 

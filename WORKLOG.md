@@ -15,8 +15,9 @@ the submission is complete. Planned work has no results.
   2026-11-14). The narrower paddle (P7) is reported as a separate probe.
 - **`plans/part2_3_plan.md` (commit `be8831c`, 2026-11-16) fixes the setup.** It
   was committed before any agent was trained. Deviations are dated here.
-- **Next:** `run_all.py tune`, then `select`, `main`, `transfer`, `mechanisms`
-  (see README). No assessed run exists yet.
+- **Tuning is done and the configurations are selected** (2026-11-16, below).
+  `main`, `transfer` and `mechanisms` were started the same day; logs in
+  `results/logs/`. Next: analysis, Part 4 tooling, prediction verdicts.
 - Sections below dated 2026-11-12 are the record from before the submission;
   where they say "pending" or "candidate", this handover is the current status.
 
@@ -25,7 +26,7 @@ the submission is complete. Planned work has no results.
 | Part | Requirement                                                              | Points | Status      |
 | ---- | ------------------------------------------------------------------------ | ------ | ----------- |
 | 1    | Timestamped prediction sheet: 6 questions + 3 states                     | 30     | Done        |
-| 2    | Settings A–D, comparison rules, required evidence                        | 20     | Code built; no assessed runs |
+| 2    | Settings A–D, comparison rules, required evidence                        | 20     | Tuning done; main runs started 2026-11-16 |
 | 3    | Mechanisms: epsilon, gamma, entropy, learning rate, PPO epochs; ≥5 seeds | 20     | Not started |
 | 4    | Ten annotated episodes                                                   | 20     | Not started |
 | 5    | Human review within the team (≤1,000 words)                              | 30     | Not started |
@@ -324,3 +325,60 @@ the Part 3 analysis must add the reference runs from `main`; not yet written.
 Q-learning's training code did not change, and a run is deterministic given its
 seed. The Q-learning runs finished by the first job are therefore kept outside
 the repository to compare with the repeated runs, as a check of reproducibility.
+
+## Tuning and selected configurations (2026-11-16)
+
+`run_all.py tune`: 36 runs on commit `73d0243`, 11:39–14:06 on 8 processes
+(`results/logs/tune.log`, `results/analysis/tune/`). Final evaluation success in
+Setting B, 200 episodes per run, 3 seeds per configuration:
+
+| Agent | Configuration | Mean | Per seed | Evaluation points with > 50% timeouts (of 36) |
+| --- | --- | --- | --- | --- |
+| Q-learning | α 0.05, final ε 0.05 | 52.8% | 34.0, 37.5, 87.0 | 0 |
+| Q-learning | α 0.05, final ε 0.01 | 46.2% | 23.0, 26.0, 89.5 | 0 |
+| Q-learning | α 0.1, final ε 0.05 (sheet) | 47.2% | 0.0, 59.0, 82.5 | 3 |
+| Q-learning | α 0.1, final ε 0.01 | 53.5% | 20.0, 49.0, 91.5 | 2 |
+| Q-learning | α 0.3, final ε 0.05 | 74.7% | 67.5, 71.5, 85.0 | 9 |
+| **Q-learning** | **α 0.3, final ε 0.01** | **83.7%** | 75.0, 81.0, 95.0 | 8 |
+| PPO | learning rate 1·10⁻⁴, entropy 0 | 36.0% | 20.0, 41.5, 46.5 | 27 |
+| PPO | learning rate 1·10⁻⁴, entropy 0.01 | 28.8% | 0.0, 36.5, 50.0 | 32 |
+| PPO | learning rate 3·10⁻⁴, entropy 0 | 83.7% | 61.0, 94.5, 95.5 | 12 |
+| PPO | learning rate 3·10⁻⁴, entropy 0.01 (sheet) | 60.5% | 0.0, 84.0, 97.5 | 13 |
+| PPO | learning rate 1·10⁻³, entropy 0 | 92.8% | 85.5, 96.0, 97.0 | 6 |
+| **PPO** | **learning rate 1·10⁻³, entropy 0.01** | **99.3%** | 99.0, 99.5, 99.5 | 11 |
+
+**Selected** by the plan's rule (highest mean; `results/selected_config.json`):
+Q-learning α = 0.3 with ε from 1.0 to 0.01 over the first half; PPO learning
+rate 1·10⁻³ with entropy 0.01. Both differ from the sheet's defaults, which
+stay in the Part 3 grid. Eivind approved the selection. Both agents exceed 10%
+success, so the fallback (success = 1 brick) does not apply.
+
+**Observations, not yet analysed:**
+
+- Success varies strongly between seeds and between evaluation points of one
+  run. `q_B_alpha0.1_eps0.05_s101` scored 92% at 400,000 steps and 0% at 500,000.
+- The 0% runs did not lose the ball: all 200 episodes timed out. In that run
+  the greedy policy moves the paddle to the right wall and then prefers NOOP
+  (Q = 0.2926) to FIRE (0.2920). Waiting costs nothing in Setting B. In the last
+  10% of training, with ε = 0.05, the same agent succeeded in 49% of episodes.
+- PPO's most probable action failed to launch the ball at 101 of 216 evaluation
+  points, Q-learning's greedy action at 22 of 216.
+- Mean time per run: Q-learning 23 min (9.5 training), PPO 37 min (7 training).
+  Evaluation dominates, mostly through timeout episodes of 2,000 steps.
+
+**Reproducibility:** the 11 Q-learning runs finished by the first, stopped
+tuning job (commit `bdc8ab5`) have byte-identical training and evaluation logs
+to the same runs in the repeated job.
+
+**Changes before the main runs** (they do not alter training):
+
+- Every episode record now has `launch_bin` (paddle bin at the start) and
+  `launch_step` (the step at which the ball came into play). S1 needs both, and
+  training episodes cannot be replayed afterwards. The tuning logs lack them.
+- Evaluation episode logs are written as `eval_episodes.csv.gz`. The tuning
+  logs were compressed afterwards with identical content (60 MB to 2 MB).
+- A failed run no longer stops a group; it is reported and repeated on restart.
+
+Part 3 with the selected configurations has 85 runs: the grid values in the
+plan, the sheet's ε schedule, and the selected α = 0.3 and learning rate 1·10⁻³
+taken from the Part 2 runs (seeds 0–4).

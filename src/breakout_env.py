@@ -100,7 +100,9 @@ class BreakoutLife(gym.Env):
             self._patch()
             self.env.step(int(self.rng.choice((LEFT, RIGHT))))
         self.prev = None
-        return self._observe(), {"start_moves": self.start_moves}
+        obs = self._observe()
+        self.launch_bin, self.launch_step = self.bins[7], None  # paddle bin at the start; step of the launch
+        return obs, {"start_moves": self.start_moves}
 
     def step(self, action):
         self._patch()
@@ -114,10 +116,13 @@ class BreakoutLife(gym.Env):
         reward = float(success) - self.penalty
         self.ret += reward
         obs = self._observe()
+        if self.launch_step is None and self.f["in_play"]:
+            self.launch_step = self.t
         out = {}
         if success or failure or truncated:
             out["episode_end"] = {"outcome": "success" if success else "failure" if failure else "timeout",
-                                  "steps": self.t, "return": self.ret, "start_moves": self.start_moves}
+                                  "steps": self.t, "return": self.ret, "start_moves": self.start_moves,
+                                  "launch_bin": self.launch_bin, "launch_step": self.launch_step}
         return obs, reward, success or failure, truncated, out
 
     def frame(self):

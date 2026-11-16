@@ -39,7 +39,7 @@ def main():
         directory = Path(args.policy)
         cfg = json.loads((directory / "config.json").read_text())
         name, setting = cfg["run_id"] + (f"_step{args.step}" if args.step else ""), args.setting or cfg["setting"]
-        log = pd.read_csv(directory / "eval_episodes.csv", dtype={"actions": str})
+        log = pd.read_csv(directory / "eval_episodes.csv.gz", dtype={"actions": str})
         log = log[(log["step"] == (args.step or cfg["budget"])) & (log["mode"] == "greedy") & (log["seed"] == args.seed)]
         if setting == cfg["setting"] and len(log):
             logged = log.iloc[0]
