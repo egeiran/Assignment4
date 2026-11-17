@@ -1,0 +1,431 @@
+metric,agent,group,seed,value
+descent_error,q,A-trained at p = 0,0,21.295625
+descent_error,q,A-trained at p = 0,1,9.176666666666666
+descent_error,q,A-trained at p = 0,2,7.688666666666666
+descent_error,q,A-trained at p = 0,3,9.823666666666666
+descent_error,q,A-trained at p = 0,4,18.984
+descent_error,q,A-trained at p = 0,5,8.316666666666666
+descent_error,q,A-trained at p = 0,6,10.548
+descent_error,q,A-trained at p = 0,7,6.729
+descent_error,q,A-trained at p = 0,8,10.717333333333332
+descent_error,q,A-trained at p = 0,9,11.698666666666666
+descent_error,q,B-trained at p = 0,0,27.349593495934958
+descent_error,q,B-trained at p = 0,1,24.51358695652174
+descent_error,q,B-trained at p = 0,2,11.707666666666666
+descent_error,q,B-trained at p = 0,3,8.3
+descent_error,q,B-trained at p = 0,4,24.078703703703702
+descent_error,q,B-trained at p = 0,5,11.647666666666666
+descent_error,q,B-trained at p = 0,6,24.841641104294478
+descent_error,q,B-trained at p = 0,7,17.66906239790918
+descent_error,q,B-trained at p = 0,8,21.9659375
+descent_error,q,B-trained at p = 0,9,10.619666666666667
+descent_error,q,A-trained at p = 0.25,0,31.52469320562706
+descent_error,q,A-trained at p = 0.25,1,19.153093525179855
+descent_error,q,A-trained at p = 0.25,2,21.823795180722893
+descent_error,q,A-trained at p = 0.25,3,25.999415546464057
+descent_error,q,A-trained at p = 0.25,4,29.89442290486132
+descent_error,q,A-trained at p = 0.25,5,20.08403110047847
+descent_error,q,A-trained at p = 0.25,6,22.004403992953613
+descent_error,q,A-trained at p = 0.25,7,20.277465205803967
+descent_error,q,A-trained at p = 0.25,8,21.005776831863788
+descent_error,q,A-trained at p = 0.25,9,25.997609085475194
+descent_error,q,B-trained at p = 0.25,0,30.8423096841015
+descent_error,q,B-trained at p = 0.25,1,24.917652027027028
+descent_error,q,B-trained at p = 0.25,2,15.23735050597976
+descent_error,q,B-trained at p = 0.25,3,12.823710762331839
+descent_error,q,B-trained at p = 0.25,4,28.319750148721
+descent_error,q,B-trained at p = 0.25,5,14.601890135853514
+descent_error,q,B-trained at p = 0.25,6,25.818666666666665
+descent_error,q,B-trained at p = 0.25,7,23.805224304372516
+descent_error,q,B-trained at p = 0.25,8,24.719551754644648
+descent_error,q,B-trained at p = 0.25,9,17.542610250297972
+descent_error,ppo,A-trained at p = 0,0,10.561875
+descent_error,ppo,A-trained at p = 0,1,12.367
+descent_error,ppo,A-trained at p = 0,2,8.523333333333333
+descent_error,ppo,A-trained at p = 0,3,5.145666666666667
+descent_error,ppo,A-trained at p = 0,4,6.612666666666667
+descent_error,ppo,A-trained at p = 0,5,10.0475
+descent_error,ppo,A-trained at p = 0,6,12.830173775671406
+descent_error,ppo,A-trained at p = 0,7,9.852
+descent_error,ppo,A-trained at p = 0,8,6.566
+descent_error,ppo,A-trained at p = 0,9,8.903666666666666
+descent_error,ppo,B-trained at p = 0,0,8.281333333333333
+descent_error,ppo,B-trained at p = 0,1,4.708666666666667
+descent_error,ppo,B-trained at p = 0,2,10.374333333333333
+descent_error,ppo,B-trained at p = 0,3,5.710333333333334
+descent_error,ppo,B-trained at p = 0,4,5.085
+descent_error,ppo,B-trained at p = 0,5,5.847
+descent_error,ppo,B-trained at p = 0,6,61.244
+descent_error,ppo,B-trained at p = 0,7,5.822666666666667
+descent_error,ppo,B-trained at p = 0,8,5.458781362007168
+descent_error,ppo,B-trained at p = 0,9,5.857666666666667
+descent_error,ppo,A-trained at p = 0.25,0,11.405192532088682
+descent_error,ppo,A-trained at p = 0.25,1,16.347679324894514
+descent_error,ppo,A-trained at p = 0.25,2,10.15040650406504
+descent_error,ppo,A-trained at p = 0.25,3,8.239517345399697
+descent_error,ppo,A-trained at p = 0.25,4,8.034077892325316
+descent_error,ppo,A-trained at p = 0.25,5,11.21138686131387
+descent_error,ppo,A-trained at p = 0.25,6,29.985933182617433
+descent_error,ppo,A-trained at p = 0.25,7,11.172667989793025
+descent_error,ppo,A-trained at p = 0.25,8,11.880830574781823
+descent_error,ppo,A-trained at p = 0.25,9,8.675943104514532
+descent_error,ppo,B-trained at p = 0.25,0,8.953125
+descent_error,ppo,B-trained at p = 0.25,1,6.6776657500763825
+descent_error,ppo,B-trained at p = 0.25,2,9.306242274412856
+descent_error,ppo,B-trained at p = 0.25,3,7.0310864881502
+descent_error,ppo,B-trained at p = 0.25,4,6.470886831890116
+descent_error,ppo,B-trained at p = 0.25,5,7.372258263824529
+descent_error,ppo,B-trained at p = 0.25,6,46.037397540983605
+descent_error,ppo,B-trained at p = 0.25,7,6.4581929555895865
+descent_error,ppo,B-trained at p = 0.25,8,7.054211035818006
+descent_error,ppo,B-trained at p = 0.25,9,7.065709046454768
+requested_switch_rate,q,A-trained at p = 0,0,0.42253968253968255
+requested_switch_rate,q,A-trained at p = 0,1,0.3863768115942029
+requested_switch_rate,q,A-trained at p = 0,2,0.3542028985507246
+requested_switch_rate,q,A-trained at p = 0,3,0.3721014492753623
+requested_switch_rate,q,A-trained at p = 0,4,0.35508196721311475
+requested_switch_rate,q,A-trained at p = 0,5,0.41789855072463766
+requested_switch_rate,q,A-trained at p = 0,6,0.4329710144927536
+requested_switch_rate,q,A-trained at p = 0,7,0.4498550724637681
+requested_switch_rate,q,A-trained at p = 0,8,0.4798360655737705
+requested_switch_rate,q,A-trained at p = 0,9,0.49991803278688524
+requested_switch_rate,q,B-trained at p = 0,0,0.4648704498489906
+requested_switch_rate,q,B-trained at p = 0,1,0.29045893719806765
+requested_switch_rate,q,B-trained at p = 0,2,0.40840579710144925
+requested_switch_rate,q,B-trained at p = 0,3,0.49019607843137253
+requested_switch_rate,q,B-trained at p = 0,4,0.28784219001610306
+requested_switch_rate,q,B-trained at p = 0,5,0.3308695652173913
+requested_switch_rate,q,B-trained at p = 0,6,0.44756061933976043
+requested_switch_rate,q,B-trained at p = 0,7,0.328828480963781
+requested_switch_rate,q,B-trained at p = 0,8,0.36388735505245723
+requested_switch_rate,q,B-trained at p = 0,9,0.41492753623188405
+requested_switch_rate,q,A-trained at p = 0.25,0,0.4653113319354545
+requested_switch_rate,q,A-trained at p = 0.25,1,0.4457831325301205
+requested_switch_rate,q,A-trained at p = 0.25,2,0.42714285714285716
+requested_switch_rate,q,A-trained at p = 0.25,3,0.40769299739980275
+requested_switch_rate,q,A-trained at p = 0.25,4,0.39778227580744524
+requested_switch_rate,q,A-trained at p = 0.25,5,0.4418843683083512
+requested_switch_rate,q,A-trained at p = 0.25,6,0.4823004982081986
+requested_switch_rate,q,A-trained at p = 0.25,7,0.4674080410607357
+requested_switch_rate,q,A-trained at p = 0.25,8,0.4628655222979384
+requested_switch_rate,q,A-trained at p = 0.25,9,0.4653825670157998
+requested_switch_rate,q,B-trained at p = 0.25,0,0.4200902398480171
+requested_switch_rate,q,B-trained at p = 0.25,1,0.3290801531144879
+requested_switch_rate,q,B-trained at p = 0.25,2,0.3645577166703927
+requested_switch_rate,q,B-trained at p = 0.25,3,0.41823410539406186
+requested_switch_rate,q,B-trained at p = 0.25,4,0.32930189834660134
+requested_switch_rate,q,B-trained at p = 0.25,5,0.36444344971650255
+requested_switch_rate,q,B-trained at p = 0.25,6,0.3835288842388461
+requested_switch_rate,q,B-trained at p = 0.25,7,0.3087325234930094
+requested_switch_rate,q,B-trained at p = 0.25,8,0.3487956487956488
+requested_switch_rate,q,B-trained at p = 0.25,9,0.43307959500406473
+requested_switch_rate,ppo,A-trained at p = 0,0,0.42138888888888887
+requested_switch_rate,ppo,A-trained at p = 0,1,0.33753968253968253
+requested_switch_rate,ppo,A-trained at p = 0,2,0.4553968253968254
+requested_switch_rate,ppo,A-trained at p = 0,3,0.3116723884256989
+requested_switch_rate,ppo,A-trained at p = 0,4,0.31491803278688524
+requested_switch_rate,ppo,A-trained at p = 0,5,0.3183802816901408
+requested_switch_rate,ppo,A-trained at p = 0,6,0.32765357760553454
+requested_switch_rate,ppo,A-trained at p = 0,7,0.35388888888888886
+requested_switch_rate,ppo,A-trained at p = 0,8,0.26819672131147543
+requested_switch_rate,ppo,A-trained at p = 0,9,0.49926229508196723
+requested_switch_rate,ppo,B-trained at p = 0,0,0.3708196721311475
+requested_switch_rate,ppo,B-trained at p = 0,1,0.4167582216362704
+requested_switch_rate,ppo,B-trained at p = 0,2,0.4860869565217391
+requested_switch_rate,ppo,B-trained at p = 0,3,0.46253623188405796
+requested_switch_rate,ppo,B-trained at p = 0,4,0.34855072463768116
+requested_switch_rate,ppo,B-trained at p = 0,5,0.30950819672131147
+requested_switch_rate,ppo,B-trained at p = 0,6,0.11803921568627451
+requested_switch_rate,ppo,B-trained at p = 0,7,0.5130434782608696
+requested_switch_rate,ppo,B-trained at p = 0,8,0.3450241469400681
+requested_switch_rate,ppo,B-trained at p = 0,9,0.4493478260869565
+requested_switch_rate,ppo,A-trained at p = 0.25,0,0.3840919401179495
+requested_switch_rate,ppo,A-trained at p = 0.25,1,0.3155517483062067
+requested_switch_rate,ppo,A-trained at p = 0.25,2,0.45996695208051674
+requested_switch_rate,ppo,A-trained at p = 0.25,3,0.3073757763975155
+requested_switch_rate,ppo,A-trained at p = 0.25,4,0.3241043644777787
+requested_switch_rate,ppo,A-trained at p = 0.25,5,0.3217331182300069
+requested_switch_rate,ppo,A-trained at p = 0.25,6,0.3074018126888218
+requested_switch_rate,ppo,A-trained at p = 0.25,7,0.3257199602780536
+requested_switch_rate,ppo,A-trained at p = 0.25,8,0.2570872914952502
+requested_switch_rate,ppo,A-trained at p = 0.25,9,0.43020662999851345
+requested_switch_rate,ppo,B-trained at p = 0.25,0,0.3711225172952466
+requested_switch_rate,ppo,B-trained at p = 0.25,1,0.39898193289360484
+requested_switch_rate,ppo,B-trained at p = 0.25,2,0.4059104737070839
+requested_switch_rate,ppo,B-trained at p = 0.25,3,0.4947014543594241
+requested_switch_rate,ppo,B-trained at p = 0.25,4,0.31403896938120046
+requested_switch_rate,ppo,B-trained at p = 0.25,5,0.3057857465722465
+requested_switch_rate,ppo,B-trained at p = 0.25,6,0.11125243788688205
+requested_switch_rate,ppo,B-trained at p = 0.25,7,0.4580818730458809
+requested_switch_rate,ppo,B-trained at p = 0.25,8,0.31104491651642235
+requested_switch_rate,ppo,B-trained at p = 0.25,9,0.4271404547780946
+observed_switch_rate,q,A-trained at p = 0,0,0.33814516129032257
+observed_switch_rate,q,A-trained at p = 0,1,0.3111764705882353
+observed_switch_rate,q,A-trained at p = 0,2,0.2994117647058824
+observed_switch_rate,q,A-trained at p = 0,3,0.3396323529411765
+observed_switch_rate,q,A-trained at p = 0,4,0.24358333333333335
+observed_switch_rate,q,A-trained at p = 0,5,0.29169117647058823
+observed_switch_rate,q,A-trained at p = 0,6,0.29360294117647057
+observed_switch_rate,q,A-trained at p = 0,7,0.41198529411764706
+observed_switch_rate,q,A-trained at p = 0,8,0.33808333333333335
+observed_switch_rate,q,A-trained at p = 0,9,0.34158333333333335
+observed_switch_rate,q,B-trained at p = 0,0,0.33524471006299467
+observed_switch_rate,q,B-trained at p = 0,1,0.21279853031230864
+observed_switch_rate,q,B-trained at p = 0,2,0.245
+observed_switch_rate,q,B-trained at p = 0,3,0.3839
+observed_switch_rate,q,B-trained at p = 0,4,0.2201797385620915
+observed_switch_rate,q,B-trained at p = 0,5,0.2741176470588235
+observed_switch_rate,q,B-trained at p = 0,6,0.3191173560261231
+observed_switch_rate,q,B-trained at p = 0,7,0.28182602557063297
+observed_switch_rate,q,B-trained at p = 0,8,0.265448425102188
+observed_switch_rate,q,B-trained at p = 0,9,0.33742647058823527
+observed_switch_rate,q,A-trained at p = 0.25,0,0.3286284706100845
+observed_switch_rate,q,A-trained at p = 0.25,1,0.31528063736460477
+observed_switch_rate,q,A-trained at p = 0.25,2,0.31264957264957266
+observed_switch_rate,q,A-trained at p = 0.25,3,0.3044827901031681
+observed_switch_rate,q,A-trained at p = 0.25,4,0.2613096837767625
+observed_switch_rate,q,A-trained at p = 0.25,5,0.29333333333333333
+observed_switch_rate,q,A-trained at p = 0.25,6,0.3244373276398897
+observed_switch_rate,q,A-trained at p = 0.25,7,0.3657963446475196
+observed_switch_rate,q,A-trained at p = 0.25,8,0.32300535416483805
+observed_switch_rate,q,A-trained at p = 0.25,9,0.3285740104825592
+observed_switch_rate,q,B-trained at p = 0.25,0,0.27587870988498353
+observed_switch_rate,q,B-trained at p = 0.25,1,0.1874631789796159
+observed_switch_rate,q,B-trained at p = 0.25,2,0.21953249111127923
+observed_switch_rate,q,B-trained at p = 0.25,3,0.30317385125532925
+observed_switch_rate,q,B-trained at p = 0.25,4,0.21019900497512436
+observed_switch_rate,q,B-trained at p = 0.25,5,0.2484095728567101
+observed_switch_rate,q,B-trained at p = 0.25,6,0.2461118276306805
+observed_switch_rate,q,B-trained at p = 0.25,7,0.22965319264489098
+observed_switch_rate,q,B-trained at p = 0.25,8,0.26140489344909235
+observed_switch_rate,q,B-trained at p = 0.25,9,0.2739479408896557
+observed_switch_rate,ppo,A-trained at p = 0,0,0.35640845070422533
+observed_switch_rate,ppo,A-trained at p = 0,1,0.3692741935483871
+observed_switch_rate,ppo,A-trained at p = 0,2,0.4175
+observed_switch_rate,ppo,A-trained at p = 0,3,0.2618414492271896
+observed_switch_rate,ppo,A-trained at p = 0,4,0.26808333333333334
+observed_switch_rate,ppo,A-trained at p = 0,5,0.29692857142857143
+observed_switch_rate,ppo,A-trained at p = 0,6,0.30938939718382974
+observed_switch_rate,ppo,A-trained at p = 0,7,0.3757258064516129
+observed_switch_rate,ppo,A-trained at p = 0,8,0.2539166666666667
+observed_switch_rate,ppo,A-trained at p = 0,9,0.41658333333333336
+observed_switch_rate,ppo,B-trained at p = 0,0,0.3169166666666667
+observed_switch_rate,ppo,B-trained at p = 0,1,0.34832379394930496
+observed_switch_rate,ppo,B-trained at p = 0,2,0.35963235294117646
+observed_switch_rate,ppo,B-trained at p = 0,3,0.3865441176470588
+observed_switch_rate,ppo,B-trained at p = 0,4,0.30713235294117647
+observed_switch_rate,ppo,B-trained at p = 0,5,0.23775
+observed_switch_rate,ppo,B-trained at p = 0,6,0.0889
+observed_switch_rate,ppo,B-trained at p = 0,7,0.4411029411764706
+observed_switch_rate,ppo,B-trained at p = 0,8,0.2765769385295299
+observed_switch_rate,ppo,B-trained at p = 0,9,0.4159558823529412
+observed_switch_rate,ppo,A-trained at p = 0.25,0,0.3334101028711807
+observed_switch_rate,ppo,A-trained at p = 0.25,1,0.3084407879123487
+observed_switch_rate,ppo,A-trained at p = 0.25,2,0.3894311422906817
+observed_switch_rate,ppo,A-trained at p = 0.25,3,0.27294952681388013
+observed_switch_rate,ppo,A-trained at p = 0.25,4,0.2657098840509203
+observed_switch_rate,ppo,A-trained at p = 0.25,5,0.3042833736443786
+observed_switch_rate,ppo,A-trained at p = 0.25,6,0.2872994195971321
+observed_switch_rate,ppo,A-trained at p = 0.25,7,0.3308509813047863
+observed_switch_rate,ppo,A-trained at p = 0.25,8,0.2137595869086491
+observed_switch_rate,ppo,A-trained at p = 0.25,9,0.369020673004376
+observed_switch_rate,ppo,B-trained at p = 0.25,0,0.3209242618741977
+observed_switch_rate,ppo,B-trained at p = 0.25,1,0.3439045679371545
+observed_switch_rate,ppo,B-trained at p = 0.25,2,0.3306629428193444
+observed_switch_rate,ppo,B-trained at p = 0.25,3,0.3935325966031299
+observed_switch_rate,ppo,B-trained at p = 0.25,4,0.2812975164723771
+observed_switch_rate,ppo,B-trained at p = 0.25,5,0.2521034113507725
+observed_switch_rate,ppo,B-trained at p = 0.25,6,0.10169930130251013
+observed_switch_rate,ppo,B-trained at p = 0.25,7,0.37452962443739396
+observed_switch_rate,ppo,B-trained at p = 0.25,8,0.24803118288123457
+observed_switch_rate,ppo,B-trained at p = 0.25,9,0.3730058618386881
+category_disagreement_A_vs_B,q,across training settings,0,0.6267876486640522
+category_disagreement_A_vs_B,q,across training settings,1,0.6626028994915888
+category_disagreement_A_vs_B,q,across training settings,2,0.6120486293278177
+category_disagreement_A_vs_B,q,across training settings,3,0.547249785802984
+category_disagreement_A_vs_B,q,across training settings,4,0.6727371547842366
+category_disagreement_A_vs_B,q,across training settings,5,0.5449474037811907
+category_disagreement_A_vs_B,q,across training settings,6,0.6162684049021865
+category_disagreement_A_vs_B,q,across training settings,7,0.624096503776284
+category_disagreement_A_vs_B,q,across training settings,8,0.5875905383422094
+category_disagreement_A_vs_B,q,across training settings,9,0.5918518322809057
+category_disagreement_A_vs_B,q,within a training setting,0,0.5145050067372983
+category_disagreement_A_vs_B,q,within a training setting,1,0.4326704234495722
+category_disagreement_A_vs_B,q,within a training setting,2,0.4339423951566941
+category_disagreement_A_vs_B,q,within a training setting,3,0.5027798432115587
+category_disagreement_A_vs_B,q,within a training setting,4,0.501526743488222
+category_disagreement_A_vs_B,q,within a training setting,5,0.48716516382769126
+category_disagreement_A_vs_B,q,within a training setting,6,0.47490781035920937
+category_disagreement_A_vs_B,q,within a training setting,7,0.48400976813880725
+category_disagreement_A_vs_B,q,within a training setting,8,0.4775630984777858
+category_disagreement_A_vs_B,q,within a training setting,9,0.5053162378322884
+category_disagreement_A_vs_B,ppo,across training settings,0,0.556904692707488
+category_disagreement_A_vs_B,ppo,across training settings,1,0.5987174599819584
+category_disagreement_A_vs_B,ppo,across training settings,2,0.36946060095945166
+category_disagreement_A_vs_B,ppo,across training settings,3,0.29692046968593244
+category_disagreement_A_vs_B,ppo,across training settings,4,0.35573311995410334
+category_disagreement_A_vs_B,ppo,across training settings,5,0.3866907221553315
+category_disagreement_A_vs_B,ppo,across training settings,6,0.7074918001230454
+category_disagreement_A_vs_B,ppo,across training settings,7,0.3920088471859985
+category_disagreement_A_vs_B,ppo,across training settings,8,0.6060171433100705
+category_disagreement_A_vs_B,ppo,across training settings,9,0.2311251854172407
+category_disagreement_A_vs_B,ppo,within a training setting,0,0.3488127635000736
+category_disagreement_A_vs_B,ppo,within a training setting,1,0.35677674065742443
+category_disagreement_A_vs_B,ppo,within a training setting,2,0.4744209131775514
+category_disagreement_A_vs_B,ppo,within a training setting,3,0.4545053086890388
+category_disagreement_A_vs_B,ppo,within a training setting,4,0.4825339790068053
+category_disagreement_A_vs_B,ppo,within a training setting,5,0.498473256511778
+category_disagreement_A_vs_B,ppo,within a training setting,6,0.6523063451383883
+category_disagreement_A_vs_B,ppo,within a training setting,7,0.39569265842086787
+category_disagreement_A_vs_B,ppo,within a training setting,8,0.4153402807396308
+category_disagreement_A_vs_B,ppo,within a training setting,9,0.2907115870206044
+launch_step_median,q,rare bins,0,5.0
+launch_step_median,q,rare bins,1,25.0
+launch_step_median,q,rare bins,2,5.0
+launch_step_median,q,rare bins,3,4.0
+launch_step_median,q,rare bins,4,5.0
+launch_step_median,q,rare bins,5,5.0
+launch_step_median,q,rare bins,6,4.0
+launch_step_median,q,rare bins,7,5.0
+launch_step_median,q,rare bins,8,5.0
+launch_step_median,q,rare bins,9,5.0
+launch_step_median,q,common bins,0,1.0
+launch_step_median,q,common bins,1,1.0
+launch_step_median,q,common bins,2,1.0
+launch_step_median,q,common bins,3,8.0
+launch_step_median,q,common bins,4,5.0
+launch_step_median,q,common bins,5,1.0
+launch_step_median,q,common bins,6,4.0
+launch_step_median,q,common bins,7,1.0
+launch_step_median,q,common bins,8,1.0
+launch_step_median,q,common bins,9,1.0
+launch_step_median,ppo,rare bins,0,1.0
+launch_step_median,ppo,rare bins,1,1.0
+launch_step_median,ppo,rare bins,2,1.0
+launch_step_median,ppo,rare bins,3,1.0
+launch_step_median,ppo,rare bins,4,1.0
+launch_step_median,ppo,rare bins,5,1.0
+launch_step_median,ppo,rare bins,6,1.0
+launch_step_median,ppo,rare bins,7,1.0
+launch_step_median,ppo,rare bins,8,1.0
+launch_step_median,ppo,rare bins,9,1.0
+launch_step_median,ppo,common bins,0,1.0
+launch_step_median,ppo,common bins,1,1.0
+launch_step_median,ppo,common bins,2,1.0
+launch_step_median,ppo,common bins,3,1.0
+launch_step_median,ppo,common bins,4,1.0
+launch_step_median,ppo,common bins,5,1.0
+launch_step_median,ppo,common bins,6,1.0
+launch_step_median,ppo,common bins,7,1.0
+launch_step_median,ppo,common bins,8,1.0
+launch_step_median,ppo,common bins,9,1.0
+S2_share_stationary,q,shared S2 observations,0,0.3813537002897024
+S2_share_stationary,q,shared S2 observations,1,0.33175313844263016
+S2_share_stationary,q,shared S2 observations,2,0.5594767799139672
+S2_share_stationary,q,shared S2 observations,3,0.42586252304450883
+S2_share_stationary,q,shared S2 observations,4,0.4111140373979457
+S2_share_stationary,q,shared S2 observations,5,0.4151523132297428
+S2_share_stationary,q,shared S2 observations,6,0.544640505662365
+S2_share_stationary,q,shared S2 observations,7,0.4351681151786498
+S2_share_stationary,q,shared S2 observations,8,0.5011851461680273
+S2_share_stationary,q,shared S2 observations,9,0.30032481783864456
+S2_share_towards_ball,q,shared S2 observations,0,0.26749187955403386
+S2_share_towards_ball,q,shared S2 observations,1,0.3380739180054429
+S2_share_towards_ball,q,shared S2 observations,2,0.2703889035203231
+S2_share_towards_ball,q,shared S2 observations,3,0.4225265560530243
+S2_share_towards_ball,q,shared S2 observations,4,0.3493108594504433
+S2_share_towards_ball,q,shared S2 observations,5,0.4150645246247037
+S2_share_towards_ball,q,shared S2 observations,6,0.3761741725923975
+S2_share_towards_ball,q,shared S2 observations,7,0.315600035115442
+S2_share_towards_ball,q,shared S2 observations,8,0.31419541743481694
+S2_share_towards_ball,q,shared S2 observations,9,0.3709946448950926
+S2_share_stationary,ppo,shared S2 observations,0,0.46396277763146343
+S2_share_stationary,ppo,shared S2 observations,1,0.7695549117724519
+S2_share_stationary,ppo,shared S2 observations,2,0.528575190940216
+S2_share_stationary,ppo,shared S2 observations,3,0.6239136160126416
+S2_share_stationary,ppo,shared S2 observations,4,0.6345360372223685
+S2_share_stationary,ppo,shared S2 observations,5,0.5230445088227548
+S2_share_stationary,ppo,shared S2 observations,6,0.48318848213501886
+S2_share_stationary,ppo,shared S2 observations,7,0.7405846721095601
+S2_share_stationary,ppo,shared S2 observations,8,0.83083135808972
+S2_share_stationary,ppo,shared S2 observations,9,0.496707927311035
+S2_share_towards_ball,ppo,shared S2 observations,0,0.24466684224387675
+S2_share_towards_ball,ppo,shared S2 observations,1,0.30366078483012904
+S2_share_towards_ball,ppo,shared S2 observations,2,0.3256957246949346
+S2_share_towards_ball,ppo,shared S2 observations,3,0.3772276358528663
+S2_share_towards_ball,ppo,shared S2 observations,4,0.4163813537002897
+S2_share_towards_ball,ppo,shared S2 observations,5,0.22017382143797734
+S2_share_towards_ball,ppo,shared S2 observations,6,0.3097181985778246
+S2_share_towards_ball,ppo,shared S2 observations,7,0.26494601000790097
+S2_share_towards_ball,ppo,shared S2 observations,8,0.24431568782372048
+S2_share_towards_ball,ppo,shared S2 observations,9,0.2680186111842683
+S2_contact_offset_px,q,last falling step before a bounce,0,4.560483870967742
+S2_contact_offset_px,q,last falling step before a bounce,1,3.796954314720812
+S2_contact_offset_px,q,last falling step before a bounce,2,2.4550898203592815
+S2_contact_offset_px,q,last falling step before a bounce,3,2.3451957295373664
+S2_contact_offset_px,q,last falling step before a bounce,4,3.287037037037037
+S2_contact_offset_px,q,last falling step before a bounce,5,3.3333333333333335
+S2_contact_offset_px,q,last falling step before a bounce,6,1.6875
+S2_contact_offset_px,q,last falling step before a bounce,7,2.7864406779661017
+S2_contact_offset_px,q,last falling step before a bounce,8,1.3671641791044775
+S2_contact_offset_px,q,last falling step before a bounce,9,3.5963855421686746
+S2_contact_offset_px,ppo,last falling step before a bounce,0,2.6184971098265897
+S2_contact_offset_px,ppo,last falling step before a bounce,1,3.313888888888889
+S2_contact_offset_px,ppo,last falling step before a bounce,2,3.2643051771117166
+S2_contact_offset_px,ppo,last falling step before a bounce,3,3.225988700564972
+S2_contact_offset_px,ppo,last falling step before a bounce,4,3.5768115942028986
+S2_contact_offset_px,ppo,last falling step before a bounce,5,2.9293478260869565
+S2_contact_offset_px,ppo,last falling step before a bounce,6,4.684210526315789
+S2_contact_offset_px,ppo,last falling step before a bounce,7,2.9393939393939394
+S2_contact_offset_px,ppo,last falling step before a bounce,8,3.5432835820895523
+S2_contact_offset_px,ppo,last falling step before a bounce,9,2.910919540229885
+S3_switch_rate,q,own trajectories,0,0.3074433656957929
+S3_switch_rate,q,own trajectories,1,0.1527777777777778
+S3_switch_rate,q,own trajectories,2,0.03395585738539898
+S3_switch_rate,q,own trajectories,3,0.2516778523489933
+S3_switch_rate,q,own trajectories,4,0.2680995475113122
+S3_switch_rate,q,own trajectories,5,0.21811680572109654
+S3_switch_rate,q,own trajectories,6,0.23850931677018633
+S3_switch_rate,q,own trajectories,7,0.11195928753180662
+S3_switch_rate,q,own trajectories,8,0.028295376121463076
+S3_switch_rate,q,own trajectories,9,0.3993576017130621
+S3_switch_rate,ppo,own trajectories,0,0.3481717011128776
+S3_switch_rate,ppo,own trajectories,1,0.38552188552188554
+S3_switch_rate,ppo,own trajectories,2,0.4400406504065041
+S3_switch_rate,ppo,own trajectories,3,0.5122199592668024
+S3_switch_rate,ppo,own trajectories,4,0.15851272015655576
+S3_switch_rate,ppo,own trajectories,5,0.3201754385964912
+S3_switch_rate,ppo,own trajectories,6,0.0539053905390539
+S3_switch_rate,ppo,own trajectories,7,0.45977011494252873
+S3_switch_rate,ppo,own trajectories,8,0.30925925925925923
+S3_switch_rate,ppo,own trajectories,9,0.49317738791423
+S3_checkpoint_change_rate,q,shared S3 observations,0,0.39812276634173216
+S3_checkpoint_change_rate,q,shared S3 observations,1,0.4122932865359243
+S3_checkpoint_change_rate,q,shared S3 observations,2,0.35714834693276293
+S3_checkpoint_change_rate,q,shared S3 observations,3,0.35251770914727093
+S3_checkpoint_change_rate,q,shared S3 observations,4,0.3453860145772222
+S3_checkpoint_change_rate,q,shared S3 observations,5,0.339881127749241
+S3_checkpoint_change_rate,q,shared S3 observations,6,0.33698938091639236
+S3_checkpoint_change_rate,q,shared S3 observations,7,0.3465997156288829
+S3_checkpoint_change_rate,q,shared S3 observations,8,0.28383952246147537
+S3_checkpoint_change_rate,q,shared S3 observations,9,0.3437143735509242
+S3_checkpoint_change_rate,ppo,shared S3 observations,0,0.2412190810457684
+S3_checkpoint_change_rate,ppo,shared S3 observations,1,0.3115913253999769
+S3_checkpoint_change_rate,ppo,shared S3 observations,2,0.231442222706137
+S3_checkpoint_change_rate,ppo,shared S3 observations,3,0.27036391817285155
+S3_checkpoint_change_rate,ppo,shared S3 observations,4,0.24746371706354794
+S3_checkpoint_change_rate,ppo,shared S3 observations,5,0.17525971281079072
+S3_checkpoint_change_rate,ppo,shared S3 observations,6,0.3403582819885483
+S3_checkpoint_change_rate,ppo,shared S3 observations,7,0.2264208948723532
+S3_checkpoint_change_rate,ppo,shared S3 observations,8,0.12663481368568025
+S3_checkpoint_change_rate,ppo,shared S3 observations,9,0.29917891042309813
+S3_share_towards_ball,ppo,"shared S3 observations, ball not above the paddle",0,0.7725383062121393
+S3_share_towards_ball,ppo,"shared S3 observations, ball not above the paddle",1,0.7526626281822861
+S3_share_towards_ball,ppo,"shared S3 observations, ball not above the paddle",2,0.6308350160351586
+S3_share_towards_ball,ppo,"shared S3 observations, ball not above the paddle",3,0.8592073484578533
+S3_share_towards_ball,ppo,"shared S3 observations, ball not above the paddle",4,0.13691253909807183
+S3_share_towards_ball,ppo,"shared S3 observations, ball not above the paddle",5,0.5954388882290058
+S3_share_towards_ball,ppo,"shared S3 observations, ball not above the paddle",6,0.40420477491388523
+S3_share_towards_ball,ppo,"shared S3 observations, ball not above the paddle",7,0.7237201567882171
+S3_share_towards_ball,ppo,"shared S3 observations, ball not above the paddle",8,0.8000950231618957
+S3_share_towards_ball,ppo,"shared S3 observations, ball not above the paddle",9,0.7516728035792057

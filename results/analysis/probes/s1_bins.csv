@@ -1,0 +1,9 @@
+launch_bin,share_of_training_starts,group,q_seeds_fire_favoured,q_seeds_all_tied,ppo_mean_p_fire,ppo_min_p_fire,ppo_seeds_p_fire_above_0.9,ppo_seeds_fire_most_probable,q_median_launch_step,ppo_median_launch_step
+0,0.117,rare,1,0,0.5166,0.344,0,9,205.8,200.9
+1,0.0754,rare,0,0,0.6704,0.4781,1,10,5.7,1.0
+2,0.0581,rare,0,0,0.7659,0.5544,2,10,204.4,1.0
+3,0.0883,rare,0,0,0.8215,0.6084,2,10,104.9,1.0
+4,0.1145,rare,0,0,0.8544,0.6472,4,10,4.0,1.0
+5,0.1085,rare,1,0,0.8743,0.6759,6,10,3.1,1.0
+6,0.1128,rare,1,0,0.8867,0.6973,7,10,202.6,1.0
+7,0.3256,common,7,0,0.8942,0.7132,8,10,2.4,1.0

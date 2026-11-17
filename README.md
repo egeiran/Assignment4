@@ -44,6 +44,8 @@ uv run python -B src/run_all.py main        # Settings A, B, C x 2 agents x 10 s
 uv run python -B src/run_all.py transfer    # final B agents on the gap layout (D) and 12 px paddle (P7)
 uv run python -B src/run_all.py mechanisms  # Part 3, one factor at a time, 5 seeds
 uv run python -B src/analyze.py main        # tables and learning curves for one group
+uv run python -B src/probes.py              # P3b-c and S1-S3: 80 evaluations with step logs, no training
+uv run python -B src/verdicts.py            # every prediction under the sheet's decision rule
 ```
 
 `run_all.py` uses 8 processes by default (`--workers N`). `run_all.py smoke` is a

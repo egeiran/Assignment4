@@ -1,0 +1,27 @@
+{
+  "experiment": "probes",
+  "run_id": "q_A_selected_s6_on_A",
+  "agent": "q",
+  "setting": "A",
+  "tag": "A_on_A",
+  "seed": 6,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "all",
+  "hp": {
+    "alpha": 0.3,
+    "gamma": 0.99,
+    "epsilon": {
+      "kind": "linear",
+      "start": 1.0,
+      "end": 0.01,
+      "fraction": 0.5
+    }
+  },
+  "trained_in": "A",
+  "source_run": "results/runs/main/q_A_selected_s6"
+}
