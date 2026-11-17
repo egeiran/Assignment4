@@ -46,6 +46,7 @@ uv run python -B src/run_all.py mechanisms  # Part 3, one factor at a time, 5 se
 uv run python -B src/analyze.py main        # tables and learning curves for one group
 uv run python -B src/probes.py              # P3b-c and S1-S3: 80 evaluations with step logs, no training
 uv run python -B src/verdicts.py            # every prediction under the sheet's decision rule
+uv run python -B src/diagnostic.py          # diagnostic experiment: forced actions at the paddle edge (S2)
 ```
 
 `run_all.py` uses 8 processes by default (`--workers N`). `run_all.py smoke` is a

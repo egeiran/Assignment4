@@ -476,3 +476,44 @@ variation between seeds.
 - S3: PPO switches more between consecutive steps than Q-learning (0.35
   against 0.20), although its preference is more stable across checkpoints
   and seeds.
+
+## Diagnostic experiment: the action at the paddle edge (2026-11-17, written before the run)
+
+**The case that does not fit.** S2 predicted that Q-learning stays still when
+the ball falls at the paddle edge and that PPO moves towards the ball. The
+probes show the reverse: PPO favours STATIONARY in 61% of the shared S2 visits
+and Q-learning in 43%.
+
+**Question.** Does the requested action in an S2 state change whether the ball
+is caught?
+
+**Two explanations.**
+
+1. *The action matters, and staying still is the better one.* PPO has learned
+   an edge catch that Q-learning has not, and Q-learning's moves at the edge
+   cost it catches. Then the catch rate after STATIONARY exceeds the catch rate
+   after TOWARDS by more than the pooled between-seed SD.
+2. *The action does not matter.* With the ball at y ≥ 165 and 4–8 px from the
+   paddle centre, the catch is already decided or can still be corrected, and
+   the favoured category is a choice between near-equal values. Then the two
+   catch rates differ by less than the pooled SD.
+
+If TOWARDS exceeds STATIONARY by more than the pooled SD, neither holds: the
+sheet's argument for centring was right about the action, and PPO's preference
+is the worse one.
+
+**Method** (`src/diagnostic.py`, no training). The final B agents of both
+algorithms play the 200 evaluation episodes in Setting B. At the first S2 step
+of an episode the emulator state is saved. From it, each of STATIONARY (NOOP),
+TOWARDS the ball and AWAY from it is requested for one step, 20 times with new
+sticky noise, and the agent's own primary policy finishes the episode. A replay
+counts as caught if the ball rises again before it is lost.
+
+**Decision rule.** Per algorithm, the catch rate is computed per trained agent
+and STATIONARY is compared with TOWARDS across the 10 seeds. Episode success is
+reported as a second outcome and AWAY as the third category. Nothing else
+decides between the explanations.
+
+**Limits known in advance.** Only one step is forced, so a correction by the
+agent in the following steps is part of the outcome. The states come from each
+agent's own episodes, so the two algorithms are probed in different states.

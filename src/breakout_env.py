@@ -125,6 +125,21 @@ class BreakoutLife(gym.Env):
                                   "launch_bin": self.launch_bin, "launch_step": self.launch_step}
         return obs, reward, success or failure, truncated, out
 
+    _EPISODE = ("lives", "t", "bricks", "ret", "start_moves", "prev", "ram", "f", "bins", "cell",
+                "launch_bin", "launch_step")
+
+    def snapshot(self):
+        """Emulator and episode state for replays from this step. The sticky-action noise is not
+        part of it, so every replay draws new noise."""
+        return self.ale.cloneState(), {name: getattr(self, name) for name in self._EPISODE}
+
+    def restore(self, snapshot):
+        state, episode = snapshot
+        self.ale.restoreState(state)
+        for name, value in episode.items():
+            setattr(self, name, value)
+        return obs_vector(self.bins)
+
     def frame(self):
         return self.ale.getScreenRGB()
 
