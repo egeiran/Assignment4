@@ -427,3 +427,52 @@ trained agents per cell, 200 episodes each):
 - In Part 3, PPO with γ = 0.9 (10.5%) and with learning rate 3·10⁻⁵ (0.0%)
   scores far higher with sampled actions (52.1% and 29.2%): the most probable
   action often does not launch the ball.
+
+## Verdicts and probes (2026-11-17)
+
+`src/verdicts.py` applies the sheet's decision rule to the finished runs and
+writes `results/analysis/verdicts/verdicts.md`. The dated verdicts are in
+`predictions/annotations.md`.
+
+**Probes** (`src/probes.py`, no training): the final A and B agents of both
+algorithms played the 200 evaluation episodes at p = 0 and at p = 0.25 with
+every step logged (80 evaluations, `results/runs/probes/`). In the 40
+evaluations where the setting equals the training setting, all trajectories
+are identical to the final evaluation in `main`; the script asserts this.
+The step logs give P3b–c and the S1–S3 probes.
+
+**Decisions by Eivind (2026-11-17):**
+
+- Pooled SD of two groups: √((SD₁² + SD₂²) / 2).
+- An inconclusive comparison is reported with its direction (weak evidence
+  for, weak evidence against, no measurable difference), not as "no effect".
+- P4c is classified as inconclusive, as the sheet predicted, and the weakness
+  of that test is stated.
+- P2 in A is classified as supported under the sheet's threshold, with the
+  note that it rests on one PPO seed.
+- S1: a "common" launch bin has at least 1/8 of the starts, which gives the
+  right wall only. This definition was written into the script before the
+  probe was run and is kept, although the four-bin alternative would change
+  one verdict from inconclusive to supported. The alternative is reported as a
+  sensitivity check.
+
+**Definitions fixed in `probes.py` before it was run:** shared observations
+are the cells visited by the final B agents of both algorithms in Setting B,
+weighted by pooled visits; a launch that never happens counts as 2,000 steps
+and the median is used; checkpoint changes are averaged over all 11
+transitions. Two rows marked "sensitivity check" were added afterwards and
+decide nothing.
+
+**Result:** of 34 components, 7 are supported, 7 contradicted and 20
+inconclusive. The inconclusive ones have differences smaller than the
+variation between seeds.
+
+**Cases that do not fit the predictions:**
+
+- S2 is reversed: at the paddle edge PPO favours STATIONARY (61% of visits)
+  and Q-learning moves more often.
+- S1: every Q-learning agent has one launch position and drives the paddle
+  there before FIRE; seven of ten use the right wall.
+- S3: PPO switches more between consecutive steps than Q-learning (0.35
+  against 0.20), although its preference is more stable across checkpoints
+  and seeds.
