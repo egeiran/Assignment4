@@ -1,0 +1,14 @@
+{
+  "git_commit": "6f71d3095816b2e527fe3fdc81e1a7c59b4eb791",
+  "git_dirty": false,
+  "python": "3.12.14",
+  "platform": "macOS-26.4.1-arm64-arm-64bit",
+  "cpu": "Apple M4",
+  "packages": {
+    "gymnasium": "1.4.0",
+    "ale-py": "0.12.1",
+    "numpy": "2.5.4",
+    "torch": "2.15.0",
+    "stable-baselines3": "2.9.2"
+  }
+}

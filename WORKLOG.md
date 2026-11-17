@@ -517,3 +517,29 @@ decides between the explanations.
 **Limits known in advance.** Only one step is forced, so a correction by the
 agent in the following steps is part of the outcome. The states come from each
 agent's own episodes, so the two algorithms are probed in different states.
+
+**Result** (run on commit `6f71d30`, 20 agents, 3,733 S2 states, 20 replays per
+action; `results/analysis/diagnostic/`):
+
+| Agent | Caught after STATIONARY | after TOWARDS | after AWAY | STATIONARY − TOWARDS |
+| --- | --- | --- | --- | --- |
+| Q-learning | 96.1 ± 3.0% | 92.6 ± 5.8% | 93.6 ± 5.8% | +3.5 (pooled SD 4.6) |
+| PPO | 98.8 ± 0.8% | 98.2 ± 1.4% | 97.0 ± 2.2% | +0.6 (pooled SD 1.1) |
+
+By the rule written before the run, explanation 2 holds for both algorithms:
+the catch rates after STATIONARY and after TOWARDS differ by less than the
+pooled SD, and the ball is caught in at least 92.6% of the replays whichever
+action is requested. The direction is the same for both (staying still is
+slightly better), so this is weak evidence for explanation 1 and not support
+for it. The reversed S2 result therefore describes a choice between
+near-equal actions, not a difference in catching strategy.
+
+Episode success, the second outcome, shows the same pattern: +8.0 points for
+Q-learning (pooled SD 10.1) and +1.9 for PPO (17.3). Three Q-learning agents
+(seeds 2, 6 and 8) lose 16–39 points of episode success after TOWARDS, so for
+single agents the action can matter later in the episode.
+
+In the first S2 state of their own episodes the two algorithms choose
+STATIONARY about equally often (Q-learning 51%, PPO 55%). The larger
+difference in the S2 probe (43% against 61%) was measured on the pooled
+shared observations.
