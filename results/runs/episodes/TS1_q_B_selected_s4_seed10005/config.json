@@ -1,0 +1,40 @@
+{
+  "experiment": "episodes",
+  "run_id": "TS1_q_B_selected_s4_seed10005",
+  "agent": "q",
+  "setting": "B",
+  "tag": "selected",
+  "seed": 4,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "all",
+  "hp": {
+    "alpha": 0.3,
+    "gamma": 0.99,
+    "epsilon": {
+      "kind": "linear",
+      "start": 1.0,
+      "end": 0.01,
+      "fraction": 0.5
+    }
+  },
+  "source_run": "results/runs/main/q_B_selected_s4",
+  "episode": {
+    "id": "TS1",
+    "kind": "typical success",
+    "agent": "q",
+    "train_seed": 4,
+    "seed": 10005,
+    "outcome": "success",
+    "steps": 74,
+    "criterion": "74 steps; most common range 70\u201379 steps holds 781 of 1518 Q-learning successes, median 74",
+    "run": "results/runs/main/q_B_selected_s4"
+  },
+  "sweep_replays": 20,
+  "decision_replays": 100,
+  "decision_gap": 8
+}

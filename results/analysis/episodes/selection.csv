@@ -1,0 +1,11 @@
+id,kind,agent,train_seed,seed,outcome,steps,criterion,run
+TS1,typical success,q,4,10005,success,74,"74 steps; most common range 70–79 steps holds 781 of 1518 Q-learning successes, median 74",results/runs/main/q_B_selected_s4
+TS2,typical success,ppo,1,10000,success,71,"71 steps; most common range 70–79 steps holds 1052 of 1756 PPO successes, median 71",results/runs/main/ppo_B_selected_s1
+TS3,typical success,ppo,3,10001,success,71,"71 steps; most common range 70–79 steps holds 1052 of 1756 PPO successes, median 71",results/runs/main/ppo_B_selected_s3
+TF1,typical failure,q,4,10003,failure,55,"55 steps; most common range 50–59 steps holds 234 of 416 Q-learning failures, median 55",results/runs/main/q_B_selected_s4
+TF2,typical failure,ppo,9,10000,failure,53,"53 steps; most common range 50–59 steps holds 162 of 230 PPO failures, median 53",results/runs/main/ppo_B_selected_s9
+TF3,typical failure,q,1,10020,failure,55,"55 steps; most common range 50–59 steps holds 234 of 416 Q-learning failures, median 55",results/runs/main/q_B_selected_s1
+SS1,surprising success,q,2,10077,success,96,"value estimate at launch 0.356, -2.41 SD from the mean of this agent's episodes (0.451)",results/runs/main/q_B_selected_s2
+SS2,surprising success,ppo,9,10107,success,72,"value estimate at launch 0.463, -5.29 SD from the mean of this agent's episodes (0.508)",results/runs/main/ppo_B_selected_s9
+SF1,surprising failure,q,1,10172,failure,53,mean value estimate over the last five steps 0.411; median over Q-learning failures 0.152,results/runs/main/q_B_selected_s1
+SF2,surprising failure,ppo,9,10004,failure,71,mean value estimate over the last five steps 0.664; median over PPO failures 0.448,results/runs/main/ppo_B_selected_s9

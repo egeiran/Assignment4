@@ -1,0 +1,40 @@
+{
+  "experiment": "episodes",
+  "run_id": "TF1_q_B_selected_s4_seed10003",
+  "agent": "q",
+  "setting": "B",
+  "tag": "selected",
+  "seed": 4,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "all",
+  "hp": {
+    "alpha": 0.3,
+    "gamma": 0.99,
+    "epsilon": {
+      "kind": "linear",
+      "start": 1.0,
+      "end": 0.01,
+      "fraction": 0.5
+    }
+  },
+  "source_run": "results/runs/main/q_B_selected_s4",
+  "episode": {
+    "id": "TF1",
+    "kind": "typical failure",
+    "agent": "q",
+    "train_seed": 4,
+    "seed": 10003,
+    "outcome": "failure",
+    "steps": 55,
+    "criterion": "55 steps; most common range 50\u201359 steps holds 234 of 416 Q-learning failures, median 55",
+    "run": "results/runs/main/q_B_selected_s4"
+  },
+  "sweep_replays": 20,
+  "decision_replays": 100,
+  "decision_gap": 8
+}

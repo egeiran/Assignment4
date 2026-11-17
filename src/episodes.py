@@ -249,7 +249,7 @@ def largest_fall(e, trace, sweep):
     played = trace.iloc[:-1]
     chosen = [rate.loc[t, a] for t, a in zip(played["t"], played["action"])] + [float(e["outcome"] == "success")]
     t = int(np.argmax(-np.diff(chosen)))
-    return t, chosen[t], chosen[t + 1], rate.loc[t].max()
+    return t, chosen[t], chosen[t + 1], rate.loc[t].max(), rate.loc[t + 1].max() if t + 1 in rate.index else chosen[t + 1]
 
 
 def describe(trace, t):
@@ -279,11 +279,12 @@ def transition(trace, t, episode):
 def decision_tables(e, trace, sweep, decisions):
     kind = "Q-values" if e["agent"] == "q" else "action probabilities"
     start = decisions[decisions["decision"] == 0].iloc[0]
-    t, before, after, best = largest_fall(e, trace, sweep)
-    lines = [f"## {heading(e)}\n", f"Selected because: {e['criterion']}.  ", f"Source run: `{e['run']}`.  ",
-             f"From the first step, {start['success']} of {start['replays']} replays with new sticky noise succeed.  ",
-             f"Largest fall in the success rate of the requested action ({SWEEP} replays per step): after step {t}, "
-             f"from {before:.0%} to {after:.0%}; the best action at step {t} reached {best:.0%}.\n"]
+    t, before, after, best, rescue = largest_fall(e, trace, sweep)
+    lines = [f"## {heading(e)}\n", f"- Selected because: {e['criterion']}.", f"- Source run: `{e['run']}`.",
+             f"- From the first step, {start['success']} of {start['replays']} replays with new sticky noise succeed.",
+             f"- Largest fall in the success rate of the requested action ({SWEEP} replays per step): after step {t}, "
+             f"from {before:.0%} to {after:.0%}. The best action at step {t} reached {best:.0%}; "
+             f"the best action after the fall reaches {rescue:.0%}.\n"]
     for n, rows in decisions[decisions["decision"] > 0].groupby("decision"):
         t = int(rows["t"].iloc[0])
         s = trace.iloc[t]
@@ -313,7 +314,7 @@ def timeline(e, trace, sweep, picked, path, where):
     for n, t in enumerate(picked, 1):
         axes[0].annotate(f"decision {n}", (t, 1.0), xycoords=("data", "axes fraction"), xytext=(0, 3),
                          textcoords="offset points", ha="center", fontsize=8, color=INK)
-    flying = trace[trace["in_play"] == 1]
+    flying = played[played["in_play"] == 1]  # without the state after the last step
     axes[0].plot(flying["t"], PADDLE_Y - flying["ball_y"], color=INK, lw=2, label="Ball height above the paddle")
     axes[0].plot(flying["t"], (flying["ball_x"] - flying["paddle_centre"]).abs(), color=MUTED, lw=1.6, ls=(0, (4, 2)),
                  label="Horizontal distance from ball to paddle centre")
@@ -512,7 +513,12 @@ def report(group):
                                    "seed": "Evaluation seed", "outcome": "Outcome", "steps": "Steps",
                                    "criterion": "Selected because", "run": "Source run"})
     shown["Agent"] = shown["Agent"].map(LABEL)
-    (out / "selection.md").write_text(to_markdown(pd.DataFrame(lengths)) + "\n" + to_markdown(shown))
+    agents = v.groupby(["agent", "train_seed", "outcome"]).size().unstack(fill_value=0).reindex(columns=list(OUTCOMES), fill_value=0)
+    agents["Selected episodes"] = [", ".join(chosen.loc[(chosen["agent"] == a) & (chosen["train_seed"] == seed), "id"]) or "–"
+                                   for a, seed in agents.index]
+    agents = agents.reset_index().rename(columns={"agent": "Agent", "train_seed": "Training seed", **{o: PLURAL.get(o, "timeouts").capitalize() for o in OUTCOMES}})
+    agents["Agent"] = agents["Agent"].map(LABEL)
+    (out / "selection.md").write_text("\n".join(to_markdown(t) for t in (pd.DataFrame(lengths), shown, agents)))
     sections, overview, dirs = [], [], []
     for e in chosen.to_dict("records"):
         d = runs / f"{e['id']}_{e['run'].split('/')[-1]}_seed{e['seed']}"
@@ -529,10 +535,11 @@ def report(group):
         video(e, trace, sweep, decisions, frames, videos / f"{e['id']}.gif")
         sections.append(decision_tables(e, trace, sweep, decisions))
         start = decisions[decisions["decision"] == 0].iloc[0]
-        t, before, after, best = largest_fall(e, trace, sweep)
+        t, before, after, best, rescue = largest_fall(e, trace, sweep)
         overview.append({"ID": e["id"], "Kind": e["kind"], "Agent": LABEL[e["agent"]], "Outcome": e["outcome"],
                          "Steps": e["steps"], "Success from the first step": f"{start['success']} of {start['replays']}",
-                         "Largest fall in success rate": f"after step {t}: {before:.0%} → {after:.0%} (best action {best:.0%})",
+                         "Largest fall in success rate": f"after step {t}: {before:.0%} → {after:.0%}",
+                         "Best action at that step": f"{best:.0%}", "Best action after the fall": f"{rescue:.0%}",
                          **{f"Decision {n}": f"step {int(g['t'].iloc[0])}: {reading(g)}"
                             for n, g in decisions[decisions["decision"] > 0].groupby("decision")}})
         print(f"{e['id']}: figures and video written", flush=True)

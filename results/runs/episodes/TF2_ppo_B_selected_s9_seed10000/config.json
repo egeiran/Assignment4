@@ -1,0 +1,36 @@
+{
+  "experiment": "episodes",
+  "run_id": "TF2_ppo_B_selected_s9_seed10000",
+  "agent": "ppo",
+  "setting": "B",
+  "tag": "selected",
+  "seed": 9,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "all",
+  "hp": {
+    "learning_rate": 0.001,
+    "entropy": 0.01,
+    "epochs": 4,
+    "gamma": 0.99
+  },
+  "source_run": "results/runs/main/ppo_B_selected_s9",
+  "episode": {
+    "id": "TF2",
+    "kind": "typical failure",
+    "agent": "ppo",
+    "train_seed": 9,
+    "seed": 10000,
+    "outcome": "failure",
+    "steps": 53,
+    "criterion": "53 steps; most common range 50\u201359 steps holds 162 of 230 PPO failures, median 53",
+    "run": "results/runs/main/ppo_B_selected_s9"
+  },
+  "sweep_replays": 20,
+  "decision_replays": 100,
+  "decision_gap": 8
+}

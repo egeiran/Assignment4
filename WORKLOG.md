@@ -570,6 +570,21 @@ comparison is not expected, but the numbers are not exact. The experiment is
 run again with the same question, method and decision rule. The first run
 stays in the history at commit `d1f2507`; both results are reported below.
 
+**Second run** (commit `4915cfb`, 21:02–21:15, the same 3,733 S2 states;
+`results/analysis/diagnostic/`):
+
+| Agent | Caught after STATIONARY | after TOWARDS | after AWAY | STATIONARY − TOWARDS | First run |
+| --- | --- | --- | --- | --- | --- |
+| Q-learning | 96.0 ± 3.3% | 92.1 ± 6.4% | 93.4 ± 6.1% | +3.9 (pooled SD 5.1) | +3.5 (4.6) |
+| PPO | 98.9 ± 0.8% | 98.1 ± 1.6% | 97.0 ± 2.1% | +0.8 (pooled SD 1.2) | +0.6 (1.1) |
+
+The conclusion is unchanged: explanation 2 holds for both algorithms, with the
+same direction as before. Episode success differs by +8.0 points for Q-learning
+(pooled SD 10.5) and +2.2 for PPO (17.3). The same three Q-learning agents
+(seeds 2, 6 and 8) lose 17–40 points of episode success after TOWARDS. The
+files of the first run were replaced; they are in the history at commit
+`d1f2507`.
+
 ## Part 4: details of the episode selection (2026-11-17, written before the selection was run)
 
 The rule is section 7 of `plans/part2_3_plan.md`. It leaves these details
@@ -596,3 +611,63 @@ not part of the selection.
 
 Changes from the plan: the plan replays the alternatives 20 times at each
 annotated decision. The sweep over all steps and the 100 replays are additions.
+
+**Correction to the selection (2026-11-17).** The first run of
+`src/episodes.py` (commit `4915cfb`) chose SS1 from Q-learning seed 3. That
+agent launches into the same state in all 200 episodes, so its value estimate
+at launch never varies and the score "SD from the agent's mean" is undefined;
+rounding turned it into −∞ and put the episode first. The report stopped on
+that value before any table or figure of the decisions was written. The score
+is now left empty for an agent without variation at launch. This changes SS1
+only (now Q-learning seed 2, evaluation seed 10077, −2.41 SD); the other nine
+episodes are the same. All ten were recorded again on the corrected commit.
+
+**Decisions by Eivind (2026-11-17):**
+
+- The diagnostic experiment is run again after the correction and both results
+  are reported.
+- The details of the episode selection in the table above are accepted.
+- Three of the five PPO episodes (TF2, SS2, SF2) come from the same trained
+  agent, seed 9. The rule stands as written before the selection; the
+  concentration is stated as a limit. Claude described seed 9 to Eivind as the
+  PPO agent with the most failures. That was wrong: seed 9 has 14 failures in
+  200 episodes, and seed 6 has 122 of PPO's 230. No selected episode comes from
+  PPO seed 6 (`results/analysis/episodes/selection.md`, third table).
+
+## Part 4: the ten episodes (2026-11-17)
+
+Run on commit `6b6ef4a`, 21:24–21:29 (`results/logs/episodes.log`). All 4,000
+logged episodes replayed to their logged trajectories. Selection, outcome
+counts per trained agent and the episodes' sources are in
+`results/analysis/episodes/selection.md`; the annotation tables are in
+`decisions.md`, one timeline and one decision figure per episode are next to
+them, and the videos are in `results/videos/episodes/`.
+
+| Episode | Agent (seed) | Outcome | Success in 100 replays from the first step | What decided it |
+| --- | --- | --- | --- | --- |
+| TS1 | Q-learning (4) | success, 74 steps | 77 | Two decisions that matter, both chosen well |
+| TS2 | PPO (1) | success, 71 steps | 98 | One decision that matters (step 46), chosen well |
+| TS3 | PPO (3) | success, 71 steps | 99 | One decision that matters (step 46), chosen well |
+| TF1 | Q-learning (4) | failure, 55 steps | 72 | Poor action at step 48: RIGHT 0%, FIRE 100% |
+| TF2 | PPO (9) | failure, 53 steps | 96 | Unlucky: at step 47 RIGHT was the only saving action and was requested; the paddle did not move in that step |
+| TF3 | Q-learning (1) | failure, 55 steps | 69 | Poor actions at steps 34 and 42: 0% against 98% |
+| SS1 | Q-learning (2) | success, 96 steps | 93 | Poor action at step 22 (30% against 74%), success all the same |
+| SS2 | PPO (9) | success, 72 steps | 96 | Two decisions that matter, both chosen well |
+| SF1 | Q-learning (1) | failure, 53 steps | 65 | Poor actions at steps 32 and 40: 0% against 98% |
+| SF2 | PPO (9) | failure, 71 steps | 97 | Unlucky in the same way as TF2, at step 63 |
+
+Of the 30 annotated decisions, 6 are poor actions (all by Q-learning), 13
+matter and were chosen among the best, and 11 are between near-equal actions.
+
+What the aggregate failure rate hides: in these five failures Q-learning loses
+through an action whose Q-value is wrong, while PPO loses after a late move
+that the sticky noise cancelled. The limits are stated with it. Five failures
+are few. Both PPO failures come from seed 9. PPO seed 6, with 122 of the 230
+PPO failures, has no episode among the ten, and Q-learning seed 1 has two of
+the three Q-learning failures.
+
+After the first look at the tables, three presentation changes were made to
+the report code, none to the recorded data: the success rate of the best
+action after the largest fall is reported, the outcome counts per trained
+agent are added to `selection.md`, and the state after the last step is left
+out of the ball curves.

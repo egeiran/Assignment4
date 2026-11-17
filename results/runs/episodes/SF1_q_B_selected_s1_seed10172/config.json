@@ -1,0 +1,40 @@
+{
+  "experiment": "episodes",
+  "run_id": "SF1_q_B_selected_s1_seed10172",
+  "agent": "q",
+  "setting": "B",
+  "tag": "selected",
+  "seed": 1,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "all",
+  "hp": {
+    "alpha": 0.3,
+    "gamma": 0.99,
+    "epsilon": {
+      "kind": "linear",
+      "start": 1.0,
+      "end": 0.01,
+      "fraction": 0.5
+    }
+  },
+  "source_run": "results/runs/main/q_B_selected_s1",
+  "episode": {
+    "id": "SF1",
+    "kind": "surprising failure",
+    "agent": "q",
+    "train_seed": 1,
+    "seed": 10172,
+    "outcome": "failure",
+    "steps": 53,
+    "criterion": "mean value estimate over the last five steps 0.411; median over Q-learning failures 0.152",
+    "run": "results/runs/main/q_B_selected_s1"
+  },
+  "sweep_replays": 20,
+  "decision_replays": 100,
+  "decision_gap": 8
+}
