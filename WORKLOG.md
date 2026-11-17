@@ -543,3 +543,56 @@ In the first S2 state of their own episodes the two algorithms choose
 STATIONARY about equally often (Q-learning 51%, PPO 55%). The larger
 difference in the S2 probe (43% against 61%) was measured on the pooled
 shared observations.
+
+## Correction: replays from a saved state (2026-11-17)
+
+**Error.** The emulator's saved state does not hold the action it played last,
+and the sticky noise repeats exactly that action. After `restore`, the first
+frames of a replay could therefore repeat the last action of the *previous
+replay* instead of the last action of the episode. Found while writing the
+Part 4 replays. Test in Setting B from one saved state whose last action was
+LEFT, 800 replays each: after one NOOP the paddle had moved −10.7 px when LEFT
+had been played before the restore and −7.7 px when RIGHT had been played.
+
+**Fix.** `BreakoutLife` records the action it played last. `restore` plays that
+action for 8 frames before it restores the state, so the sticky noise repeats
+the right action. After the fix the same test gives −10.7 and −10.5 px.
+`src/verify.py` has a ninth check for this (exact replay in A, and no
+dependence on earlier replays in B); all nine pass. Training and evaluation
+never restore a state and are unchanged: the Setting B replay check and the
+tracking reference in `verify.json` are identical to before.
+
+**Effect on the diagnostic experiment.** In the run on commit `6f71d30` the
+first replay of each state was correct. In the other 19 the forced step could
+start with a stale action in the frames where the noise struck (25% per frame).
+The error is the same for the three forced actions, so a bias in the
+comparison is not expected, but the numbers are not exact. The experiment is
+run again with the same question, method and decision rule. The first run
+stays in the history at commit `d1f2507`; both results are reported below.
+
+## Part 4: details of the episode selection (2026-11-17, written before the selection was run)
+
+The rule is section 7 of `plans/part2_3_plan.md`. It leaves these details
+open. They are fixed here, before `src/episodes.py` is run on the agents of
+`main`. The script was developed on the six tuning agents with the selected
+configurations (`--check`, seeds 100–102, evaluation seeds 20,000+), which are
+not part of the selection.
+
+| Detail | Choice |
+| --- | --- |
+| Episodes | Final greedy evaluation in B, 20 agents × 200 episodes |
+| Value estimate | Highest Q-value of the state for Q-learning, critic value for PPO |
+| Most common length range | 10-step ranges (0–9, 10–19, …), per algorithm and outcome; the range with the most episodes |
+| Typical episode | Closest to the median length inside that range; ties by lowest evaluation seed, then lowest training seed |
+| Spread over agents | One Q-learning and one PPO episode per outcome, the third from the algorithm with more episodes of that outcome; different trained agents and evaluation seeds within an outcome |
+| Surprising success | One per algorithm: the success with the lowest value estimate at launch (first step with the ball in play), in SD from the mean of the same trained agent's 200 episodes |
+| Surprising failure | One per algorithm: the failure with the highest mean value estimate over its last five steps |
+| Timeouts | Counted and reported as a third outcome; not selected, since the sheet defines failure as a lost ball |
+| Important decision | Every step of an episode is replayed: each of the four actions is forced for one step, 20 times with new sticky noise, and the agent's policy continues. The three steps with the largest difference in success rate between the best and the worst action are annotated, at least 8 steps apart |
+| Numbers in the tables | The three decisions are replayed again, 100 times per action, with new noise. Only these replays are reported, since the 20-replay sweep also chose the steps |
+| Reading of a decision | Near-equal actions: best and worst action differ by less than 20 points. Poor action: the best action succeeds at least 20 points more often than the chosen one. Otherwise the action matters and the chosen action is among the best |
+| Unlucky outcome | The success rate of 100 replays from the first step with the logged action is reported for every episode |
+| Largest fall | Per episode, the step after which the success rate of the requested action (20 replays) falls the most, with the rate of the best action at that step. A fall that no action could have avoided is noise, not a decision |
+
+Changes from the plan: the plan replays the alternatives 20 times at each
+annotated decision. The sweep over all steps and the 100 replays are additions.

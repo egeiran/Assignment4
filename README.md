@@ -47,6 +47,7 @@ uv run python -B src/analyze.py main        # tables and learning curves for one
 uv run python -B src/probes.py              # P3b-c and S1-S3: 80 evaluations with step logs, no training
 uv run python -B src/verdicts.py            # every prediction under the sheet's decision rule
 uv run python -B src/diagnostic.py          # diagnostic experiment: forced actions at the paddle edge (S2)
+uv run python -B src/episodes.py            # Part 4: ten episodes, replays of every action, figures and videos
 ```
 
 `run_all.py` uses 8 processes by default (`--workers N`). `run_all.py smoke` is a
@@ -59,7 +60,9 @@ uv run python -B src/diagnostic.py          # diagnostic experiment: forced acti
 | `results/selected_config.json` | The configuration chosen for each agent, with the tuning means behind it |
 | `results/logs/` | Console log of each group, with start and end time |
 | `results/verification/verify.json` | Output of `verify.py` |
-| `results/videos/` | Recorded episodes (GIF) |
+| `results/runs/episodes/<id>_<run>_seed<seed>/` | One Part 4 episode: `trace.csv` (state, Q-values or probabilities and action per step), `sweep.csv` (20 replays of every action from every step), `decisions.csv` (100 replays at the three annotated decisions) |
+| `results/analysis/episodes/` | `selection.md`, `decisions.md` (the annotation tables), `overview.md`, length and value distributions, and a timeline and a decision figure per episode |
+| `results/videos/` | Recorded episodes (GIF); `episodes/` holds the ten Part 4 episodes with Q-values or probabilities per step |
 
 A run is named `<agent>_<setting>_<configuration>_s<seed>`, for example
 `ppo_B_selected_s3`. Any evaluation episode can be replayed from its seed:

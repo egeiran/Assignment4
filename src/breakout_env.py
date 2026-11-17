@@ -70,6 +70,7 @@ class BreakoutLife(gym.Env):
         self.penalty, self.gap = s["penalty"], s["gap"]
         self.env = make_env(p=s["p"], difficulty=s["difficulty"])
         self.ale = self.env.unwrapped.ale
+        self.ale_actions = self.ale.getMinimalActionSet()  # emulator codes of the four actions
         self.observation_space = spaces.Box(0.0, 1.0, (8,), np.float32)
         self.action_space = spaces.Discrete(4)
         self.rng = np.random.default_rng()
@@ -95,10 +96,11 @@ class BreakoutLife(gym.Env):
         else:
             _, info = self.env.reset()
         self.lives, self.t, self.bricks, self.ret = info["lives"], 0, 0, 0.0
-        self.start_moves = int(self.rng.integers(0, 31))
+        self.start_moves, self.last = int(self.rng.integers(0, 31)), NOOP  # last: the action played most recently
         for _ in range(self.start_moves):
             self._patch()
-            self.env.step(int(self.rng.choice((LEFT, RIGHT))))
+            self.last = int(self.rng.choice((LEFT, RIGHT)))
+            self.env.step(self.last)
         self.prev = None
         obs = self._observe()
         self.launch_bin, self.launch_step = self.bins[7], None  # paddle bin at the start; step of the launch
@@ -106,8 +108,8 @@ class BreakoutLife(gym.Env):
 
     def step(self, action):
         self._patch()
-        self.prev = self.ram
-        _, game_reward, game_over, _, info = self.env.step(int(action))
+        self.prev, self.last = self.ram, int(action)
+        _, game_reward, game_over, _, info = self.env.step(self.last)
         self.t += 1
         self.bricks += int(game_reward > 0)
         success = self.bricks >= self.k
@@ -126,7 +128,7 @@ class BreakoutLife(gym.Env):
         return obs, reward, success or failure, truncated, out
 
     _EPISODE = ("lives", "t", "bricks", "ret", "start_moves", "prev", "ram", "f", "bins", "cell",
-                "launch_bin", "launch_step")
+                "launch_bin", "launch_step", "last")
 
     def snapshot(self):
         """Emulator and episode state for replays from this step. The sticky-action noise is not
@@ -135,6 +137,8 @@ class BreakoutLife(gym.Env):
 
     def restore(self, snapshot):
         state, episode = snapshot
+        for _ in range(8):  # sticky noise repeats the action the emulator played last, which the saved
+            self.ale.act(self.ale_actions[episode["last"]])  # state does not hold: play that action first
         self.ale.restoreState(state)
         for name, value in episode.items():
             setattr(self, name, value)

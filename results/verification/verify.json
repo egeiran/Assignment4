@@ -39,6 +39,11 @@
       "check": "PPO environment seeds",
       "passed": true,
       "detail": "104 environment seeds over 13 training seeds, none shared"
+    },
+    {
+      "check": "Replay from a saved state",
+      "passed": true,
+      "detail": "exact in A; paddle shift after NOOP in B -11.64 / -11.50 px after LEFT / RIGHT replays"
     }
   ],
   "tracking_reference": {

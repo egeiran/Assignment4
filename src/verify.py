@@ -14,7 +14,7 @@ import ppo
 import q_learning
 from breakout_env import N_CELLS, SETTINGS, BreakoutLife, cell_index, encode, tracking_action
 from evaluate import run_episode, summarise
-from inspect_env import FIRE, PADDLE_RED
+from inspect_env import FIRE, LEFT, NOOP, PADDLE_RED, RIGHT
 from run import ROOT
 
 OUT = ROOT / "results" / "verification"
@@ -126,13 +126,48 @@ def check_ppo_seeds():
     return used and len(set(flat)) == len(flat), f"{len(flat)} environment seeds over 13 training seeds, none shared"
 
 
+def check_saved_state():
+    """Replays from a saved state: exact without noise, and with noise independent of what was played before."""
+    env = BreakoutLife("A")
+    env.reset(seed=40_000)
+    for _ in range(20):
+        env.step(tracking_action(env))
+    saved, runs = env.snapshot(), []
+    for _ in range(2):
+        env.restore(saved)
+        trace, done = [], False
+        while not done:
+            _, _, terminated, truncated, _ = env.step(tracking_action(env))
+            trace.append(env.ram.tobytes())
+            done = terminated or truncated
+        runs.append(trace)
+    env.close()
+    env = BreakoutLife("B")
+    env.reset(seed=40_000)
+    while env.f["paddle_x"] > 80:
+        env.step(LEFT)
+    saved, start, shift = env.snapshot(), env.f["paddle_x"], {}
+    for played in (LEFT, RIGHT):  # the sticky noise must repeat the episode's last action, not this one
+        moves = []
+        for _ in range(1000):
+            env.restore(saved)
+            env.step(played)
+            env.restore(saved)
+            env.step(NOOP)
+            moves.append(env.f["paddle_x"] - start)
+        shift[played] = float(np.mean(moves))
+    env.close()
+    return runs[0] == runs[1] and abs(shift[LEFT] - shift[RIGHT]) < 0.75, \
+        f"exact in A; paddle shift after NOOP in B {shift[LEFT]:+.2f} / {shift[RIGHT]:+.2f} px after LEFT / RIGHT replays"
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     checks = [("State cells", check_cells), ("Setting A deterministic", check_deterministic_a),
               ("Setting B replay", check_replay_b), ("Gap layout", check_gap),
               ("Outcomes and rewards", check_outcomes), ("Q-learning update (toy chain)", check_toy_q),
               ("Epsilon schedule", check_epsilon),
-              ("PPO environment seeds", check_ppo_seeds)]
+              ("PPO environment seeds", check_ppo_seeds), ("Replay from a saved state", check_saved_state)]
     results, failed = [], False
     print(f"| {'Check':32} | Result | Detail")
     for name, fn in checks:
