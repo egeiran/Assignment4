@@ -155,6 +155,20 @@ All verdicts with their calculations are in
   - The observed difference is the reverse of the predicted one.
   - Contact offset: Q-learning 2.9 px, PPO 3.3 px (0.8). Inconclusive: weak
     evidence against wider Q-learning offsets.
+- **2026-11-17, diagnostic experiment and change of interpretation.** From
+  3,733 S2 states in the agents' own episodes, each of STATIONARY, TOWARDS and
+  AWAY was forced for one step, 20 times with new sticky noise
+  (`results/analysis/diagnostic/`; question and rule in `WORKLOG.md`, written
+  before the run).
+  - Ball caught after STATIONARY against TOWARDS: Q-learning 96.0% against
+    92.1% (5.1), PPO 98.9% against 98.1% (1.2). The differences are below the
+    pooled SD, with weak evidence that staying still is slightly better.
+  - The sheet treated the action in S2 as decisive for the catch. It is not:
+    the ball is caught in at least 92% of the replays whichever action is
+    forced. The reversed preference above is a choice between near-equal
+    actions, not a difference in catching strategy.
+  - The experiment was run twice, because the first run had an error in the
+    sticky noise after a state restore. Both runs give the same conclusion.
 
 ## S3
 
