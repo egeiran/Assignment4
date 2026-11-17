@@ -105,7 +105,8 @@ def modal_range(pool):
 def select(v):
     v = v.copy()
     own = v.groupby("run")["value_launch"].agg(["mean", "std"])
-    v["z_launch"] = (v["value_launch"] - v["run"].map(own["mean"])) / v["run"].map(own["std"])
+    spread = v["run"].map(own["std"])  # zero for an agent that always launches into the same state: no score
+    v["z_launch"] = ((v["value_launch"] - v["run"].map(own["mean"])) / spread).where(spread > 1e-9)
     chosen = []
 
     def take(candidates, kind, criterion, apart):
