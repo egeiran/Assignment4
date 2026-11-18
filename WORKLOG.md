@@ -26,12 +26,12 @@ the submission is complete. Planned work has no results.
 | Part | Requirement                                                              | Points | Status      |
 | ---- | ------------------------------------------------------------------------ | ------ | ----------- |
 | 1    | Timestamped prediction sheet: 6 questions + 3 states                     | 30     | Done        |
-| 2    | Settings A–D, comparison rules, required evidence                        | 20     | Tuning done; main runs started 2026-11-16 |
-| 3    | Mechanisms: epsilon, gamma, entropy, learning rate, PPO epochs; ≥5 seeds | 20     | Not started |
-| 4    | Ten annotated episodes                                                   | 20     | Not started |
+| 2    | Settings A–D, comparison rules, required evidence                        | 20     | Runs and tables done; in the brief draft |
+| 3    | Mechanisms: epsilon, gamma, entropy, learning rate, PPO epochs; ≥5 seeds | 20     | Runs, verdicts and diagnostic experiment done; in the brief draft |
+| 4    | Ten annotated episodes                                                   | 20     | Episodes, replays and evidence tables done; our analysis of the 30 decisions remains |
 | 5    | Human review within the team (≤1,000 words)                              | 30     | Not started |
-| 6    | Three recommendations                                                    | 30     | Not started |
-| –    | Code, experiment records, evidence brief (≤2,000 words), AI record       | –      | Not started |
+| 6    | Three recommendations                                                    | 30     | Proposed in the brief draft; not yet decided by us |
+| –    | Code, experiment records, evidence brief (≤2,000 words), AI record       | –      | Code and records done; brief drafted (1,376 words); AI record current to Part 4 |
 
 ## Decisions so far (provisional, 2026-11-12)
 
