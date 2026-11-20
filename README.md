@@ -64,6 +64,11 @@ uv run python -B src/episodes.py            # Part 4: ten episodes, replays of e
 | `results/analysis/episodes/` | `selection.md`, `decisions.md` (the annotation tables), `overview.md`, length and value distributions, and a timeline and a decision figure per episode |
 | `results/videos/` | Recorded episodes (GIF); `episodes/` holds the ten Part 4 episodes with Q-values or probabilities per step |
 
+The fixed ten-episode selection is unchanged. A separate descriptive analysis of
+PPO seed 6's saved checkpoints can be reproduced with
+`python3 src/analyze_seed6.py`; it writes
+`results/analysis/episodes/ppo_seed6.md` and does not run new training or replays.
+
 A run is named `<agent>_<setting>_<configuration>_s<seed>`, for example
 `ppo_B_selected_s3`. Any evaluation episode can be replayed from its seed:
 

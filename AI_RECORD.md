@@ -50,3 +50,27 @@ freeze timestamp, tag or submission is inferred from this AI review.
 | Environment inspection          | Wrote `src/inspect_env.py`, which runs random actions and a fixed tracking rule without learning                                                                                                                                                                                                                                          | Checked: RAM positions against pixels (r = 1.000 for the ball), frames inspected by eye, and a re-run gave identical calibration files. Two errors were caught and fixed before the sheet was written: the paddle width (a wall marker had been counted) and K = 5, which random play never reaches (changed to K = 2). Both are dated in `WORKLOG.md` |
 | Prediction sheet                | Claude drafted the first version of `predictions/predictions_v1.md`, building on the setup Eivind had chosen                                                                                                                                                                                                                              | Eivind directed the work: he chose the setup, had Claude draft the sheet and Codex review it, decided which revisions to make, and checked every claim before accepting it. Trym's team review remains to be completed before the freeze                                                                                                               |
 | Independent review and revision | OpenAI Codex compared the sheet with the assignment, inspection records and earlier report style. It identified coarse state aliasing at the paddle edge, an undiscounted argument in P4, inconsistent P2 criteria, raw action switches that treated NOOP and FIRE as different movement, and an over-strong off-policy explanation in S2 | Eivind asked Codex to implement the revisions without using git. The state now uses relative horizontal error at 4 px resolution near the paddle, P2 predicts greater PPO seed variation, P4 uses the discounted objective, and P3/S2 distinguish requested actions from effective movement. No training result was used in these changes              |
+
+## Trym-requested review of Parts 2–6 (2026-11-19)
+
+Codex reviewed the assignment materials, experiment plan, report draft,
+annotations, source code and saved summaries/run records. It made local edits
+to the evidence brief and annotation wording to narrow unsupported claims,
+added a reproducible descriptive analysis of PPO B seed 6 from existing files,
+and prepared questions in the Part 5 review record. It did not change the
+submitted prediction sheet or run new training or environment replays. The
+analysis is AI-assisted and the human group discussion, judgements and
+approvals remain pending. Verification limits and files that could not be
+executed or regenerated are reported in the review handover; no human agreement
+is inferred from these edits.
+
+### Technical verification follow-up (2026-11-19)
+
+Codex installed `uv` and Playwright Chromium under `/tmp`, synchronized the
+locked Python 3.12 environment, and ran the requested verification and saved-run
+analyses. `src/verify.py` passed 9/9 checks; the main, tuning, transfer,
+mechanism, diagnostic, probe, verdict and seed-6 summaries were regenerated
+without new training. It regenerated the evidence brief HTML/PDF and visually
+inspected all nine PDF pages. The browser required execution outside the
+sandbox after Chromium crashed there with SIGTRAP. The review record remains
+open for Trym and Eivind; their answers or approval are not inferred.
