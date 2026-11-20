@@ -1,0 +1,23 @@
+{
+  "experiment": "mechanisms",
+  "run_id": "q_B_eps_constant0.1_s3",
+  "agent": "q",
+  "setting": "B",
+  "tag": "eps_constant0.1",
+  "seed": 3,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "final",
+  "hp": {
+    "alpha": 0.3,
+    "gamma": 0.99,
+    "epsilon": {
+      "kind": "constant",
+      "value": 0.1
+    }
+  }
+}

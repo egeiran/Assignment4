@@ -1,0 +1,36 @@
+{
+  "experiment": "episodes",
+  "run_id": "SF2_ppo_B_selected_s9_seed10004",
+  "agent": "ppo",
+  "setting": "B",
+  "tag": "selected",
+  "seed": 9,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "all",
+  "hp": {
+    "learning_rate": 0.001,
+    "entropy": 0.01,
+    "epochs": 4,
+    "gamma": 0.99
+  },
+  "source_run": "results/runs/main/ppo_B_selected_s9",
+  "episode": {
+    "id": "SF2",
+    "kind": "surprising failure",
+    "agent": "ppo",
+    "train_seed": 9,
+    "seed": 10004,
+    "outcome": "failure",
+    "steps": 71,
+    "criterion": "mean value estimate over the last five steps 0.664; median over PPO failures 0.448",
+    "run": "results/runs/main/ppo_B_selected_s9"
+  },
+  "sweep_replays": 20,
+  "decision_replays": 100,
+  "decision_gap": 8
+}

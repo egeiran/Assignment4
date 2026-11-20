@@ -1,0 +1,40 @@
+{
+  "experiment": "episodes",
+  "run_id": "SS1_q_B_selected_s2_seed10077",
+  "agent": "q",
+  "setting": "B",
+  "tag": "selected",
+  "seed": 2,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "all",
+  "hp": {
+    "alpha": 0.3,
+    "gamma": 0.99,
+    "epsilon": {
+      "kind": "linear",
+      "start": 1.0,
+      "end": 0.01,
+      "fraction": 0.5
+    }
+  },
+  "source_run": "results/runs/main/q_B_selected_s2",
+  "episode": {
+    "id": "SS1",
+    "kind": "surprising success",
+    "agent": "q",
+    "train_seed": 2,
+    "seed": 10077,
+    "outcome": "success",
+    "steps": 96,
+    "criterion": "value estimate at launch 0.356, -2.41 SD from the mean of this agent's episodes (0.451)",
+    "run": "results/runs/main/q_B_selected_s2"
+  },
+  "sweep_replays": 20,
+  "decision_replays": 100,
+  "decision_gap": 8
+}

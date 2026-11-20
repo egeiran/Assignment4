@@ -1,0 +1,27 @@
+{
+  "experiment": "transfer",
+  "run_id": "q_B_selected_s6_on_P7",
+  "agent": "q",
+  "setting": "P7",
+  "tag": "on_P7",
+  "seed": 6,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "all",
+  "hp": {
+    "alpha": 0.3,
+    "gamma": 0.99,
+    "epsilon": {
+      "kind": "linear",
+      "start": 1.0,
+      "end": 0.01,
+      "fraction": 0.5
+    }
+  },
+  "trained_in": "B",
+  "source_run": "results/runs/main/q_B_selected_s6"
+}

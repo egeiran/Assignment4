@@ -1,0 +1,28 @@
+{
+  "experiment": "diagnostic",
+  "run_id": "ppo_B_selected_s5_s2",
+  "agent": "ppo",
+  "setting": "B",
+  "tag": "selected",
+  "seed": 5,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "all",
+  "hp": {
+    "learning_rate": 0.001,
+    "entropy": 0.01,
+    "epochs": 4,
+    "gamma": 0.99
+  },
+  "source_run": "results/runs/main/ppo_B_selected_s5",
+  "replays": 20,
+  "arms": [
+    "stationary",
+    "towards",
+    "away"
+  ]
+}

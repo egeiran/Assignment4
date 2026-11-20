@@ -1,0 +1,23 @@
+{
+  "experiment": "probes",
+  "run_id": "ppo_B_selected_s9_on_B",
+  "agent": "ppo",
+  "setting": "B",
+  "tag": "B_on_B",
+  "seed": 9,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "all",
+  "hp": {
+    "learning_rate": 0.001,
+    "entropy": 0.01,
+    "epochs": 4,
+    "gamma": 0.99
+  },
+  "trained_in": "B",
+  "source_run": "results/runs/main/ppo_B_selected_s9"
+}

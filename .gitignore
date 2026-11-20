@@ -5,3 +5,7 @@ __pycache__/
 cache/
 # Identical copy of "Assignment 4.pdf" (same bytes, checked with cmp)
 Assignment 4-1.pdf
+# Smoke test (seed 999): a code check, not evidence
+results/runs/smoke/
+results/analysis/smoke/
+results/videos/*_s999_*

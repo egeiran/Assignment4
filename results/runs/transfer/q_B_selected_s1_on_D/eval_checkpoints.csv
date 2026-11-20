@@ -1,0 +1,2 @@
+step,mode,train_seconds,episodes,success_rate,failure_rate,timeout_rate,mean_return,distinct_trajectories,median_steps_success,mean_steps_success,median_steps_failure,mean_steps_failure
+500000,greedy,0,200,0.455,0.215,0.33,0.455,162,58.0,64.65934065934066,50.0,50.883720930232556

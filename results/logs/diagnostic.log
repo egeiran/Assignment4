@@ -1,0 +1,36 @@
+start 2026-11-17 21:02:01
+diagnostic: 20 jobs on 8 workers
+[1/20] done ppo_B_selected_s6_s2: 166 S2 states
+[2/20] done ppo_B_selected_s5_s2: 200 S2 states
+[3/20] done ppo_B_selected_s2_s2: 197 S2 states
+[4/20] done ppo_B_selected_s0_s2: 199 S2 states
+[5/20] done ppo_B_selected_s1_s2: 200 S2 states
+[6/20] done ppo_B_selected_s3_s2: 198 S2 states
+[7/20] done ppo_B_selected_s4_s2: 199 S2 states
+[8/20] done ppo_B_selected_s7_s2: 200 S2 states
+[9/20] done q_B_selected_s4_s2: 185 S2 states
+[10/20] done q_B_selected_s0_s2: 167 S2 states
+[11/20] done q_B_selected_s1_s2: 133 S2 states
+[12/20] done q_B_selected_s3_s2: 191 S2 states
+[13/20] done ppo_B_selected_s8_s2: 186 S2 states
+[14/20] done q_B_selected_s2_s2: 196 S2 states
+[15/20] done q_B_selected_s5_s2: 192 S2 states
+[16/20] done ppo_B_selected_s9_s2: 200 S2 states
+[17/20] done q_B_selected_s6_s2: 171 S2 states
+[18/20] done q_B_selected_s7_s2: 182 S2 states
+[19/20] done q_B_selected_s8_s2: 181 S2 states
+[20/20] done q_B_selected_s9_s2: 190 S2 states
+| Agent | Outcome | S2 states per seed | Stationary | Towards | Away | Stationary − towards | Stationary − away |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Q-learning | caught | 179 | 96.0 ± 3.3 | 92.1 ± 6.4 | 93.4 ± 6.1 | +3.9 (pooled SD 5.1) | +2.6 (pooled SD 4.9) |
+| Q-learning | success | 179 | 79.5 ± 12.2 | 71.5 ± 8.4 | 75.3 ± 13.4 | +8.0 (pooled SD 10.5) | +4.2 (pooled SD 12.8) |
+| PPO | caught | 194 | 98.9 ± 0.8 | 98.1 ± 1.6 | 97.0 ± 2.1 | +0.8 (pooled SD 1.2) | +1.9 (pooled SD 1.6) |
+| PPO | success | 194 | 89.8 ± 15.7 | 87.5 ± 18.7 | 86.9 ± 17.7 | +2.2 (pooled SD 17.3) | +2.8 (pooled SD 16.8) |
+
+| Agent | Own choice: stationary | Own choice: towards | Own choice: away | Caught after own choice |
+| --- | --- | --- | --- | --- |
+| Q-learning | 50.9% | 28.5% | 20.6% | 96.6% |
+| PPO | 54.7% | 26.8% | 18.5% | 98.9% |
+
+Written to results/analysis/diagnostic/
+end 2026-11-17 21:15:08

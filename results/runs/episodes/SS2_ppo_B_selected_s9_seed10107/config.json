@@ -1,0 +1,36 @@
+{
+  "experiment": "episodes",
+  "run_id": "SS2_ppo_B_selected_s9_seed10107",
+  "agent": "ppo",
+  "setting": "B",
+  "tag": "selected",
+  "seed": 9,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "all",
+  "hp": {
+    "learning_rate": 0.001,
+    "entropy": 0.01,
+    "epochs": 4,
+    "gamma": 0.99
+  },
+  "source_run": "results/runs/main/ppo_B_selected_s9",
+  "episode": {
+    "id": "SS2",
+    "kind": "surprising success",
+    "agent": "ppo",
+    "train_seed": 9,
+    "seed": 10107,
+    "outcome": "success",
+    "steps": 72,
+    "criterion": "value estimate at launch 0.463, -5.29 SD from the mean of this agent's episodes (0.508)",
+    "run": "results/runs/main/ppo_B_selected_s9"
+  },
+  "sweep_replays": 20,
+  "decision_replays": 100,
+  "decision_gap": 8
+}

@@ -1,0 +1,39 @@
+start 2026-11-16 11:39:37
+tune: 36 jobs on 8 workers
+[1/36] done q_B_alpha0.05_eps0.05_s102: success 0.34 in 1046 s
+[2/36] done q_B_alpha0.05_eps0.01_s102: success 0.23 in 1046 s
+[3/36] done q_B_alpha0.05_eps0.05_s101: success 0.38 in 1063 s
+[4/36] done q_B_alpha0.05_eps0.01_s100: success 0.90 in 1077 s
+[5/36] done q_B_alpha0.05_eps0.01_s101: success 0.26 in 1112 s
+[6/36] done q_B_alpha0.05_eps0.05_s100: success 0.87 in 1135 s
+[7/36] done q_B_alpha0.1_eps0.05_s100: success 0.59 in 1339 s
+[8/36] done q_B_alpha0.1_eps0.05_s101: success 0.00 in 1594 s
+[9/36] done q_B_alpha0.1_eps0.01_s101: success 0.92 in 1083 s
+[10/36] done q_B_alpha0.1_eps0.05_s102: success 0.82 in 1210 s
+[11/36] done q_B_alpha0.1_eps0.01_s100: success 0.49 in 1313 s
+[12/36] done q_B_alpha0.1_eps0.01_s102: success 0.20 in 1467 s
+[13/36] done q_B_alpha0.3_eps0.05_s100: success 0.71 in 1656 s
+[14/36] done q_B_alpha0.3_eps0.05_s101: success 0.68 in 1823 s
+[15/36] done q_B_alpha0.3_eps0.01_s100: success 0.75 in 1593 s
+[16/36] done q_B_alpha0.3_eps0.05_s102: success 0.85 in 1943 s
+[17/36] done q_B_alpha0.3_eps0.01_s102: success 0.95 in 1384 s
+[18/36] done q_B_alpha0.3_eps0.01_s101: success 0.81 in 1552 s
+[19/36] done ppo_B_lr0.0003_ent0.0_s101: success 0.94 in 1966 s
+[20/36] done ppo_B_lr0.0001_ent0.0_s100: success 0.41 in 3592 s
+[21/36] done ppo_B_lr0.0003_ent0.0_s100: success 0.95 in 2345 s
+[22/36] done ppo_B_lr0.0001_ent0.0_s102: success 0.47 in 3310 s
+[23/36] done ppo_B_lr0.0001_ent0.0_s101: success 0.20 in 3677 s
+[24/36] done ppo_B_lr0.0001_ent0.01_s100: success 0.50 in 3298 s
+[25/36] done ppo_B_lr0.0001_ent0.01_s102: success 0.36 in 3812 s
+[26/36] done ppo_B_lr0.0001_ent0.01_s101: success 0.00 in 3964 s
+[27/36] done ppo_B_lr0.001_ent0.0_s101: success 0.85 in 1089 s
+[28/36] done ppo_B_lr0.0003_ent0.01_s100: success 0.84 in 1563 s
+[29/36] done ppo_B_lr0.001_ent0.0_s100: success 0.96 in 1355 s
+[30/36] done ppo_B_lr0.0003_ent0.0_s102: success 0.61 in 1970 s
+[31/36] done ppo_B_lr0.0003_ent0.01_s101: success 0.97 in 1766 s
+[32/36] done ppo_B_lr0.0003_ent0.01_s102: success 0.00 in 1933 s
+[33/36] done ppo_B_lr0.001_ent0.0_s102: success 0.97 in 988 s
+[34/36] done ppo_B_lr0.001_ent0.01_s100: success 0.99 in 1005 s
+[35/36] done ppo_B_lr0.001_ent0.01_s101: success 0.99 in 1152 s
+[36/36] done ppo_B_lr0.001_ent0.01_s102: success 0.99 in 1276 s
+end 2026-11-16 14:06:13

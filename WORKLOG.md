@@ -5,28 +5,33 @@ the submission is complete. Planned work has no results.
 
 ## Current handover
 
-- Eivind (from 2026-11-12): repository, environment inspection, prediction sheet
-  draft. Claude drafts the predictions; Eivind edits and approves them (logged in
-  AI_RECORD.md).
-- Trym requested a Codex review before the freeze. Proposed clarifications are
-  now in the candidate; Trym and Eivind's academic approval remains pending.
-  Keep any disagreement about which agent wins as a team choice or *Dissent*.
-- **Part 1 is due Friday 2026-11-13** and is mandatory: without it the main
-  submission is not graded. Check the deadline time on Blackboard.
-- **No training before the freeze** (tag `predictions-v1`). Predictions
-  reconstructed after seeing results do not count.
+- **Part 1 was submitted on 2026-11-13**: the sheet in merge commit `61bcabe`
+  (Trym's PR #1), unchanged. Never edit `predictions/predictions_v1.*`;
+  interpretations go in `predictions/annotations.md`.
+- **Parts 2–6 (from 2026-11-14):** Eivind builds code, runs and the brief draft
+  with Claude (logged in AI_RECORD.md). Trym reviews. The Part 5 review record
+  is written by Trym and Eivind, not by an AI.
+- **Setting D is the 32 px gap layout** from the submitted sheet (Eivind,
+  2026-11-14). The narrower paddle (P7) is reported as a separate probe.
+- **`plans/part2_3_plan.md` (commit `be8831c`, 2026-11-16) fixes the setup.** It
+  was committed before any agent was trained. Deviations are dated here.
+- **Tuning is done and the configurations are selected** (2026-11-16, below).
+  `main`, `transfer` and `mechanisms` were started the same day; logs in
+  `results/logs/`. Next: analysis, Part 4 tooling, prediction verdicts.
+- Sections below dated 2026-11-12 are the record from before the submission;
+  where they say "pending" or "candidate", this handover is the current status.
 
 ## Requirement status
 
 | Part | Requirement                                                              | Points | Status      |
 | ---- | ------------------------------------------------------------------------ | ------ | ----------- |
-| 1    | Timestamped prediction sheet: 6 questions + 3 states                     | 30     | In progress |
-| 2    | Settings A–D, comparison rules, required evidence                        | 20     | Not started |
-| 3    | Mechanisms: epsilon, gamma, entropy, learning rate, PPO epochs; ≥5 seeds | 20     | Not started |
-| 4    | Ten annotated episodes                                                   | 20     | Not started |
+| 1    | Timestamped prediction sheet: 6 questions + 3 states                     | 30     | Done        |
+| 2    | Settings A–D, comparison rules, required evidence                        | 20     | Runs and tables done; in the brief draft |
+| 3    | Mechanisms: epsilon, gamma, entropy, learning rate, PPO epochs; ≥5 seeds | 20     | Runs, verdicts and diagnostic experiment done; in the brief draft |
+| 4    | Ten annotated episodes                                                   | 20     | Episodes, replays and evidence tables done; our analysis of the 30 decisions remains |
 | 5    | Human review within the team (≤1,000 words)                              | 30     | Not started |
-| 6    | Three recommendations                                                    | 30     | Not started |
-| –    | Code, experiment records, evidence brief (≤2,000 words), AI record       | –      | Not started |
+| 6    | Three recommendations                                                    | 30     | Proposed in the brief draft; not yet decided by us |
+| –    | Code, experiment records, evidence brief (≤2,000 words), AI record       | –      | Code and records done; brief drafted (1,376 words); AI record current to Part 4 |
 
 ## Decisions so far (provisional, 2026-11-12)
 
@@ -216,3 +221,453 @@ including headings, table markup, image markup and references: 2,601 before,
 unstated Part 1 word limit. `git diff --check` passed without output. The
 submission candidate is `predictions/predictions_v1.pdf`, subject to human review;
 its source is `predictions/predictions_v1.md`. No freeze or submission is recorded.
+
+## After the Part 1 submission (Eivind with Claude, 2026-11-14)
+
+- The submitted sheet is the one in `61bcabe`. Claude's freeze proposals (PR #2:
+  placeholder timestamp, reworded AI statement, revised P4 rationale, new P8)
+  were **not adopted**. The sheet therefore has no prediction for the gap
+  layout; D results are reported without a prior prediction and say so.
+- Kept from that proposal branch, because Part 2 needs it: the fixed-rule
+  **layout calibration** in `src/inspect_transfer_layout.py` (`layout_calibration`
+  in `probe.json`; no learning). Fixed rules, p = 0.25, 16 px paddle, no random
+  start moves, paired seeds for both layouts, patch to RAM 18–23 re-applied
+  before every step from reset, pixel check at step 30.
+
+  | Policy (lives) | Original: K≥2 | Gap: K≥2 | Steps to K=2 (orig / gap, median) | Ball above wall (gap) |
+  | --- | --- | --- | --- | --- |
+  | Tracking (100) | 80% | 86% | 76.5 / 55 | 5% |
+  | Random (200) | 1.5% | 3% | 80 / 88.5 | 0.5% |
+
+  The 80% here and the 89% in the first calibration come from different seed
+  lists; 100 lives leave several percentage points of sampling noise. At K = 2
+  the gap seldom matters, and the state holds no brick information. The team
+  keeps the gap as D anyway: it is the layout named in the submitted sheet, and
+  the task asks us to explain whether the representation can generalise.
+- Tracking successes take 63–93 steps to K = 2 in B. P4's 300-step example in
+  the sheet is hypothetical and lies beyond the 267-step break-even against a
+  27-step loss; this is noted for the P4 annotation, not changed in the sheet.
+
+## Experiment code and smoke test (Eivind with Claude, 2026-11-16)
+
+Code for Parts 2–3 is in `src/`: `breakout_env.py` (one-life environment and
+state encoder), `q_learning.py`, `ppo.py`, `evaluate.py`, `run.py`,
+`run_all.py`, `analyze.py`, `verify.py`, `make_video.py`. Part 4 tooling
+(probes for S1–S3, episode selection, alternative-action replay) is not written.
+
+**Measurements behind the plan** (fixed rules, no learning): the paddle position
+is 99 at reset on a range of 8–144, so it starts right of centre, and more than a
+quarter of the starts end at the right wall. The ball direction is zero on at
+least one axis in about 3% of steps. A seeded reset takes 63 ms, an unseeded one
+6 ms, an agent step 0.4 ms.
+
+**Verification** (`uv run python -B src/verify.py`, `results/verification/verify.json`):
+all 7 checks pass. All 4,760 cells are reachable by the encoder; seeded Setting A
+episodes repeat exactly; Setting B episodes replay exactly from seed and action
+sequence; the gap is empty 30 steps after reset in D; rewards and outcomes follow
+the plan; the Q-learning update converges to the known values on a toy chain.
+
+Tracking rule through the new environment, 100 seeded episodes each (with the
+random start moves, unlike the Part 1 calibration):
+
+| Setting | Success | Median steps to success | Distinct trajectories |
+| --- | --- | --- | --- |
+| A | 100% | 79 | 25 |
+| B | 90% | 72 | 100 |
+| C | 90% | 72 | 100 |
+| D (gap) | 94% | 55 | 100 |
+| P7 (12 px paddle) | 79% | 71 | 100 |
+
+**Implementation notes to carry into the brief:**
+
+- PPO stops at exactly 500,000 steps. The last 288 steps are collected but not
+  used in an update, because 500,000 is not a multiple of the 1,024-step rollout.
+- Stable-Baselines3 builds separate 2 × 64 networks for the actor and the critic.
+- In D the game redraws the full wall for one step when the ball is launched;
+  the gap is restored before the next step. The ball is then near the paddle.
+- The encoder always assumes the 16 px paddle, also in P7, so the observation
+  format is unchanged.
+- In A, 100 episodes gave 25 distinct trajectories. The A tables report the
+  number of distinct trajectories.
+
+**Smoke test** (`run_all.py smoke`: 20,000 steps, Setting B, seed 999, 50
+evaluation episodes per point). Purpose: check that the code runs and measure
+speed. Its output is not evidence, is excluded from git and did not change the
+plan. Training ran at 1,271 steps/s (Q-learning) and 930 steps/s (PPO) with two
+processes. Evaluation is the larger cost: 0.12 s per normal episode, mostly the
+seeded reset, and 1.1 s per timeout episode. PPO's most probable action did not
+launch the ball at 10 of 12 points in this short run, so its evaluation took
+553 s. If that persists in full runs, the 166 planned runs take about 11–12
+hours on 8 processes; otherwise about 4–5 hours. Both figures are extrapolated
+from this one run and will be replaced by measured times after tuning.
+
+## Code review fixes before the assessed runs (Eivind with Claude, 2026-11-16)
+
+A second AI pass read the code without having written it and reported the
+points below. Eivind decided to fix them, because correctness matters more than
+the lost run time. A first tuning job had started at 10:58 on commit `bdc8ab5`;
+it was stopped and all tuning runs are repeated on the fixed code, so every
+assessed run uses one code version.
+
+| Finding | Fix |
+| --- | --- |
+| Stable-Baselines3 seeds the 8 PPO environments as seed, seed + 1, …, so training seeds 0 and 1 shared 7 of 8 environment seeds. P2 concerns variation between seeds | `ppo.env_seeds`: each environment gets an independent seed derived from (training seed, environment number). `verify.py` checks that the 13 training seeds share none |
+| Q-tables were saved in single precision but trained in double. Near-equal values could become ties and change a greedy action in transfer or replay | Saved at full precision (`.npz`). `make_video.py` replays the logged action sequence and checks it against the logged trajectory |
+| The sheet's ε schedule was not an explicit Part 3 variant. Had tuning selected final ε = 0.01, it would never have been run | Added as `eps_linear0.05`; skipped only when it equals the selected configuration |
+| `git_dirty` was true for every run, because new result files counted | It now looks only at `src/`, `pyproject.toml` and `uv.lock` |
+| `transfer` did not check `--k` against the selected configuration | Checked |
+
+Left as they are: PPO is evaluated at the policy of its last completed update
+(at 25,000 steps that is the policy after 24,576); a run that crashes writes no
+logs and is repeated from the start. `analyze.py` reads one group at a time, so
+the Part 3 analysis must add the reference runs from `main`; not yet written.
+
+Q-learning's training code did not change, and a run is deterministic given its
+seed. The Q-learning runs finished by the first job are therefore kept outside
+the repository to compare with the repeated runs, as a check of reproducibility.
+
+## Tuning and selected configurations (2026-11-16)
+
+`run_all.py tune`: 36 runs on commit `73d0243`, 11:39–14:06 on 8 processes
+(`results/logs/tune.log`, `results/analysis/tune/`). Final evaluation success in
+Setting B, 200 episodes per run, 3 seeds per configuration:
+
+| Agent | Configuration | Mean | Per seed | Evaluation points with > 50% timeouts (of 36) |
+| --- | --- | --- | --- | --- |
+| Q-learning | α 0.05, final ε 0.05 | 52.8% | 34.0, 37.5, 87.0 | 0 |
+| Q-learning | α 0.05, final ε 0.01 | 46.2% | 23.0, 26.0, 89.5 | 0 |
+| Q-learning | α 0.1, final ε 0.05 (sheet) | 47.2% | 0.0, 59.0, 82.5 | 3 |
+| Q-learning | α 0.1, final ε 0.01 | 53.5% | 20.0, 49.0, 91.5 | 2 |
+| Q-learning | α 0.3, final ε 0.05 | 74.7% | 67.5, 71.5, 85.0 | 9 |
+| **Q-learning** | **α 0.3, final ε 0.01** | **83.7%** | 75.0, 81.0, 95.0 | 8 |
+| PPO | learning rate 1·10⁻⁴, entropy 0 | 36.0% | 20.0, 41.5, 46.5 | 27 |
+| PPO | learning rate 1·10⁻⁴, entropy 0.01 | 28.8% | 0.0, 36.5, 50.0 | 32 |
+| PPO | learning rate 3·10⁻⁴, entropy 0 | 83.7% | 61.0, 94.5, 95.5 | 12 |
+| PPO | learning rate 3·10⁻⁴, entropy 0.01 (sheet) | 60.5% | 0.0, 84.0, 97.5 | 13 |
+| PPO | learning rate 1·10⁻³, entropy 0 | 92.8% | 85.5, 96.0, 97.0 | 6 |
+| **PPO** | **learning rate 1·10⁻³, entropy 0.01** | **99.3%** | 99.0, 99.5, 99.5 | 11 |
+
+**Selected** by the plan's rule (highest mean; `results/selected_config.json`):
+Q-learning α = 0.3 with ε from 1.0 to 0.01 over the first half; PPO learning
+rate 1·10⁻³ with entropy 0.01. Both differ from the sheet's defaults, which
+stay in the Part 3 grid. Eivind approved the selection. Both agents exceed 10%
+success, so the fallback (success = 1 brick) does not apply.
+
+**Observations, not yet analysed:**
+
+- Success varies strongly between seeds and between evaluation points of one
+  run. `q_B_alpha0.1_eps0.05_s101` scored 92% at 400,000 steps and 0% at 500,000.
+- The 0% runs did not lose the ball: all 200 episodes timed out. In that run
+  the greedy policy moves the paddle to the right wall and then prefers NOOP
+  (Q = 0.2926) to FIRE (0.2920). Waiting costs nothing in Setting B. In the last
+  10% of training, with ε = 0.05, the same agent succeeded in 49% of episodes.
+- PPO's most probable action failed to launch the ball at 101 of 216 evaluation
+  points, Q-learning's greedy action at 22 of 216.
+- Mean time per run: Q-learning 23 min (9.5 training), PPO 37 min (7 training).
+  Evaluation dominates, mostly through timeout episodes of 2,000 steps.
+
+**Reproducibility:** the 11 Q-learning runs finished by the first, stopped
+tuning job (commit `bdc8ab5`) have byte-identical training and evaluation logs
+to the same runs in the repeated job.
+
+**Changes before the main runs** (they do not alter training):
+
+- Every episode record now has `launch_bin` (paddle bin at the start) and
+  `launch_step` (the step at which the ball came into play). S1 needs both, and
+  training episodes cannot be replayed afterwards. The tuning logs lack them.
+- Evaluation episode logs are written as `eval_episodes.csv.gz`. The tuning
+  logs were compressed afterwards with identical content (60 MB to 2 MB).
+- A failed run no longer stops a group; it is reported and repeated on restart.
+
+Part 3 with the selected configurations has 85 runs: the grid values in the
+plan, the sheet's ε schedule, and the selected α = 0.3 and learning rate 1·10⁻³
+taken from the Part 2 runs (seeds 0–4).
+
+## Runs for Parts 2 and 3 (2026-11-16)
+
+All 145 training runs used commit `7ce3f82` with unchanged code (`git_dirty`
+is false in every `environment.json`). They ran on 8 processes and none failed.
+
+| Group | Content | Started | Finished |
+| --- | --- | --- | --- |
+| `main` | 60 runs: Settings A, B, C × 2 agents × 10 seeds | 14:41 | 17:04 |
+| `transfer` | 40 evaluations: the final B agents on the gap layout (D) and the 12 px paddle (P7) | 17:04 | 17:06 |
+| `mechanisms` | 85 runs: Part 3, Setting B, 5 seeds per value | 17:06 | 21:19 |
+
+Tables and curves are in `results/analysis/main/`, `transfer/` and
+`mechanisms/`. `analyze.py mechanisms` includes the Setting B runs of `main`
+with seeds 0–4 as configuration `selected`, as the plan specifies.
+
+**Final evaluation, greedy policy** (success rate, mean ± between-seed SD, 10
+trained agents per cell, 200 episodes each):
+
+| Setting | Q-learning | PPO |
+| --- | --- | --- |
+| A | 100.0 ± 0.0% | 99.4 ± 2.1% |
+| B | 75.9 ± 16.7% | 87.8 ± 17.5% |
+| C | 79.1 ± 21.8% | 93.7 ± 3.6% |
+| D (B agents, gap layout) | 51.5 ± 16.5% | 83.4 ± 27.8% |
+| P7 (B agents, 12 px paddle) | 53.4 ± 9.3% | 68.9 ± 21.6% |
+
+**Observations, not yet assessed against the predictions:**
+
+- Setting A does not separate the agents. In B, nine PPO seeds reach 86–97% and
+  one 39%; Q-learning is spread evenly from 46% to 95%.
+- Q-learning's mean in B was 87.7% at 400,000 steps and 75.9% at 500,000.
+- On the gap layout Q-learning falls from 75.9% to 51.5%. PPO keeps 83.4%, but
+  two seeds drop to 24% and 39%.
+- The selected configurations rarely fail to launch at the final evaluation
+  (one Q-learning agent in B with 33% timeouts). During training it still
+  happens: every episode timed out at 73 of 360 evaluation points for PPO and
+  31 of 360 for Q-learning.
+- Tuning selected α = 0.3 for Q-learning from 3 seeds (83.7% against 53.5% for
+  α = 0.1 with the same ε schedule). On seeds 0–4 the order is reversed: α = 0.1
+  reaches 86.4 ± 10.9% and α = 0.3 67.2 ± 18.4%. The selected configuration
+  stays, as fixed in the plan; the brief reports both numbers.
+- In Part 3, PPO with γ = 0.9 (10.5%) and with learning rate 3·10⁻⁵ (0.0%)
+  scores far higher with sampled actions (52.1% and 29.2%): the most probable
+  action often does not launch the ball.
+
+## Verdicts and probes (2026-11-17)
+
+`src/verdicts.py` applies the sheet's decision rule to the finished runs and
+writes `results/analysis/verdicts/verdicts.md`. The dated verdicts are in
+`predictions/annotations.md`.
+
+**Probes** (`src/probes.py`, no training): the final A and B agents of both
+algorithms played the 200 evaluation episodes at p = 0 and at p = 0.25 with
+every step logged (80 evaluations, `results/runs/probes/`). In the 40
+evaluations where the setting equals the training setting, all trajectories
+are identical to the final evaluation in `main`; the script asserts this.
+The step logs give P3b–c and the S1–S3 probes.
+
+**Decisions by Eivind (2026-11-17):**
+
+- Pooled SD of two groups: √((SD₁² + SD₂²) / 2).
+- An inconclusive comparison is reported with its direction (weak evidence
+  for, weak evidence against, no measurable difference), not as "no effect".
+- P4c is classified as inconclusive, as the sheet predicted, and the weakness
+  of that test is stated.
+- P2 in A is classified as supported under the sheet's threshold, with the
+  note that it rests on one PPO seed.
+- S1: a "common" launch bin has at least 1/8 of the starts, which gives the
+  right wall only. This definition was written into the script before the
+  probe was run and is kept, although the four-bin alternative would change
+  one verdict from inconclusive to supported. The alternative is reported as a
+  sensitivity check.
+
+**Definitions fixed in `probes.py` before it was run:** shared observations
+are the cells visited by the final B agents of both algorithms in Setting B,
+weighted by pooled visits; a launch that never happens counts as 2,000 steps
+and the median is used; checkpoint changes are averaged over all 11
+transitions. Two rows marked "sensitivity check" were added afterwards and
+decide nothing.
+
+**Result:** of 34 components, 7 are supported, 7 contradicted and 20
+inconclusive. The inconclusive ones have differences smaller than the
+variation between seeds.
+
+**Cases that do not fit the predictions:**
+
+- S2 is reversed: at the paddle edge PPO favours STATIONARY (61% of visits)
+  and Q-learning moves more often.
+- S1: every Q-learning agent has one launch position and drives the paddle
+  there before FIRE; seven of ten use the right wall.
+- S3: PPO switches more between consecutive steps than Q-learning (0.35
+  against 0.20), although its preference is more stable across checkpoints
+  and seeds.
+
+## Diagnostic experiment: the action at the paddle edge (2026-11-17, written before the run)
+
+**The case that does not fit.** S2 predicted that Q-learning stays still when
+the ball falls at the paddle edge and that PPO moves towards the ball. The
+probes show the reverse: PPO favours STATIONARY in 61% of the shared S2 visits
+and Q-learning in 43%.
+
+**Question.** Does the requested action in an S2 state change whether the ball
+is caught?
+
+**Two explanations.**
+
+1. *The action matters, and staying still is the better one.* PPO has learned
+   an edge catch that Q-learning has not, and Q-learning's moves at the edge
+   cost it catches. Then the catch rate after STATIONARY exceeds the catch rate
+   after TOWARDS by more than the pooled between-seed SD.
+2. *The action does not matter.* With the ball at y ≥ 165 and 4–8 px from the
+   paddle centre, the catch is already decided or can still be corrected, and
+   the favoured category is a choice between near-equal values. Then the two
+   catch rates differ by less than the pooled SD.
+
+If TOWARDS exceeds STATIONARY by more than the pooled SD, neither holds: the
+sheet's argument for centring was right about the action, and PPO's preference
+is the worse one.
+
+**Method** (`src/diagnostic.py`, no training). The final B agents of both
+algorithms play the 200 evaluation episodes in Setting B. At the first S2 step
+of an episode the emulator state is saved. From it, each of STATIONARY (NOOP),
+TOWARDS the ball and AWAY from it is requested for one step, 20 times with new
+sticky noise, and the agent's own primary policy finishes the episode. A replay
+counts as caught if the ball rises again before it is lost.
+
+**Decision rule.** Per algorithm, the catch rate is computed per trained agent
+and STATIONARY is compared with TOWARDS across the 10 seeds. Episode success is
+reported as a second outcome and AWAY as the third category. Nothing else
+decides between the explanations.
+
+**Limits known in advance.** Only one step is forced, so a correction by the
+agent in the following steps is part of the outcome. The states come from each
+agent's own episodes, so the two algorithms are probed in different states.
+
+**Result** (run on commit `6f71d30`, 20 agents, 3,733 S2 states, 20 replays per
+action; `results/analysis/diagnostic/`):
+
+| Agent | Caught after STATIONARY | after TOWARDS | after AWAY | STATIONARY − TOWARDS |
+| --- | --- | --- | --- | --- |
+| Q-learning | 96.1 ± 3.0% | 92.6 ± 5.8% | 93.6 ± 5.8% | +3.5 (pooled SD 4.6) |
+| PPO | 98.8 ± 0.8% | 98.2 ± 1.4% | 97.0 ± 2.2% | +0.6 (pooled SD 1.1) |
+
+By the rule written before the run, explanation 2 holds for both algorithms:
+the catch rates after STATIONARY and after TOWARDS differ by less than the
+pooled SD, and the ball is caught in at least 92.6% of the replays whichever
+action is requested. The direction is the same for both (staying still is
+slightly better), so this is weak evidence for explanation 1 and not support
+for it. The reversed S2 result therefore describes a choice between
+near-equal actions, not a difference in catching strategy.
+
+Episode success, the second outcome, shows the same pattern: +8.0 points for
+Q-learning (pooled SD 10.1) and +1.9 for PPO (17.3). Three Q-learning agents
+(seeds 2, 6 and 8) lose 16–39 points of episode success after TOWARDS, so for
+single agents the action can matter later in the episode.
+
+In the first S2 state of their own episodes the two algorithms choose
+STATIONARY about equally often (Q-learning 51%, PPO 55%). The larger
+difference in the S2 probe (43% against 61%) was measured on the pooled
+shared observations.
+
+## Correction: replays from a saved state (2026-11-17)
+
+**Error.** The emulator's saved state does not hold the action it played last,
+and the sticky noise repeats exactly that action. After `restore`, the first
+frames of a replay could therefore repeat the last action of the *previous
+replay* instead of the last action of the episode. Found while writing the
+Part 4 replays. Test in Setting B from one saved state whose last action was
+LEFT, 800 replays each: after one NOOP the paddle had moved −10.7 px when LEFT
+had been played before the restore and −7.7 px when RIGHT had been played.
+
+**Fix.** `BreakoutLife` records the action it played last. `restore` plays that
+action for 8 frames before it restores the state, so the sticky noise repeats
+the right action. After the fix the same test gives −10.7 and −10.5 px.
+`src/verify.py` has a ninth check for this (exact replay in A, and no
+dependence on earlier replays in B); all nine pass. Training and evaluation
+never restore a state and are unchanged: the Setting B replay check and the
+tracking reference in `verify.json` are identical to before.
+
+**Effect on the diagnostic experiment.** In the run on commit `6f71d30` the
+first replay of each state was correct. In the other 19 the forced step could
+start with a stale action in the frames where the noise struck (25% per frame).
+The error is the same for the three forced actions, so a bias in the
+comparison is not expected, but the numbers are not exact. The experiment is
+run again with the same question, method and decision rule. The first run
+stays in the history at commit `d1f2507`; both results are reported below.
+
+**Second run** (commit `4915cfb`, 21:02–21:15, the same 3,733 S2 states;
+`results/analysis/diagnostic/`):
+
+| Agent | Caught after STATIONARY | after TOWARDS | after AWAY | STATIONARY − TOWARDS | First run |
+| --- | --- | --- | --- | --- | --- |
+| Q-learning | 96.0 ± 3.3% | 92.1 ± 6.4% | 93.4 ± 6.1% | +3.9 (pooled SD 5.1) | +3.5 (4.6) |
+| PPO | 98.9 ± 0.8% | 98.1 ± 1.6% | 97.0 ± 2.1% | +0.8 (pooled SD 1.2) | +0.6 (1.1) |
+
+The conclusion is unchanged: explanation 2 holds for both algorithms, with the
+same direction as before. Episode success differs by +8.0 points for Q-learning
+(pooled SD 10.5) and +2.2 for PPO (17.3). The same three Q-learning agents
+(seeds 2, 6 and 8) lose 17–40 points of episode success after TOWARDS. The
+files of the first run were replaced; they are in the history at commit
+`d1f2507`.
+
+## Part 4: details of the episode selection (2026-11-17, written before the selection was run)
+
+The rule is section 7 of `plans/part2_3_plan.md`. It leaves these details
+open. They are fixed here, before `src/episodes.py` is run on the agents of
+`main`. The script was developed on the six tuning agents with the selected
+configurations (`--check`, seeds 100–102, evaluation seeds 20,000+), which are
+not part of the selection.
+
+| Detail | Choice |
+| --- | --- |
+| Episodes | Final greedy evaluation in B, 20 agents × 200 episodes |
+| Value estimate | Highest Q-value of the state for Q-learning, critic value for PPO |
+| Most common length range | 10-step ranges (0–9, 10–19, …), per algorithm and outcome; the range with the most episodes |
+| Typical episode | Closest to the median length inside that range; ties by lowest evaluation seed, then lowest training seed |
+| Spread over agents | One Q-learning and one PPO episode per outcome, the third from the algorithm with more episodes of that outcome; different trained agents and evaluation seeds within an outcome |
+| Surprising success | One per algorithm: the success with the lowest value estimate at launch (first step with the ball in play), in SD from the mean of the same trained agent's 200 episodes |
+| Surprising failure | One per algorithm: the failure with the highest mean value estimate over its last five steps |
+| Timeouts | Counted and reported as a third outcome; not selected, since the sheet defines failure as a lost ball |
+| Important decision | Every step of an episode is replayed: each of the four actions is forced for one step, 20 times with new sticky noise, and the agent's policy continues. The three steps with the largest difference in success rate between the best and the worst action are annotated, at least 8 steps apart |
+| Numbers in the tables | The three decisions are replayed again, 100 times per action, with new noise. Only these replays are reported, since the 20-replay sweep also chose the steps |
+| Reading of a decision | Near-equal actions: best and worst action differ by less than 20 points. Poor action: the best action succeeds at least 20 points more often than the chosen one. Otherwise the action matters and the chosen action is among the best |
+| Unlucky outcome | The success rate of 100 replays from the first step with the logged action is reported for every episode |
+| Largest fall | Per episode, the step after which the success rate of the requested action (20 replays) falls the most, with the rate of the best action at that step. A fall that no action could have avoided is noise, not a decision |
+
+Changes from the plan: the plan replays the alternatives 20 times at each
+annotated decision. The sweep over all steps and the 100 replays are additions.
+
+**Correction to the selection (2026-11-17).** The first run of
+`src/episodes.py` (commit `4915cfb`) chose SS1 from Q-learning seed 3. That
+agent launches into the same state in all 200 episodes, so its value estimate
+at launch never varies and the score "SD from the agent's mean" is undefined;
+rounding turned it into −∞ and put the episode first. The report stopped on
+that value before any table or figure of the decisions was written. The score
+is now left empty for an agent without variation at launch. This changes SS1
+only (now Q-learning seed 2, evaluation seed 10077, −2.41 SD); the other nine
+episodes are the same. All ten were recorded again on the corrected commit.
+
+**Decisions by Eivind (2026-11-17):**
+
+- The diagnostic experiment is run again after the correction and both results
+  are reported.
+- The details of the episode selection in the table above are accepted.
+- Three of the five PPO episodes (TF2, SS2, SF2) come from the same trained
+  agent, seed 9. The rule stands as written before the selection; the
+  concentration is stated as a limit. Claude described seed 9 to Eivind as the
+  PPO agent with the most failures. That was wrong: seed 9 has 14 failures in
+  200 episodes, and seed 6 has 122 of PPO's 230. No selected episode comes from
+  PPO seed 6 (`results/analysis/episodes/selection.md`, third table).
+
+## Part 4: the ten episodes (2026-11-17)
+
+Run on commit `6b6ef4a`, 21:24–21:29 (`results/logs/episodes.log`). All 4,000
+logged episodes replayed to their logged trajectories. Selection, outcome
+counts per trained agent and the episodes' sources are in
+`results/analysis/episodes/selection.md`; the annotation tables are in
+`decisions.md`, one timeline and one decision figure per episode are next to
+them, and the videos are in `results/videos/episodes/`.
+
+| Episode | Agent (seed) | Outcome | Success in 100 replays from the first step | What decided it |
+| --- | --- | --- | --- | --- |
+| TS1 | Q-learning (4) | success, 74 steps | 77 | Two decisions that matter, both chosen well |
+| TS2 | PPO (1) | success, 71 steps | 98 | One decision that matters (step 46), chosen well |
+| TS3 | PPO (3) | success, 71 steps | 99 | One decision that matters (step 46), chosen well |
+| TF1 | Q-learning (4) | failure, 55 steps | 72 | Poor action at step 48: RIGHT 0%, FIRE 100% |
+| TF2 | PPO (9) | failure, 53 steps | 96 | Unlucky: at step 47 RIGHT was the only saving action and was requested; the paddle did not move in that step |
+| TF3 | Q-learning (1) | failure, 55 steps | 69 | Poor actions at steps 34 and 42: 0% against 98% |
+| SS1 | Q-learning (2) | success, 96 steps | 93 | Poor action at step 22 (30% against 74%), success all the same |
+| SS2 | PPO (9) | success, 72 steps | 96 | Two decisions that matter, both chosen well |
+| SF1 | Q-learning (1) | failure, 53 steps | 65 | Poor actions at steps 32 and 40: 0% against 98% |
+| SF2 | PPO (9) | failure, 71 steps | 97 | Unlucky in the same way as TF2, at step 63 |
+
+Of the 30 annotated decisions, 6 are poor actions (all by Q-learning), 13
+matter and were chosen among the best, and 11 are between near-equal actions.
+
+What the aggregate failure rate hides: in these five failures Q-learning loses
+through an action whose Q-value is wrong, while PPO loses after a late move
+that the sticky noise cancelled. The limits are stated with it. Five failures
+are few. Both PPO failures come from seed 9. PPO seed 6, with 122 of the 230
+PPO failures, has no episode among the ten, and Q-learning seed 1 has two of
+the three Q-learning failures.
+
+After the first look at the tables, three presentation changes were made to
+the report code, none to the recorded data: the success rate of the best
+action after the largest fall is reported, the outcome counts per trained
+agent are added to `selection.md`, and the state after the last step is left
+out of the ball curves.

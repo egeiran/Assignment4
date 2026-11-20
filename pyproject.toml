@@ -7,6 +7,10 @@ dependencies = [
     "ale-py>=0.12.1",
     "gymnasium>=1.4.0",
     "markdown>=3.11.3",
+    "matplotlib>=3.11.2",
     "numpy>=2.5.4",
+    "pandas>=3.1.1",
     "pillow>=13.0.0",
+    "stable-baselines3>=2.9.2",
+    "torch>=2.15.0",
 ]

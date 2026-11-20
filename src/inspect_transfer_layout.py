@@ -4,6 +4,11 @@ Usage: uv run python -B src/inspect_transfer_layout.py
 Writes only results/inspection/transfer_probe/. Existing inspection is preserved.
 RAM 0:36 stores bricks (OCAtari's Breakout RAM decoder); clearing bytes 18:24
 is checked against pixels and paired scripted trajectories, not assumed safe.
+
+The layout calibration plays whole lives with the random policy and the fixed
+tracking rule on both layouts (paired seeds), re-applying the patch before every
+step so that it survives the launch. It records the step at which K = 2 is
+reached, which the main inspection does not log.
 """
 import json
 from importlib.metadata import version
@@ -12,9 +17,55 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-from inspect_env import features, heuristic, make_env, ram
+from inspect_env import PADDLE_RED, features, heuristic, make_env, ram
 
 OUT = Path(__file__).resolve().parent.parent / "results/inspection/transfer_probe"
+GAP_RAM = range(18, 24)
+WALL_TOP = 57  # top pixel row of the brick wall
+
+
+def calibration_life(seed, gap, policy, rng):
+    """One life (p = 0.25, 16 px paddle, no random start moves). Returns K = 2 statistics."""
+    env = make_env(p=0.25)
+    _, info = env.reset(seed=seed)
+    lives, prev, bricks, step_k2, above_wall = info["lives"], None, 0, None, False
+    for t in range(1, 2001):
+        if gap:
+            for address in GAP_RAM:
+                env.unwrapped.ale.setRAM(address, 0)
+        before = ram(env).copy()
+        f = features(before, prev)
+        above_wall |= f["in_play"] and f["ball_y"] < WALL_TOP
+        action = int(rng.integers(4)) if policy == "random" else heuristic(f, 16)
+        _, reward, terminated, _, info = env.step(action)
+        if gap and t == 30:  # well after launch: the gap must still be empty (ball pixels allowed)
+            region = env.unwrapped.ale.getScreenRGB()[57:93, 48:80]
+            assert np.all((region == 0).all(axis=2) | (region == PADDLE_RED).all(axis=2)), "Gap refilled."
+        prev = before
+        bricks += reward > 0
+        if bricks >= 2:
+            step_k2 = t
+            break
+        if info["lives"] < lives or terminated:
+            break
+    env.close()
+    return {"k2": step_k2 is not None, "step_k2": step_k2, "above_wall": bool(above_wall)}
+
+
+def layout_calibration():
+    out = {}
+    for j, (policy, n) in enumerate((("heuristic", 100), ("random", 200))):
+        for gap in (False, True):
+            rng = np.random.default_rng(42 + j)
+            lives = [calibration_life(42 + 1000 * j + k, gap, policy, rng) for k in range(n)]
+            steps = [l["step_k2"] for l in lives if l["k2"]]
+            out[f"{policy}|{'gap' if gap else 'original'}"] = {
+                "lives": n,
+                "share_reaching_K2": round(float(np.mean([l["k2"] for l in lives])), 3),
+                "steps_to_K2_min_median_max": ([int(min(steps)), float(np.median(steps)), int(max(steps))]
+                                               if steps else None),
+                "share_with_ball_above_wall": round(float(np.mean([l["above_wall"] for l in lives])), 3)}
+    return out
 
 
 def prepare(seed, gap=False, mode=0):
@@ -89,9 +140,11 @@ def main():
               "mode": 0, "difficulty": 0, "sticky_probability": 0.25, "frameskip": 4,
               "seed": 42, "cleared_RAM_addresses": list(range(18, 24)),
               "mode_checks": modes, "initial_pixel_check": initial, "scripted_collision_check": contact,
-              "limits": "Patch applied after 20 tracking-rule steps, not at fresh reset. "
-                        "A pre-launch patch was overwritten during game initialisation. "
-                        "No training, agent performance or full-episode wrapper validation. "
+              "layout_calibration": layout_calibration(),
+              "limits": "Collision check: patch applied after 20 tracking-rule steps, not at fresh reset; "
+                        "a single pre-launch patch was overwritten during game initialisation. "
+                        "Layout calibration re-applies the patch before every step, from reset, for fixed "
+                        "rules only and without random start moves. No training or agent performance. "
                         "Map acceptance and final D choice remain with the team."}
     (OUT / "probe.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2))

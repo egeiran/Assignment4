@@ -1,0 +1,25 @@
+{
+  "experiment": "main",
+  "run_id": "q_C_selected_s6",
+  "agent": "q",
+  "setting": "C",
+  "tag": "selected",
+  "seed": 6,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "all",
+  "hp": {
+    "alpha": 0.3,
+    "gamma": 0.99,
+    "epsilon": {
+      "kind": "linear",
+      "start": 1.0,
+      "end": 0.01,
+      "fraction": 0.5
+    }
+  }
+}

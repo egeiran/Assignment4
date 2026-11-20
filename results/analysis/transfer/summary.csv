@@ -1,0 +1,5 @@
+Setting,Agent,Configuration,Policy,Trained agents,Success % (mean ± SD),Success % range,Failure %,Timeout %,Mean return,"Median steps, success","Median steps, failure",Distinct trajectories,Interactions,Training time (s)
+D,PPO,on_D,greedy,10,83.4 ± 27.8,24.0–99.5,16.0 ± 28.0,0.7 ± 2.2,0.834,60.5 ± 11.7,43.6 ± 13.0,195,"500,000",–
+D,Q-learning,on_D,greedy,10,51.5 ± 16.5,15.0–68.5,45.2 ± 18.4,3.3 ± 10.4,0.515,61.9 ± 7.3,52.5 ± 1.4,195,"500,000",–
+P7,PPO,on_P7,greedy,10,68.9 ± 21.6,13.5–91.5,30.4 ± 21.5,0.7 ± 2.2,0.689,71.5 ± 0.7,53.0 ± 0.0,195,"500,000",–
+P7,Q-learning,on_P7,greedy,10,53.4 ± 9.3,38.0–68.0,43.3 ± 12.8,3.3 ± 10.4,0.534,71.0 ± 3.0,55.6 ± 0.9,194,"500,000",–

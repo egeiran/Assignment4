@@ -1,0 +1,49 @@
+start 2026-11-17 21:24:25
+| id | kind | agent | train_seed | seed | outcome | steps | criterion |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| TS1 | typical success | q | 4 | 10005 | success | 74 | 74 steps; most common range 70–79 steps holds 781 of 1518 Q-learning successes, median 74 |
+| TS2 | typical success | ppo | 1 | 10000 | success | 71 | 71 steps; most common range 70–79 steps holds 1052 of 1756 PPO successes, median 71 |
+| TS3 | typical success | ppo | 3 | 10001 | success | 71 | 71 steps; most common range 70–79 steps holds 1052 of 1756 PPO successes, median 71 |
+| TF1 | typical failure | q | 4 | 10003 | failure | 55 | 55 steps; most common range 50–59 steps holds 234 of 416 Q-learning failures, median 55 |
+| TF2 | typical failure | ppo | 9 | 10000 | failure | 53 | 53 steps; most common range 50–59 steps holds 162 of 230 PPO failures, median 53 |
+| TF3 | typical failure | q | 1 | 10020 | failure | 55 | 55 steps; most common range 50–59 steps holds 234 of 416 Q-learning failures, median 55 |
+| SS1 | surprising success | q | 2 | 10077 | success | 96 | value estimate at launch 0.356, -2.41 SD from the mean of this agent's episodes (0.451) |
+| SS2 | surprising success | ppo | 9 | 10107 | success | 72 | value estimate at launch 0.463, -5.29 SD from the mean of this agent's episodes (0.508) |
+| SF1 | surprising failure | q | 1 | 10172 | failure | 53 | mean value estimate over the last five steps 0.411; median over Q-learning failures 0.152 |
+| SF2 | surprising failure | ppo | 9 | 10004 | failure | 71 | mean value estimate over the last five steps 0.664; median over PPO failures 0.448 |
+
+[1/10] done TF1_q_B_selected_s4_seed10003: decisions at steps [6, 17, 48]
+[2/10] done TF3_q_B_selected_s1_seed10020: decisions at steps [17, 34, 42]
+[3/10] done TS1_q_B_selected_s4_seed10005: decisions at steps [8, 17, 48]
+[4/10] done TF2_ppo_B_selected_s9_seed10000: decisions at steps [0, 35, 46]
+[5/10] done TS3_ppo_B_selected_s3_seed10001: decisions at steps [6, 38, 46]
+[6/10] done TS2_ppo_B_selected_s1_seed10000: decisions at steps [3, 24, 46]
+[7/10] done SS2_ppo_B_selected_s9_seed10107: decisions at steps [7, 16, 47]
+[8/10] done SS1_q_B_selected_s2_seed10077: decisions at steps [22, 49, 70]
+[9/10] done SF1_q_B_selected_s1_seed10172: decisions at steps [15, 32, 40]
+[10/10] done SF2_ppo_B_selected_s9_seed10004: decisions at steps [2, 16, 62]
+TS1: figures and video written
+TS2: figures and video written
+TS3: figures and video written
+TF1: figures and video written
+TF2: figures and video written
+TF3: figures and video written
+SS1: figures and video written
+SS2: figures and video written
+SF1: figures and video written
+SF2: figures and video written
+| ID | Kind | Agent | Outcome | Steps | Success from the first step | Largest fall in success rate | Decision 1 | Decision 2 | Decision 3 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TS1 | typical success | Q-learning | success | 74 | 77 of 100 | after step 40: 100% → 70% (best action 100%) | step 8: near-equal actions | step 17: the action matters; the chosen action is among the best | step 48: the action matters; the chosen action is among the best |
+| TS2 | typical success | PPO | success | 71 | 98 of 100 | after step 41: 95% → 80% (best action 100%) | step 3: near-equal actions | step 24: near-equal actions | step 46: the action matters; the chosen action is among the best |
+| TS3 | typical success | PPO | success | 71 | 99 of 100 | after step 11: 100% → 90% (best action 100%) | step 6: near-equal actions | step 38: near-equal actions | step 46: the action matters; the chosen action is among the best |
+| TF1 | typical failure | Q-learning | failure | 55 | 72 of 100 | after step 47: 80% → 0% (best action 100%) | step 6: near-equal actions | step 17: the action matters; the chosen action is among the best | step 48: poor action: FIRE succeeds 100 points more often |
+| TF2 | typical failure | PPO | failure | 53 | 96 of 100 | after step 47: 100% → 0% (best action 100%) | step 0: near-equal actions | step 35: near-equal actions | step 46: the action matters; the chosen action is among the best |
+| TF3 | typical failure | Q-learning | failure | 55 | 69 of 100 | after step 8: 90% → 40% (best action 90%) | step 17: the action matters; the chosen action is among the best | step 34: poor action: FIRE succeeds 98 points more often | step 42: poor action: LEFT succeeds 98 points more often |
+| SS1 | surprising success | Q-learning | success | 96 | 93 of 100 | after step 5: 100% → 20% (best action 100%) | step 22: poor action: FIRE succeeds 44 points more often | step 49: near-equal actions | step 70: the action matters; the chosen action is among the best |
+| SS2 | surprising success | PPO | success | 72 | 96 of 100 | after step 1: 100% → 90% (best action 100%) | step 7: near-equal actions | step 16: the action matters; the chosen action is among the best | step 47: the action matters; the chosen action is among the best |
+| SF1 | surprising failure | Q-learning | failure | 53 | 65 of 100 | after step 29: 70% → 10% (best action 100%) | step 15: the action matters; the chosen action is among the best | step 32: poor action: NOOP succeeds 98 points more often | step 40: poor action: LEFT succeeds 98 points more often |
+| SF2 | surprising failure | PPO | failure | 71 | 97 of 100 | after step 63: 100% → 0% (best action 100%) | step 2: near-equal actions | step 16: the action matters; the chosen action is among the best | step 62: the action matters; the chosen action is among the best |
+
+Written to results/analysis/episodes/ and results/videos/episodes/
+end 2026-11-17 21:29:23

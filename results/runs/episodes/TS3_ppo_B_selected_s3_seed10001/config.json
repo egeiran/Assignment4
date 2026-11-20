@@ -1,0 +1,36 @@
+{
+  "experiment": "episodes",
+  "run_id": "TS3_ppo_B_selected_s3_seed10001",
+  "agent": "ppo",
+  "setting": "B",
+  "tag": "selected",
+  "seed": 3,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "all",
+  "hp": {
+    "learning_rate": 0.001,
+    "entropy": 0.01,
+    "epochs": 4,
+    "gamma": 0.99
+  },
+  "source_run": "results/runs/main/ppo_B_selected_s3",
+  "episode": {
+    "id": "TS3",
+    "kind": "typical success",
+    "agent": "ppo",
+    "train_seed": 3,
+    "seed": 10001,
+    "outcome": "success",
+    "steps": 71,
+    "criterion": "71 steps; most common range 70\u201379 steps holds 1052 of 1756 PPO successes, median 71",
+    "run": "results/runs/main/ppo_B_selected_s3"
+  },
+  "sweep_replays": 20,
+  "decision_replays": 100,
+  "decision_gap": 8
+}

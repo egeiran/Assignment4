@@ -1,0 +1,21 @@
+{
+  "experiment": "main",
+  "run_id": "ppo_C_selected_s6",
+  "agent": "ppo",
+  "setting": "C",
+  "tag": "selected",
+  "seed": 6,
+  "k": 2,
+  "budget": 500000,
+  "eval_seeds": [
+    10000,
+    200
+  ],
+  "checkpoints": "all",
+  "hp": {
+    "learning_rate": 0.001,
+    "entropy": 0.01,
+    "epochs": 4,
+    "gamma": 0.99
+  }
+}
