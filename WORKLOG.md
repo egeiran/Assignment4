@@ -9,8 +9,8 @@ the submission is complete. Planned work has no results.
   (Trym's PR #1), unchanged. Never edit `predictions/predictions_v1.*`;
   interpretations go in `predictions/annotations.md`.
 - **Parts 2–6 (from 2026-11-14):** Eivind builds code, runs and the brief draft
-  with Claude (logged in AI_RECORD.md). Trym reviews. The Part 5 review record
-  is written by Trym and Eivind, not by an AI.
+  with Claude (logged in AI_RECORD.md). Part 5 requires a human discussion by
+  Trym and Eivind; an AI-prepared question sheet is not that review.
 - **Setting D is the 32 px gap layout** from the submitted sheet (Eivind,
   2026-11-14). The narrower paddle (P7) is reported as a separate probe.
 - **`plans/part2_3_plan.md` (commit `be8831c`, 2026-11-16) fixes the setup.** It
@@ -29,9 +29,9 @@ the submission is complete. Planned work has no results.
 | 2    | Settings A–D, comparison rules, required evidence                        | 20     | Runs and tables done; in the brief draft |
 | 3    | Mechanisms: epsilon, gamma, entropy, learning rate, PPO epochs; ≥5 seeds | 20     | Runs, verdicts and diagnostic experiment done; in the brief draft |
 | 4    | Ten annotated episodes                                                   | 20     | Episodes, replays and evidence tables done; our analysis of the 30 decisions remains |
-| 5    | Human review within the team (≤1,000 words)                              | 30     | Not started |
+| 5    | Human review within the team (≤1,000 words)                              | 30     | AI-prepared questions only; human discussion and responses pending |
 | 6    | Three recommendations                                                    | 30     | Proposed in the brief draft; not yet decided by us |
-| –    | Code, experiment records, evidence brief (≤2,000 words), AI record       | –      | Code and records done; brief drafted (1,376 words); AI record current to Part 4 |
+| –    | Code, experiment records, evidence brief (≤2,000 words), AI record       | –      | Code and records present; brief revised and pending team review; AI record updated through 2026-11-19 |
 
 ## Decisions so far (provisional, 2026-11-12)
 
@@ -671,3 +671,70 @@ the report code, none to the recorded data: the success rate of the best
 action after the largest fall is reported, the outcome counts per trained
 agent are added to `selection.md`, and the state after the last step is left
 out of the ball curves.
+
+## Trym-requested review of the report and evidence (2026-11-19)
+
+The review started on branch `trym/part2-review`; the worktree was clean at
+start. The evidence brief was edited locally, while the submitted
+`predictions/predictions_v1.md` and `.pdf` were left unchanged. The Part 5 file
+now contains questions for the team, not invented answers; Trym and Eivind have
+not yet held or recorded the required discussion.
+
+- A source review of `breakout_env.py`, `q_learning.py`, `ppo.py`, `evaluate.py`,
+  `run.py`, `run_all.py`, `verdicts.py` and `episodes.py` found the intended
+  terminal success/failure versus bootstrapped timeout distinction, the C
+  penalty on every step, common observation bins, shared interaction/evaluation
+  schedules, disjoint tuning/evaluation seed ranges and per-seed result
+  aggregation. This is static review; `verify.py` was not runnable here.
+- Table 2 was cross-checked against all 60 main-run `eval_episodes.csv.gz` files
+  and their runtime records using the standard library. Success, failure,
+  timeout, seed ranges, mean returns, episode-length and training-time
+  summaries agree to displayed precision. The one-decimal 99.4% PPO A success
+  is the rounded 99.35% mean.
+- Tuning shows α = 0.3 winning on its three tuning seeds (83.7% vs 53.5% for
+  α = 0.1), while the five matched Part 3 seeds favour α = 0.1 on each seed
+  (mean 86.4% vs 67.2%). The report now treats this as configuration-selection
+  uncertainty, not proof that tuning chose the wrong value.
+- The diagnostic records both immediate catches and episode success after the
+  forced action, followed by the agent's policy. Both still-versus-towards
+  differences are below pooled SD, though Q-learning seeds 2, 6 and 8 lose
+  17–40 points of success after TOWARDS. The report treats the pooled effect as
+  unresolved, not equivalent; the state sample comes from agent-occupied
+  trajectories. The report also narrows the transfer claim to missing explicit
+  brick-layout and paddle-width features; other ball/paddle information remains
+  useful across layouts.
+- A new script `src/analyze_seed6.py` summarizes the existing PPO B seed-6
+  checkpoints and training episodes in `results/analysis/episodes/ppo_seed6.md`.
+  It confirms 39% final success, 11% at 250k, and 232/846 successes in the last
+  50k training interactions. The final 122 failures are all post-launch (121
+  launch at step 1, one at step 2); this still does not diagnose the cause or
+  rerun episodes. The ten-episode selection is unchanged.
+- The report now distinguishes training (excluding evaluation), evaluation,
+  tuning and unmeasured inference. The tune batch log records 2 h 26 min on
+  eight workers. Solving A at 500k is not presented as evidence of sufficient
+  training in B/D. General claims are restricted to this game, feature design,
+  chosen configurations and implementation; no independent-team/person
+  replication was conducted.
+- Regenerated verdicts confirm that P6.2 is triggered (worst PPO 39%, worst
+  Q-learning 46%). The brief now withdraws an unconditional PPO recommendation;
+  screened PPO remains conditional on a pass threshold and fresh validation,
+  neither of which was predeclared or tested.
+
+**Verification (2026-11-19):** The host Python is 3.12.3, matching
+`.python-version`. `uv` 0.13.9 was installed under `/tmp`, and `uv sync --locked`
+created the environment from `pyproject.toml` and `uv.lock`; no dependency files
+were changed. `src/verify.py` passed all 9 checks. The main, tuning, transfer,
+mechanism and diagnostic analyses were regenerated from saved runs; probe and
+verdict summaries were regenerated, and the seed-6 episode summary was written
+from existing evaluation/training records. No training was run. The saved raw
+experiment records and submitted prediction files remain unchanged.
+
+The Markdown export succeeded with temporary Playwright Chromium after the
+browser crashed inside the sandbox (`SIGTRAP`; Crashpad reported
+`setsockopt: Operation not permitted`). `report/evidence_brief.html` and `.pdf`
+were regenerated. All 9 PDF pages were rendered and visually inspected;
+tables, figures, page breaks and text are readable, with no clipped content.
+`git diff --check` passes. Counts from `src/count_words.py` are 1,816 words for
+the evidence brief (table rows and captions excluded) and 444 for the review
+record. The review record still contains unanswered questions for Trym and
+Eivind; no discussion or approval is inferred.
