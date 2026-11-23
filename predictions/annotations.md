@@ -110,6 +110,12 @@ All verdicts with their calculations are in
   3. Not met: 500,000 steps take 353 s for Q-learning and 383 s for PPO. At
      353 s Q-learning is at 76.1% and PPO at 82.6% (18.9).
   4. Not met: P7 is not contradicted.
+- **2026-11-19, recommendation implication.** The P6.2 reversal condition
+  occurred, so the evidence brief withdraws an unconditional PPO recommendation.
+  The current records identify seed 6 as an outlier but do not define a
+  pre-use acceptance threshold or validate screening on a fresh evaluation
+  set. Whether a screened PPO deployment is acceptable remains for the team
+  to decide.
 
 ## P7
 
@@ -162,13 +168,37 @@ All verdicts with their calculations are in
   before the run).
   - Ball caught after STATIONARY against TOWARDS: Q-learning 96.0% against
     92.1% (5.1), PPO 98.9% against 98.1% (1.2). The differences are below the
-    pooled SD, with weak evidence that staying still is slightly better.
-  - The sheet treated the action in S2 as decisive for the catch. It is not:
-    the ball is caught in at least 92% of the replays whichever action is
-    forced. The reversed preference above is a choice between near-equal
-    actions, not a difference in catching strategy.
+    pooled SD: weak evidence that staying still helps, but not evidence that
+    the actions are practically equivalent.
+  - The replay then continues the agent's greedy policy to episode end.
+    STATIONARY against TOWARDS gives Q-learning 79.5% against 71.5% episode
+    success (8.0 points; pooled SD 10.5), PPO 89.8% against 87.5% (2.2; 17.3).
+    These differences are also below pooled SD. The diagnostic leaves the
+    effect unresolved under the sheet's rule; neither outcome establishes
+    practical equivalence. The tested states are the first S2 state from each
+    agent's own evaluation episodes, not a randomized state sample. Three
+    Q-learning seeds (2, 6 and 8) lose 17–40 points of episode success after
+    TOWARDS, illustrating seed-level heterogeneity behind the pooled mean.
+    The predicted policy preference remains contradicted; its explanation is
+    unresolved.
+  - This wording intentionally distinguishes the two result families in
+    `results/analysis/verdicts/verdicts.md`: its S2 rows classify the predicted
+    preferred-action direction as contradicted, while the diagnostic asks
+    whether forcing an action changes catch or episode success. Those
+    still-versus-towards effects are inconclusive under the pooled-SD rule.
   - The experiment was run twice, because the first run had an error in the
     sticky noise after a state restore. Both runs give the same conclusion.
+
+## Supplemental look at PPO seed 6
+
+- **2026-11-19.** A separate descriptive pass over the existing PPO B seed-6
+  checkpoints was added after noticing that this seed accounts for 122 of 230
+  failures but is absent from the fixed ten-episode selection. Greedy success
+  across the same 200 evaluation seeds is non-monotone (11.0% at 250k steps,
+  39.0% at 500k); 232 of 846 completed episodes in the final 50k training
+  interactions succeed. See `results/analysis/episodes/ppo_seed6.md`, generated
+  by `src/analyze_seed6.py`. This describes the outlier; it does not explain its
+  cause, establish convergence or replace any selected episode.
 
 ## S3
 
