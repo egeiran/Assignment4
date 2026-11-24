@@ -74,3 +74,15 @@ without new training. It regenerated the evidence brief HTML/PDF and visually
 inspected all nine PDF pages. The browser required execution outside the
 sandbox after Chromium crashed there with SIGTRAP. The review record remains
 open for Trym and Eivind; their answers or approval are not inferred.
+
+## Restructured brief headings (Claude, 2026-11-24)
+
+Eivind asked Claude to make the brief's headings follow the assignment text.
+Claude renamed the headings by assignment part, turned the bold lead-ins into
+the assignment's questions, added a table mapping each requirement to where it
+is answered, and restated the pre-registered competing explanation in Part 3.
+It also shortened four paragraphs (budget and runtime, α, classroom
+recommendation, closing scope) from 1,915 to 1,779 words. It changed no
+result, verdict or recommendation. Accepted or rejected by the team: pending.
+Checked: word count, the α claim against the checkpoint files, and a visual
+pass over all ten PDF pages.
