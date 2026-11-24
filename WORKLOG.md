@@ -738,3 +738,18 @@ tables, figures, page breaks and text are readable, with no clipped content.
 the evidence brief (table rows and captions excluded) and 444 for the review
 record. The review record still contains unanswered questions for Trym and
 Eivind; no discussion or approval is inferred.
+
+## Brief headings follow the assignment (2026-11-24)
+
+Requested by Eivind. Section headings now name the assignment part they answer
+(Part 2: Learning settings, Part 3: Mechanisms, Part 4, Part 6), and the bold
+lead-ins use the assignment's questions: the main question of each setting
+A–D, the four Part 3 steps (prediction supported, a case that does not fit,
+competing explanation, diagnostic experiment) and the Part 4 requirements. A
+table after the introduction maps each requirement to the table, figure or
+section that answers it; tables are outside the word count. The introduction
+names Part 1 and Part 5. The Part 3 text states the competing explanation from
+the diagnostic plan (`Diagnostic experiment`, explanation 2) again, which the
+2026-11-19 revision had dropped. No result, verdict or recommendation changed;
+the S2 verdict wording, Table 6a and situation 2 still await the group review.
+The brief is 1,915 words (`src/count_words.py`), and the PDF has ten pages.
