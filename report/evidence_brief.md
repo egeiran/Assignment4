@@ -45,16 +45,11 @@ the cell as its table index; PPO receives the same bins as a vector.
 | Selected configuration | Q-learning: α 0.3, ε from 1 to 0.01 over the first half, γ 0.99. PPO: learning rate 1·10⁻³, entropy 0.01, 4 epochs, γ 0.99 |
 | Hardware | Apple M4, 8 runs in parallel, CPU only. Runtimes in Table 2 are training time without evaluation |
 
-Both agents solve Setting A at the full 500,000-step budget. That does not show
-that either has converged in B or D; several B agents remain far below their
-own best checkpoint or vary sharply by seed. Equal interactions were not equal
-computation: PPO needed 8 to 22% more training time in A and B. The reported
-training times exclude evaluation. For example, PPO seed 6 in B used 399 s for
-training and 696 s for scheduled evaluations, much of the latter spent on the
-untrained policy timing out. Tuning required 18 full-budget runs per agent
-(36 total); the logged batch took 2 h 26 min with eight workers
-(`results/logs/tune.log`). These timings do not establish a low end-to-end cost
-for finding a usable agent.
+Both agents solve Setting A within the budget, but that does not show that
+they have converged in B: several B agents end far below their own best
+checkpoint. Equal interactions were not equal computation: PPO needed 8 to 22%
+more training time in A and B. Runtimes exclude evaluation. Tuning took 36
+full-budget runs, 2 h 26 min on eight workers (`results/logs/tune.log`).
 
 ### Settings A to D
 
@@ -146,15 +141,11 @@ configuration. Five seeds each.
 - **Data reuse.** One epoch learns too little from each rollout; ten adds
   nothing over four.
 
-Tuning selected α = 0.3 (83.7% over seeds 100–102) over α = 0.1 (53.5%). On
-the separate, matched mechanism runs for seeds 0–4, α = 0.1 scores 86.4% and
-α = 0.3 scores 67.2%; α = 0.1 is higher on all five paired seeds, by a mean
-19.2 points. This warns that the three-seed tuning choice is uncertain, but
-does not prove α = 0.1 is generally better: the tuning sample favoured α = 0.3
-and the comparison covers only five other seeds. The PPO lead in B (11.9
-points) is conditional on the chosen configuration; it does not establish a
-best-tuned algorithm comparison. A matched ten-seed comparison of these two Q
-configurations would resolve this specific uncertainty.
+Tuning chose α 0.3 on three seeds (83.7% against 53.5% for α 0.1). On seeds
+0–4, α 0.1 scores 86.4% and α 0.3 67.2%. α 0.1 is higher on all five seeds,
+mostly through seeds 0 and 1, where α 0.3 collapses in the last 100,000 steps.
+The tuning choice is therefore uncertain, and the PPO lead in B holds for the
+selected configurations, not necessarily for the best ones.
 
 **Does the result support the prediction?** S2 predicted that with the ball
 falling 4–8 px from the paddle centre, Q-learning would stay still and PPO
@@ -273,13 +264,11 @@ checkpoint. Source: `results/analysis/episodes/ppo_seed6.md`.*
 | Further experiment | 10 seeds at 50k–200k steps in A | 30 seeds; set a screen threshold; validate on fresh seeds | Train on varied layouts and paddle widths; test unseen changes |
 
 **Rapid classroom demonstration.** Q-learning in Setting A is the only
-combination with no failed episode on any seed, and its behaviour can be
-inspected directly in the table: Figure 3 shows a wrong decision next to the
-Q-values that caused it. Explainable is not the same as correct. Training took
-307 s for Q-learning and 375 s for PPO; evaluation and tuning cost extra, and
-inference speed was not benchmarked. These measurements do not show a large
-end-to-end speed advantage. PPO is the better choice if the demonstration
-must show sticky actions.
+combination with no failed episode on any seed, and its decisions can be read
+from the table: Figure 3 shows a wrong decision next to the Q-values that
+caused it. Explainable is not the same as correct, and training is only
+slightly shorter than PPO's (307 against 375 s). PPO is the better choice if
+the demonstration must show sticky actions.
 
 **Repeated operation in uncertainty.** PPO fails less often in B and C, but in
 B the difference is smaller than the variation between seeds, so this is weak
@@ -315,7 +304,5 @@ never launch the ball did. Third, values stored per state do not carry over
 to states that were not visited, while a function over the same features can
 interpolate without any assurance that it does so correctly.
 
-These results come from one game, one feature design, one selected
-hyperparameter per agent and one team's implementation. They do not establish
-performance across independent teams, people, games, or unseen layouts in
-general.
+Nothing here shows that one algorithm is better in general, or that the
+results hold for other games or state designs.

@@ -753,3 +753,8 @@ the diagnostic plan (`Diagnostic experiment`, explanation 2) again, which the
 2026-11-19 revision had dropped. No result, verdict or recommendation changed;
 the S2 verdict wording, Table 6a and situation 2 still await the group review.
 The brief is 1,915 words (`src/count_words.py`), and the PDF has ten pages.
+
+**Shorter paragraphs (same day).** Four paragraphs were shortened without
+changing their claims: the budget and runtime paragraph in the setup, the
+α paragraph in Part 3, the classroom recommendation, and the closing scope
+paragraph, which is now one sentence. The brief is 1,779 words (from 1,915).
