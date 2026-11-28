@@ -27,6 +27,10 @@ checkpoint; policies are greedy and evaluation does not update them.
 At 500,000 steps, 122 episodes fail and 0 time out. Of the failures, 121 launch at step 1 and 1 at step 2. Failure length has median 53 steps (range 25–74); success length has median 82 (range 79–88).
 The failures occur after launch, but these episode rows do not include per-step states for the unselected failures and do not identify why the ball was lost.
 
+## Supplemental GIF checked against saved per-step probes
+
+The GIF `results/videos/ppo_B_selected_s6_B_seed10001.gif` shows one 53-step failure. Its requested actions agree with the saved probe for evaluation seed 10001. The ball is falling at step 16 and rising at step 17 after a paddle contact. From decision step 20 through 52, the paddle stays at RAM-derived x = 8 (the encoder's centre is 16) and the requested action is FIRE. The first brick is hit before the ball returns and is lost. These are observations of this trajectory, not evidence that FIRE or a particular learning mechanism explains all 122 failures. No alternative-action replay was added.
+
 ## Training record and limits
 
 The final 50,000-interaction window contains 846 completed
@@ -45,3 +49,4 @@ alternative-action replay was run for this seed.
 
 **Sources:** `results/runs/main/ppo_B_selected_s6/eval_episodes.csv.gz`,
 `eval_checkpoints.csv`, `train_episodes.csv`, `runtime.json`.
+Per-step corroboration: `results/runs/probes/ppo_B_selected_s6_on_B/` (`steps.npz`, `eval_episodes.csv.gz`, `eval_checkpoints.csv`).

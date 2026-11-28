@@ -1,0 +1,187 @@
+{
+  "passed": true,
+  "scope": "saved records; no new training or evaluation",
+  "run_counts": {
+    "main": 60,
+    "tune": 36,
+    "mechanisms": 85,
+    "transfer": 40,
+    "probes": 80
+  },
+  "evaluation_summaries_checked": 2385,
+  "evaluation_episode_rows_checked": 477000,
+  "diagnostic_agents": 20,
+  "s2_states": 3733,
+  "annotated_episodes": 10,
+  "annotated_decisions": 30,
+  "facts": {
+    "q_A": {
+      "mean_percent": 100.0,
+      "sd_points": 0.0,
+      "minimum_percent": 100.0,
+      "per_seed_percent": [
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    "q_B": {
+      "mean_percent": 75.9,
+      "sd_points": 16.652994392067217,
+      "minimum_percent": 46.0,
+      "per_seed_percent": [
+        54.0,
+        46.0,
+        91.5,
+        65.5,
+        79.0,
+        80.5,
+        95.0,
+        70.0,
+        91.0,
+        86.5
+      ]
+    },
+    "q_C": {
+      "mean_percent": 79.1,
+      "sd_points": 21.81716958931403,
+      "minimum_percent": 20.5,
+      "per_seed_percent": [
+        20.5,
+        93.5,
+        90.5,
+        81.5,
+        75.5,
+        75.5,
+        93.0,
+        89.5,
+        79.0,
+        92.5
+      ]
+    },
+    "q_D": {
+      "mean_percent": 51.45,
+      "sd_points": 16.476329823247788,
+      "minimum_percent": 15.0,
+      "per_seed_percent": [
+        38.5,
+        45.5,
+        68.5,
+        55.50000000000001,
+        15.0,
+        68.0,
+        53.5,
+        67.0,
+        45.0,
+        57.99999999999999
+      ]
+    },
+    "ppo_A": {
+      "mean_percent": 99.35,
+      "sd_points": 2.0554804791094465,
+      "minimum_percent": 93.5,
+      "per_seed_percent": [
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        93.5,
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    "ppo_B": {
+      "mean_percent": 87.8,
+      "sd_points": 17.4582040568006,
+      "minimum_percent": 39.0,
+      "per_seed_percent": [
+        92.5,
+        97.0,
+        97.0,
+        93.5,
+        91.5,
+        95.5,
+        39.0,
+        93.5,
+        85.5,
+        93.0
+      ]
+    },
+    "ppo_C": {
+      "mean_percent": 93.7,
+      "sd_points": 3.57615560188436,
+      "minimum_percent": 87.5,
+      "per_seed_percent": [
+        95.0,
+        87.5,
+        97.0,
+        92.0,
+        95.0,
+        95.5,
+        88.5,
+        98.0,
+        96.5,
+        92.0
+      ]
+    },
+    "ppo_D": {
+      "mean_percent": 83.35,
+      "sd_points": 27.76793714580421,
+      "minimum_percent": 24.0,
+      "per_seed_percent": [
+        97.0,
+        98.0,
+        97.0,
+        97.0,
+        99.5,
+        24.0,
+        39.0,
+        98.5,
+        87.0,
+        96.5
+      ]
+    }
+  },
+  "matched_alpha_comparison": [
+    {
+      "seed": 0,
+      "q_selected": 54.0,
+      "q_alpha0.1": 90.0,
+      "ppo_selected": 92.5
+    },
+    {
+      "seed": 1,
+      "q_selected": 46.0,
+      "q_alpha0.1": 89.0,
+      "ppo_selected": 97.0
+    },
+    {
+      "seed": 2,
+      "q_selected": 91.5,
+      "q_alpha0.1": 96.0,
+      "ppo_selected": 97.0
+    },
+    {
+      "seed": 3,
+      "q_selected": 65.5,
+      "q_alpha0.1": 67.5,
+      "ppo_selected": 93.5
+    },
+    {
+      "seed": 4,
+      "q_selected": 79.0,
+      "q_alpha0.1": 89.5,
+      "ppo_selected": 91.5
+    }
+  ]
+}

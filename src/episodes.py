@@ -43,7 +43,7 @@ from run_all import selected
 BIN = 10          # width of a length range (agent steps)
 GAP = 8           # least distance between two annotated decisions (agent steps)
 SWEEP, CONFIRM = 20, 100
-MATTERS = 0.20    # difference in replayed success rate that counts as a real difference between actions
+MATTERS = 0.20    # descriptive threshold for labelling decisions, not a significance/equivalence test
 KINDS = {"TS": "typical success", "TF": "typical failure", "SS": "surprising success", "SF": "surprising failure"}
 OUTCOMES = ("success", "failure", "timeout")
 PLURAL = {"success": "successes", "failure": "failures"}
@@ -237,7 +237,7 @@ def reading(rows):
     rate = rows.set_index("action")["success"] / rows["replays"].iloc[0]
     chosen = rows.loc[rows["chosen"] == 1, "action"].iloc[0]
     if rate.max() - rate.min() < MATTERS:
-        return "near-equal actions"
+        return "observed action spread below 20 points; equivalence not established"
     if rate.max() - rate[chosen] < MATTERS:
         return "the action matters; the chosen action is among the best"
     return f"poor action: {rate.idxmax()} succeeds {100 * (rate.max() - rate[chosen]):.0f} points more often"
@@ -288,7 +288,8 @@ def decision_tables(e, trace, sweep, decisions):
     for n, rows in decisions[decisions["decision"] > 0].groupby("decision"):
         t = int(rows["t"].iloc[0])
         s = trace.iloc[t]
-        shares = ", ".join(f"{r.action} {100 * r.success / r.replays:.0f}%" for r in rows.itertuples())
+        shares = "; ".join(f"{r.action} {100 * r.success / r.replays:.0f}% "
+                           f"(95% Wilson interval {wilson(r.success, r.replays)})" for r in rows.itertuples())
         table = pd.DataFrame([
             ("State and available actions", f"{describe(trace, t)}. Bricks hit: {int(s['bricks'])} of 2. "
              f"State cell {int(s['cell'])}. Actions: {', '.join(ACTIONS)}"),
@@ -299,6 +300,15 @@ def decision_tables(e, trace, sweep, decisions):
         ], columns=["Evidence", f"Decision {n}, step {t}"])
         lines.append(to_markdown(table))
     return "\n".join(lines)
+
+
+def wilson(successes, total):
+    """Binomial interval conditional on this saved state, policy and replay protocol."""
+    z, p = 1.959963984540054, successes / total
+    denominator = 1 + z * z / total
+    centre = (p + z * z / (2 * total)) / denominator
+    half = z * np.sqrt(p * (1 - p) / total + z * z / (4 * total * total)) / denominator
+    return f"{100 * max(0, centre - half):.1f}–{100 * min(1, centre + half):.1f}%"
 
 
 def timeline(e, trace, sweep, picked, path, where):
@@ -519,7 +529,16 @@ def report(group):
     agents = agents.reset_index().rename(columns={"agent": "Agent", "train_seed": "Training seed", **{o: PLURAL.get(o, "timeouts").capitalize() for o in OUTCOMES}})
     agents["Agent"] = agents["Agent"].map(LABEL)
     (out / "selection.md").write_text("\n".join(to_markdown(t) for t in (pd.DataFrame(lengths), shown, agents)))
-    sections, overview, dirs = [], [], []
+    sections = ["# Annotated decisions in the ten selected episodes\n\n"
+                "Each alternative requests one action for one step, then follows the same agent's "
+                "greedy policy to episode end. Percentages use 100 fresh-noise replays per action; "
+                "95% Wilson intervals quantify Monte Carlo uncertainty conditional on the saved "
+                "state and policy. They do not measure uncertainty across training seeds or "
+                "unseen states, and are not adjusted for multiple comparisons. Decision steps "
+                "were selected using a separate 20-replay sweep. The 20-point reading threshold "
+                "is descriptive: a smaller spread does not establish practical equivalence. "
+                "A reported 0% or 100% is an observed frequency, not a guaranteed outcome.\n"]
+    overview, dirs = [], []
     for e in chosen.to_dict("records"):
         d = runs / f"{e['id']}_{e['run'].split('/')[-1]}_seed{e['seed']}"
         if group == "episodes":

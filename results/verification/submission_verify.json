@@ -1,0 +1,111 @@
+{
+  "checks": [
+    {
+      "check": "State cells",
+      "passed": true,
+      "detail": "4760 cells reached"
+    },
+    {
+      "check": "Setting A deterministic",
+      "passed": true,
+      "detail": "10 seeded Setting A episodes repeat exactly"
+    },
+    {
+      "check": "Setting B replay",
+      "passed": true,
+      "detail": "10 seeded Setting B episodes replay exactly from seed + actions"
+    },
+    {
+      "check": "Gap layout",
+      "passed": true,
+      "detail": "gap empty 30 steps after reset in D, wall intact in B"
+    },
+    {
+      "check": "Outcomes and rewards",
+      "passed": true,
+      "detail": "reward +1 only on success, C return = success - 0.001 x steps, idle paddle times out"
+    },
+    {
+      "check": "Q-learning update (toy chain)",
+      "passed": true,
+      "detail": "Q(right) = [0.729, 0.81, 0.9, 1.0]"
+    },
+    {
+      "check": "Epsilon schedule",
+      "passed": true,
+      "detail": "epsilon at 0/25/50/100% = [1.0, 0.525, 0.050000000000000044, 0.050000000000000044]"
+    },
+    {
+      "check": "PPO environment seeds",
+      "passed": true,
+      "detail": "104 environment seeds over 13 training seeds, none shared"
+    },
+    {
+      "check": "Replay from a saved state",
+      "passed": true,
+      "detail": "exact in A; paddle shift after NOOP in B -11.64 / -11.50 px after LEFT / RIGHT replays"
+    }
+  ],
+  "tracking_reference": {
+    "A": {
+      "episodes": 100,
+      "success_rate": 1.0,
+      "failure_rate": 0.0,
+      "timeout_rate": 0.0,
+      "mean_return": 1.0,
+      "distinct_trajectories": 25,
+      "median_steps_success": 79.0,
+      "mean_steps_success": 75.56,
+      "median_steps_failure": null,
+      "mean_steps_failure": null
+    },
+    "B": {
+      "episodes": 100,
+      "success_rate": 0.9,
+      "failure_rate": 0.1,
+      "timeout_rate": 0.0,
+      "mean_return": 0.9,
+      "distinct_trajectories": 100,
+      "median_steps_success": 72.0,
+      "mean_steps_success": 75.74444444444444,
+      "median_steps_failure": 53.0,
+      "mean_steps_failure": 53.1
+    },
+    "C": {
+      "episodes": 100,
+      "success_rate": 0.9,
+      "failure_rate": 0.1,
+      "timeout_rate": 0.0,
+      "mean_return": 0.8265200000000003,
+      "distinct_trajectories": 100,
+      "median_steps_success": 72.0,
+      "mean_steps_success": 75.74444444444444,
+      "median_steps_failure": 53.0,
+      "mean_steps_failure": 53.1
+    },
+    "D": {
+      "episodes": 100,
+      "success_rate": 0.94,
+      "failure_rate": 0.06,
+      "timeout_rate": 0.0,
+      "mean_return": 0.94,
+      "distinct_trajectories": 100,
+      "median_steps_success": 55.0,
+      "mean_steps_success": 66.45744680851064,
+      "median_steps_failure": 48.0,
+      "mean_steps_failure": 49.666666666666664
+    },
+    "P7": {
+      "episodes": 100,
+      "success_rate": 0.79,
+      "failure_rate": 0.21,
+      "timeout_rate": 0.0,
+      "mean_return": 0.79,
+      "distinct_trajectories": 100,
+      "median_steps_success": 71.0,
+      "mean_steps_success": 70.0253164556962,
+      "median_steps_failure": 53.0,
+      "mean_steps_failure": 51.857142857142854
+    }
+  }
+}
