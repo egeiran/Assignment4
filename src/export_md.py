@@ -20,7 +20,7 @@ h1,h2{border-bottom:1px solid #ccc;padding-bottom:.2em} h2{page-break-before:aut
 table{border-collapse:collapse;margin:1em 0;font-size:9.5pt} th,td{border:1px solid #ccc;padding:4px 8px;text-align:left}
 th{background:#f2f2f2} code{background:#f4f4f4;padding:1px 4px;font-size:9.5pt;overflow-wrap:anywhere} pre{background:#f4f4f4;padding:8px;font-size:9pt;white-space:pre-wrap}
 img{max-width:100%} em{color:#555} hr{border:0;border-top:1px solid #ccc}
-@media print{body{margin:0;max-width:none} h1,h2,h3,.table-caption{break-after:avoid} tr,img{break-inside:avoid} p:has(>img){break-after:avoid}.figure-caption{break-before:avoid}thead{display:table-header-group}}
+@media print{body{margin:0;max-width:none} h1,h2,h3,.table-caption{break-after:avoid} table,tr,img,p{break-inside:avoid} p:has(>img){break-after:avoid}.figure-caption{break-before:avoid}thead{display:table-header-group}}
 </style>"""
 MAC_CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 

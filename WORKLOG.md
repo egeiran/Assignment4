@@ -15,9 +15,15 @@ the submission is complete. Planned work has no results.
   2026-11-14). The narrower paddle (P7) is reported as a separate probe.
 - **`plans/part2_3_plan.md` (commit `be8831c`, 2026-11-16) fixes the setup.** It
   was committed before any agent was trained. Deviations are dated here.
-- **Tuning is done and the configurations are selected** (2026-11-16, below).
-  `main`, `transfer` and `mechanisms` were started the same day; logs in
-  `results/logs/`. Next: analysis, Part 4 tooling, prediction verdicts.
+- **Assessed runs, analyses and Part 4 records are complete.** The 2026-11-28
+  saved-record audit and all nine environment/plumbing checks passed. No new
+  assessed training or retuning was performed. See the final entry below.
+- **Human review:** Eivind's responses from `4cd8bf7` are present. Trym's three
+  review answers remain outstanding; neither agreement nor completion is
+  inferred. Eivind's answers have been consolidated into an 806-word draft.
+- **Task-source check:** the repository PDF has the requested title, but the
+  separately named attachment `Assignment 4(1).pdf` is not accessible here.
+  Confirm the authoritative copy before declaring the submission ready.
 - Sections below dated 2026-11-12 are the record from before the submission;
   where they say "pending" or "candidate", this handover is the current status.
 
@@ -28,10 +34,10 @@ the submission is complete. Planned work has no results.
 | 1    | Timestamped prediction sheet: 6 questions + 3 states                     | 30     | Done        |
 | 2    | Settings A–D, comparison rules, required evidence                        | 20     | Runs and tables done; in the brief draft |
 | 3    | Mechanisms: epsilon, gamma, entropy, learning rate, PPO epochs; ≥5 seeds | 20     | Runs, verdicts and diagnostic experiment done; in the brief draft |
-| 4    | Ten annotated episodes                                                   | 20     | Episodes, replays and evidence tables done; our analysis of the 30 decisions remains |
-| 5    | Human review within the team (≤1,000 words)                              | 30     | AI-prepared questions only; human discussion and responses pending |
+| 4    | Ten annotated episodes                                                   | 20     | All 30 annotations checked, with conditional replay intervals and a PDF appendix |
+| 5    | Human review within the team (≤1,000 words)                              | 30     | Eivind's answers present; Trym's answers and final consolidation pending |
 | 6    | Three recommendations                                                    | 30     | Proposed in the brief draft; not yet decided by us |
-| –    | Code, experiment records, evidence brief (≤2,000 words), AI record       | –      | Code and records present; brief revised and pending team review; AI record updated through 2026-11-19 |
+| –    | Code, experiment records, evidence brief (≤2,000 words), AI record       | –      | Technical audit completed; final human review and authoritative-PDF confirmation pending; AI record updated through 2026-11-28 |
 
 ## Decisions so far (provisional, 2026-11-12)
 
@@ -758,3 +764,85 @@ The brief is 1,915 words (`src/count_words.py`), and the PDF has ten pages.
 changing their claims: the budget and runtime paragraph in the setup, the
 α paragraph in Part 3, the classroom recommendation, and the closing scope
 paragraph, which is now one sentence. The brief is 1,779 words (from 1,915).
+
+## Submission audit and regenerated evidence (2026-11-28)
+
+Trym requested a complete submission review, with the Assignment 3 feedback
+used to check causal attribution, the unit of replication and timing scope.
+Started clean on `trym/part2-review` at `4cd8bf7`; fetched origin and upstream.
+This version includes Trym's four review commits, Eivind's reviews, the revised
+brief and the supplemental seed-6 GIF. No merge or push was performed.
+
+The accessible six-page `Assignment 4.pdf` has the title *Assignment 4:
+Reinforcement Learning*. Its requirements were read in full and mapped in
+`report/requirements_check.md`. The separately named attachment
+`Assignment 4(1).pdf` was not available, so equivalence is not claimed.
+
+**Implemented technical corrections.** The brief and annotations retain P2's
+original formal A classification while stating that one non-perfect PPO seed
+accounts for all its variation and B remains inconclusive. P6.2 withdraws the
+unconditional PPO recommendation; observed minima do not bound future agents,
+and screening thresholds remain future decisions. The five-seed α comparison
+identifies the same training seeds/configurations, isolates the changed learning
+rate and does not retune on the evaluation set. S2 distinguishes preferred
+categories, catch and subsequent episode success, with seed heterogeneity and
+no equivalence claim. The supplemental GIF was inspected and corroborated
+against pre-existing probe states/actions for evaluation seed 10001. No new
+causal replay or change to the ten-episode selection was made.
+
+D/P7 now have all recorded outcome measures in the brief, including failure,
+timeout, return and outcome-specific lengths. Captions identify source runs.
+Timing distinguishes training, tuning and evaluation, and identifies unmeasured
+inference cost and the combined scope of the 134-second D/P7 batch. The three
+recommendations identify configurations, two observations, weakness, a reversal
+condition and a decision-relevant follow-up experiment. Inspectable values are
+not presented as measured explainability. Observed replay frequencies of 0/100
+or 100/100 are not guarantees.
+
+**Checks performed.** Installed uv 0.13.10 and PDF/browser utilities under
+`/tmp`; `uv sync --locked` installed the repository's pinned dependencies into
+`.venv` on Python 3.12.3, without changing dependency files. `verify.py` passed
+all nine checks; the new output is `results/verification/submission_verify.json`,
+leaving the original verification record intact. The standard-library audit
+recomputed 2,385 evaluation summaries from 477,000 episode rows, checked 3,733
+S2 states and all 30 annotated decisions. Its output is
+`results/verification/submission_audit.json`. Regenerated all main/tuning/
+transfer/mechanism/probe/verdict/diagnostic summaries; numerical results and
+prediction classifications are unchanged. The episode report reproduced the
+ten original trajectories and generated conditional 95% Wilson intervals from
+the existing 100-replay counts, plus a printable `decisions.pdf`. Interval edge
+cases and complete/multiline-caption word counting were checked.
+
+**Preservation and open human input.** All original raw runs/logs, selected
+configurations, episode selection, submitted prediction files and Eivind's
+seed-6 GIF are unchanged. No assessed training was needed or started. Trym was
+asked three open questions early; his responses are still pending. Eivind's
+overlapping answers and review were consolidated into an attributed draft;
+his original wording remains in `4cd8bf7`. The P2 wording tension is explicit.
+The brief is 1,933 words excluding tables/captions; the complete current review
+is 806 words, leaving room for Trym's actual judgements. These are not
+final team approval or a completed Part 5. The authoritative attachment also
+needs to be supplied or confirmed before the entire submission is called ready.
+
+**Export checks for the current draft.** Using pinned Markdown 3.11.3 and
+Chromium 159.0.8154.6, regenerated `report/evidence_brief.html` / `.pdf`
+(12 pages), `report/review_record.html` / `.pdf` (2 pages, explicitly pending
+Trym's input), and `results/analysis/episodes/decisions.html` / `.pdf`
+(11 pages). Chromium required execution outside the tool sandbox after a
+SIGTRAP; no browser sandbox was disabled. All 25 pages were rendered for
+visual inspection, with the wide results/recommendation tables, figures and
+complete decision tables also checked at readable scale. The exporter keeps
+captions, paragraphs and decision tables together and wraps long source paths.
+Each HTML file matches its current Markdown and exporter exactly. Extracted
+text from all three PDFs matches its HTML after whitespace/Unicode
+normalisation, with no text outside page boundaries or unresolved content
+placeholders. All figure-source paths resolve to existing configuration/log
+records. `git diff --check` passed, and checks against `4cd8bf7` confirmed
+preservation of original data, selection, prediction files and seed-6 GIF.
+
+Local commits so far: `14170ab` adds audits, replay uncertainty and
+reproduction/export tooling; `a075dd3` aligns evidence and recommendations;
+`5a56b65` consolidates Eivind's existing review without attributing views to
+Trym. The regeneration/verification commit follows this record. No commit,
+export or successful technical check constitutes the outstanding human review
+or confirmation of the unavailable authoritative attachment.

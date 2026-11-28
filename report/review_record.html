@@ -1,0 +1,87 @@
+<meta charset='utf-8'><style>
+body{font-family:Helvetica,Arial,sans-serif;font-size:11pt;line-height:1.45;max-width:17cm;margin:2cm auto;color:#222}
+h1,h2{border-bottom:1px solid #ccc;padding-bottom:.2em} h2{page-break-before:auto}
+table{border-collapse:collapse;margin:1em 0;font-size:9.5pt} th,td{border:1px solid #ccc;padding:4px 8px;text-align:left}
+th{background:#f2f2f2} code{background:#f4f4f4;padding:1px 4px;font-size:9.5pt;overflow-wrap:anywhere} pre{background:#f4f4f4;padding:8px;font-size:9pt;white-space:pre-wrap}
+img{max-width:100%} em{color:#555} hr{border:0;border-top:1px solid #ccc}
+@media print{body{margin:0;max-width:none} h1,h2,h3,.table-caption{break-after:avoid} table,tr,img,p{break-inside:avoid} p:has(>img){break-after:avoid}.figure-caption{break-before:avoid}thead{display:table-header-group}}
+</style><h1>Team review record (Part 5)</h1>
+<p><strong>Evidence reviewed:</strong> the submitted prediction sheet (<code>61bcabe</code>), its dated
+annotations, the evidence brief and saved analyses. Eivind supplied written
+answers and a review on 24 November 2026 (<code>4cd8bf7</code>). This consolidation is
+prepared on 28 November. Trym's answers to three follow-up questions are still
+pending; no discussion outcome, agreement or approval is attributed to him.</p>
+<h2>1. Strongest supporting evidence</h2>
+<p>Eivind identifies the ten-seed result in Setting A. Q-learning succeeded in
+all 2,000 evaluation episodes (100.0 ± 0.0% across ten trained agents); PPO
+reached 99.4 ± 2.1%, with nine seeds at 100% and one at 93.5%. He considers
+this the strongest support for a classroom demonstration and evidence that
+this environment, representation and final budget permit successful learning.
+It does not separate the algorithms or establish performance in B–D.</p>
+<p>He also notes that Q-learning seeds 0 and 6 reached 0% at some late checkpoints:
+the final result hides sensitivity to when training stops. The independent
+training replications are the ten agents, not 2,000 independent training runs;
+A's 200 evaluation seeds average about 33 distinct trajectories per agent.</p>
+<h2>2. Claims that went beyond the evidence</h2>
+<p>Eivind challenges a broad reading of P2 as showing greater PPO seed variation.
+His short answer accepts A's formal classification, whereas his longer review
+proposes saying P2 is not supported because A's entire spread comes from one
+PPO agent and B is inconclusive. These passages need distinguishing rather
+than silently replacing the original rule. The technical check confirms:
+A is formally supported under the explicit SD threshold (2.1 ≥ 1.5 × 0),
+while B is inconclusive (17.5/16.7 = 1.05). Greater PPO variability in both
+settings is not established. No new formal classification is introduced.</p>
+<p>He also challenges the classroom explainability argument. Q-values can be
+inspected, but PPO's action probabilities are visible too. Neither student
+understanding nor comparative explainability was measured. The brief now
+states what a student can inspect and treats easier understanding as an
+untested assumption.</p>
+<h2>3. A plausible alternative explanation</h2>
+<p>Eivind proposes that PPO's higher B success reflects the selected Q-learning
+configuration rather than an intrinsic algorithm advantage. On the matched
+training seeds 0–4, selected PPO scores 94.3%, selected Q-learning (α 0.3)
+67.2%, and Q-learning with only α changed to 0.1 scores 86.4%. The PPO lead
+shrinks from 27.1 to 7.9 percentage points. All five Q pairs favour α 0.1;
+α 0.3 seeds 0 and 1 deteriorate in the last 100,000 steps.</p>
+<p>He proposes retuning both agents on new tuning seeds, then evaluating new
+trained agents on fresh evaluation seeds. The current comparison demonstrates
+configuration sensitivity, not which algorithm is best tuned. Tuning seeds
+100–102 favoured α 0.3 (83.7% versus 53.5%, with final ε 0.01 for both).
+Choosing α 0.1 now using evaluation results would violate comparison rule 7.
+A future study must keep selection separate from final assessment; crossing
+the descriptive pooled-SD threshold alone would not establish a causal
+explanation for a remaining gap.</p>
+<h2>4. Comparison with the original predictions</h2>
+<p>Eivind generally favours retaining the component-wise verdicts and stating
+what each recommendation depends on. P1 is inconclusive at the specified
+small budget; P5's ranking/gap predictions and P4a–c are mostly inconclusive.
+P4d is contradicted: successful episodes shortened by about 2%, not 5%.
+P3a and the narrower-paddle success drop support the Q-learning predictions,
+while the corresponding PPO components are inconclusive. P7's predicted
+between-agent difference is also inconclusive. D had no prior prediction.</p>
+<p>The S2 majority-action predictions are contradicted for both agents; PPO's
+S1 threshold is contradicted, and three of four S3 components are supported.
+Eivind regards S2's consequences as unresolved. The technical distinction is
+between preferred action, catch after a forced action and subsequent episode
+success. Differences below pooled SD do not show practical equivalence;
+Q-learning seeds 2, 6 and 8 lose 17–40 points after TOWARDS.</p>
+<p>P6.2 was triggered: the worst observed PPO B agent scored 39%, versus 46% for
+Q-learning. Eivind weighs this alongside PPO's higher B mean (87.8% versus
+75.9%) and lower failure rate. He supports checking each agent before use
+when failures matter. These minima are not guaranteed lower bounds, and no
+acceptance threshold has been established.</p>
+<p>His seed-6 GIF observation is retained as supplemental evidence. Existing
+step logs corroborate a catch followed by stationary FIRE requests in one
+episode; neither source explains all 122 failures. The original ten episodes
+are unchanged.</p>
+<h2>Changes and remaining decisions</h2>
+<p>The technical revision retains the original verdict rules and selected
+configurations; qualifies explainability, generalisation and timing claims;
+withdraws unconditional PPO deployment; and separates S2 and seed-6
+observations from causal explanations. These edits do not constitute joint
+human approval.</p>
+<p>Trym's pending input concerns the B risk trade-off and recommendation, his own
+strongest evidence and overclaim, and how configuration uncertainty should
+shape the conclusion and next experiment. These answers are needed to finish
+the team review, record agreement or dissent, and identify the final resulting
+edits. No additional training has been agreed or run.</p>

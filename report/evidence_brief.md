@@ -34,6 +34,7 @@ and signed ball-to-paddle error; before launch, paddle position. There are
 and an in-play flag. Neither receives brick positions or paddle width.
 The previous executed sticky action is also omitted, leaving partial
 observability under sticky transitions.
+The sheet's pooled-SD rule is descriptive, not a significance or equivalence test.
 
 *Table 1. Comparison rules. Sources: `plans/part2_3_plan.md`, `results/selected_config.json`, `results/logs/`.*
 
@@ -74,8 +75,8 @@ in C.
 
 *Figure 1. Evaluation success against environment interactions in A, B and C. 200 evaluation episodes per point, unsmoothed. Thick line: mean over 10 seeds; band: ± 1 SD; thin lines: single seeds. Source: `results/analysis/main/sources.txt`.*
 
-**A: How efficiently does each approach learn?** Both agents solve the deterministic game. Neither is
-measurably faster early: at 10% of the budget PPO has 16.6% and Q-learning
+**A: How efficiently does each approach learn?** Both agents nearly solve the deterministic game. Early ranking is
+unresolved: at 10% of the budget PPO has 16.6% and Q-learning
 17.4% (pooled SD 25.5). Q-learning reaches 99.8% at 200,000 steps while it
 still explores, then falls to 87–90% between 350,000 and 450,000 steps before
 it ends at 100%. PPO rises more slowly and steadily. A Q-learning agent stopped
@@ -226,15 +227,16 @@ the action changes the success rate most were replayed 100 times per action.
 
 ![Decisions in TF1](../results/analysis/episodes/TF1_decisions.png)
 
-*Figure 3. The three annotated decisions of TF1. At step 48 the highest Q-value belongs to the one action that never succeeds. Source: `results/runs/episodes/TF1_q_B_selected_s4_seed10003`.*
+*Figure 3. The three annotated decisions of TF1. At step 48 the highest Q-value selects RIGHT: 0 successes in 100 replays, versus 99 for NOOP and 100 for FIRE. Source: `results/runs/episodes/TF1_q_B_selected_s4_seed10003`.*
 
 **Poor action or unlucky outcome?** The failure rate treats all failures
 alike. The episodes show two kinds. The
-three Q-learning failures each contain an action that alone loses the episode
-while another action succeeds in 98–100% of the replays. The two PPO failures
-are unlucky outcomes: the agent requested the only action that saves the ball,
-and the sticky noise held the paddle for that step. The agent had waited until
-the last step to move, so the luck met a habit that leaves no margin.
+three Q-learning failures each contain a chosen action with 0/100 successful
+replays, versus 98–100/100 for an alternative. In the two PPO failures, the
+agent requested the only action with nonzero success in the tested replays,
+but the paddle did not move that step under sticky noise. Waiting until the
+last step to move left little margin. These frequencies are conditional on
+the saved states and policies, not guaranteed action outcomes.
 
 **Limits of the episodes.** This is a limitation of the tables, and the
 episodes have their own. Five
