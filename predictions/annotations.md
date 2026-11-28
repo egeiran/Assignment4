@@ -48,6 +48,30 @@ All verdicts with their calculations are in
   - A: PPO 2.1, Q-learning 0.0. Supported under the sheet's threshold. The
     result rests on one PPO seed at 93.5%; the other 19 agents reach 100%.
   - B: PPO 17.5, Q-learning 16.7, ratio 1.05. Inconclusive: no measurable difference.
+- **2026-11-28, formal rule and scope.** The explicit P2 threshold overrides
+  the general mean-difference rule: SD_PPO ≥ 1.5 × SD_Q supports the A component
+  even when SD_Q = 0, provided both SDs are not zero. We retain that
+  preregistered classification. Its evidential strength is limited: removing
+  the sole non-perfect PPO agent would leave both SDs zero. The B component
+  remains inconclusive, so greater PPO variation in both A and B is not
+  established. This distinction resolves a wording conflict in Eivind's review
+  without changing the submitted rule or erasing his concern about overclaiming.
+
+## Configuration sensitivity (P1/P6 interpretation)
+
+- **2026-11-28.** On the matched training seeds 0–4, selected PPO averages
+  94.3%, selected Q-learning (α 0.3) 67.2%, and Q-learning with only α changed
+  to 0.1 86.4%. The gaps are 27.1 and 7.9 percentage points. Source runs:
+  `results/runs/main/ppo_B_selected_s{0..4}`,
+  `results/runs/main/q_B_selected_s{0..4}` and
+  `results/runs/mechanisms/q_B_alpha0.1_s{0..4}`; exact per-seed values are in
+  `results/verification/submission_audit.json`. Final ε stays 0.01, γ 0.99,
+  budget 500,000, and evaluation seeds/policy are unchanged. The tuning
+  comparison used separate seeds 100–102 and favoured α 0.3 (83.7% versus
+  53.5%, both with final ε 0.01). The five-seed comparison demonstrates
+  sensitivity to configuration, not a best-tuned algorithm ranking. We keep
+  the original selection; choosing α 0.1 on these evaluation results would
+  violate comparison rule 7. A fresh retuning/validation study is future work.
 
 ## P3
 
@@ -116,6 +140,20 @@ All verdicts with their calculations are in
   pre-use acceptance threshold or validate screening on a fresh evaluation
   set. Whether a screened PPO deployment is acceptable remains for the team
   to decide.
+- **2026-11-28, limits of the reversal evidence.** The two observed minima are
+  based on ten trained agents each, not guaranteed lower bounds for a future
+  agent. P6.2 still triggers exactly as declared. Any acceptance threshold and
+  independent screening protocol would be future decisions, not thresholds
+  inferred from the current 39% and 46% minima. The equal-time P6.3 calculation
+  uses training time only; it does not include tuning, evaluation or a measured
+  inference-latency comparison.
+- **2026-11-28, human review outcome.** Trym would try PPO first if the
+  specific trained agent can be tested on fresh episodes before use. Without
+  such testing, he does not recommend either method unconditionally when
+  failures matter. This retains the P6.2 reversal of unconditional PPO advice;
+  it does not claim that an acceptance threshold or screening procedure has
+  already been validated. His equal-budget retuning and fresh-training-seed
+  comparison are proposed future work, not additional assessed experiments.
 
 ## P7
 
@@ -158,7 +196,9 @@ All verdicts with their calculations are in
     seeds) and a move towards the ball in 34%. Contradicted.
   - PPO favours a move towards the ball in 30% (above half in no seed) and
     STATIONARY in 61%. Contradicted.
-  - The observed difference is the reverse of the predicted one.
+  - Both predicted majority preferences fail. Q-learning's 43% stationary
+    share is still larger than its 34% towards share: the result does not mean
+    that a majority of Q-learning decisions favour moving towards the ball.
   - Contact offset: Q-learning 2.9 px, PPO 3.3 px (0.8). Inconclusive: weak
     evidence against wider Q-learning offsets.
 - **2026-11-17, diagnostic experiment and change of interpretation.** From
@@ -199,6 +239,13 @@ All verdicts with their calculations are in
   interactions succeed. See `results/analysis/episodes/ppo_seed6.md`, generated
   by `src/analyze_seed6.py`. This describes the outlier; it does not explain its
   cause, establish convergence or replace any selected episode.
+- **2026-11-28.** Eivind's supplemental GIF,
+  `results/videos/ppo_B_selected_s6_B_seed10001.gif`, depicts one evaluation
+  episode. A stationary paddle requesting FIRE after a catch is an observation
+  in that trajectory, not a demonstrated explanation for the 122 post-launch
+  failures. The saved evaluation rows show all failures occur after launch
+  (121 launch at step 1, one at step 2), with no final-policy timeouts.
+  Neither the GIF nor these aggregate rows compare alternative actions.
 
 ## S3
 

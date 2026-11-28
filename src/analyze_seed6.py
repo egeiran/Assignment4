@@ -1,7 +1,7 @@
 """Supplemental descriptive analysis of the omitted PPO seed-6 B episodes.
 
 Reads only the saved run data; does not change the Part 4 selection.
-Run with: python3 src/analyze_seed6.py
+Run with: uv run python -B src/analyze_seed6.py
 """
 import csv
 import gzip
@@ -10,10 +10,13 @@ import statistics
 from collections import Counter
 from pathlib import Path
 
+import numpy as np
+
 
 ROOT = Path(__file__).resolve().parent.parent
 RUN = ROOT / "results/runs/main/ppo_B_selected_s6"
 OUT = ROOT / "results/analysis/episodes/ppo_seed6.md"
+PROBE = ROOT / "results/runs/probes/ppo_B_selected_s6_on_B"
 
 
 def read_csv(path):
@@ -62,6 +65,22 @@ def main():
     failure_launches = Counter(r["launch_step"] for r in by_outcome["failure"])
     failure_steps = [int(r["steps"]) for r in by_outcome["failure"]]
     success_steps = [int(r["steps"]) for r in by_outcome["success"]]
+    # The pre-existing probe stores requested actions and states for these same
+    # episodes. Use it to corroborate the supplemental GIF, without new replay.
+    probe_rows = read_csv(PROBE / "eval_checkpoints.csv")
+    assert float(probe_rows[0]["success_rate"]) == len(by_outcome["success"]) / len(final)
+    with gzip.open(PROBE / "eval_episodes.csv.gz", "rt", newline="") as stream:
+        probe_episodes = list(csv.DictReader(stream))
+    assert [(r["seed"], r["trajectory"], r["actions"]) for r in probe_episodes] == [
+        (r["seed"], r["trajectory"], r["actions"]) for r in final]
+    with np.load(PROBE / "steps.npz") as archive:
+        columns = {str(name): i for i, name in enumerate(archive["columns"])}
+        trace = archive["steps"][archive["steps"][:, columns["episode"]] == 1]
+    episode = next(r for r in final if int(r["seed"]) == 10001)
+    assert len(trace) == int(episode["steps"]) == 53
+    assert "".join(str(int(a)) for a in trace[:, columns["action"]]) == episode["actions"]
+    tail = trace[trace[:, columns["t"]] >= 20]
+    assert np.all(tail[:, columns["paddle_x"]] == 8) and np.all(tail[:, columns["action"]] == 1)
     lines += [
         "",
         "## Final-policy episodes",
@@ -76,6 +95,18 @@ def main():
         "The failures occur after launch, but these episode rows do not include "
         "per-step states for the unselected failures and do not identify why "
         "the ball was lost.",
+        "",
+        "## Supplemental GIF checked against saved per-step probes",
+        "",
+        "The GIF `results/videos/ppo_B_selected_s6_B_seed10001.gif` shows one "
+        "53-step failure. Its requested actions agree with the saved probe for "
+        "evaluation seed 10001. The ball is falling at step 16 and rising at "
+        "step 17 after a paddle contact. From decision step 20 through 52, "
+        "the paddle stays at RAM-derived x = 8 (the encoder's centre is 16) "
+        "and the requested action is FIRE. The first brick is hit before the "
+        "ball returns and is lost. These are observations of this trajectory, "
+        "not evidence that FIRE or a particular learning mechanism explains "
+        "all 122 failures. No alternative-action replay was added.",
     ]
 
     window = [r for r in training if 450_000 < int(r["end_step"]) <= 500_000]
@@ -101,6 +132,8 @@ def main():
         "",
         "**Sources:** `results/runs/main/ppo_B_selected_s6/eval_episodes.csv.gz`,",
         "`eval_checkpoints.csv`, `train_episodes.csv`, `runtime.json`.",
+        "Per-step corroboration: `results/runs/probes/ppo_B_selected_s6_on_B/` "
+        "(`steps.npz`, `eval_episodes.csv.gz`, `eval_checkpoints.csv`).",
         "",
     ]
     OUT.write_text("\n".join(lines))

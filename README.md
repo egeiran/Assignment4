@@ -9,6 +9,14 @@ agents see the same compact Breakout state? See the [official task](<Assignment 
 Start with [WORKLOG.md](WORKLOG.md): scope, decisions, requirement status and handover.
 Consequential AI assistance is logged in [AI_RECORD.md](AI_RECORD.md).
 
+**Status, 28 November:** Eivind's recorded review and Trym's supplied written
+judgements are consolidated in Part 5. Technical checks and final exports are
+documented in [the requirement audit](report/requirements_check.md). The only
+remaining source check is the unavailable attachment `Assignment 4(1).pdf`:
+the requirement audit currently uses the repository's `Assignment 4.pdf`,
+which has the requested title. Confirm equivalence or supply the attachment
+before treating that final requirement check as complete.
+
 ## Part 1: prediction sheet
 
 The [prediction sheet PDF](predictions/predictions_v1.pdf) was submitted on
@@ -25,7 +33,7 @@ contained only environment inspection, which involves no learning.
 Python 3.12 with uv (the system Python 3.14 is not used):
 
 ```bash
-uv sync
+uv sync --locked
 ```
 
 Pinned versions are in `uv.lock`. The ALE ROMs ship with `ale-py`.
@@ -35,6 +43,11 @@ Pinned versions are in `uv.lock`. The ALE ROMs ship with `ale-py`.
 The setup is fixed in [plans/part2_3_plan.md](plans/part2_3_plan.md), committed
 before any agent was trained. Run the groups in this order; finished runs are
 skipped, so a group can be stopped and resumed.
+For an independent training replication, use a separate checkout and move that
+checkout's bundled `results/runs/` to a reference directory first. Keep the
+original records intact. The commands below then create new run directories;
+the saved-record-only sequence later in this file rebuilds the submitted
+analyses without training.
 
 ```bash
 uv run python -B src/verify.py              # environment and plumbing checks (about 1 min)
@@ -65,9 +78,66 @@ uv run python -B src/episodes.py            # Part 4: ten episodes, replays of e
 | `results/videos/` | Recorded episodes (GIF); `episodes/` holds the ten Part 4 episodes with Q-values or probabilities per step |
 
 The fixed ten-episode selection is unchanged. A separate descriptive analysis of
-PPO seed 6's saved checkpoints can be reproduced with
-`python3 src/analyze_seed6.py`; it writes
+PPO seed 6's saved checkpoints and per-step probes can be reproduced with
+`uv run python -B src/analyze_seed6.py`; it writes
 `results/analysis/episodes/ppo_seed6.md` and does not run new training or replays.
+
+## Check and regenerate the saved submission
+
+The following sequence uses existing records and saved agents. It does not train
+an agent, change the selected configurations, or replace raw experiment logs.
+`verify.py` uses fixed rules and a toy Q-learning chain; its new output is kept
+separate from the original verification record. The episode report replays
+the ten original action sequences to obtain frames; it does not rerun the
+alternative-action experiment or choose a new set of episodes.
+
+```bash
+uv sync --locked
+uv run --locked python -B src/verify.py --output results/verification/submission_verify.json
+uv run --locked python -B src/audit_results.py
+uv run --locked python -B src/analyze.py tune
+uv run --locked python -B src/analyze.py main
+uv run --locked python -B src/analyze.py transfer
+uv run --locked python -B src/analyze.py mechanisms
+uv run --locked python -B src/probes.py --analyse
+uv run --locked python -B src/verdicts.py
+uv run --locked python -B src/diagnostic.py --analyse
+uv run --locked python -B src/analyze_seed6.py
+uv run --locked python -B src/episodes.py --report
+uv run --locked python -B src/count_words.py report/evidence_brief.md
+uv run --locked python -B src/count_words.py report/review_record.md --all
+uv run --locked python -B src/export_md.py report/evidence_brief.md
+uv run --locked python -B src/export_md.py report/review_record.md
+uv run --locked python -B src/export_md.py results/analysis/episodes/decisions.md
+git diff --check
+```
+
+PDF export requires Chrome/Chromium on `PATH`, or `CHROME` set to its executable.
+The counter excludes complete table/figure captions and table rows for the
+2,000-word evidence brief. `--all` includes these for the 1,000-word review
+record. Layout-only HTML tags are not prose. Check each exported PDF visually;
+a successful export alone does not verify pagination or text completeness.
+
+## Submission files
+
+Include these files and directories together so that the source paths printed
+in figures and captions remain resolvable:
+
+- `report/evidence_brief.pdf` and `.md`: Parts 2, 3 and 6, with the Part 4 summary.
+- `report/review_record.pdf` and `.md`: Part 5, with attributed human judgements.
+- `results/analysis/episodes/decisions.pdf` and `.md`: all 30 Part 4 decision annotations;
+  `selection.md` documents the original ten-episode selection.
+- `predictions/`: submitted original Markdown/HTML/PDF and subsequent annotations.
+- `src/`, `pyproject.toml`, `uv.lock`, `.python-version`, `README.md`, and
+  `plans/part2_3_plan.md`: executable code and reproduction instructions.
+- `results/runs/`, `results/logs/`, `results/analysis/`, `results/inspection/`,
+  `results/verification/`, `results/videos/`: configurations, seeds, software/
+  hardware provenance, policies, raw logs, traces, figures and videos.
+- `AI_RECORD.md`, `WORKLOG.md`: consequential AI assistance and dated decisions/checks.
+
+`report/requirements_check.md` records the final requirement audit and any
+limitations. The submitted prediction files and original records are preserved;
+do not regenerate or overwrite them when rebuilding the final report.
 
 A run is named `<agent>_<setting>_<configuration>_s<seed>`, for example
 `ppo_B_selected_s3`. Any evaluation episode can be replayed from its seed:

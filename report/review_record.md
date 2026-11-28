@@ -1,55 +1,111 @@
-# Review record (Part 5)
+# Team review record (Part 5)
 
-Maximum 1,000 words. This is a preparation sheet for the required discussion
-between Eivind and Trym; it is not a completed group review.
+**Evidence reviewed:** the submitted prediction sheet (`61bcabe`), its dated
+annotations, the evidence brief and saved analyses. Eivind supplied written
+answers and a review on 24 November 2026 (`4cd8bf7`). This consolidation is
+based on those answers and Trym's three written judgements supplied on
+28 November. Their positions are attributed below; no additional meeting or
+unrecorded approval is implied.
 
-**Prepared:** 19 November 2026, by Codex (AI), from the evidence brief,
-prediction annotations, analysis summaries, saved run records and source code.
-**Human review and approval:** not yet completed. Neither person's answers or
-agreement is inferred here. The submitted prediction sheet remains unchanged.
+## 1. Strongest supporting evidence
 
-## Questions for Eivind and Trym
+Eivind identifies the ten-seed result in Setting A. Q-learning succeeded in
+all 2,000 evaluation episodes (100.0 ± 0.0% across ten trained agents); PPO
+reached 99.4 ± 2.1%, with nine seeds at 100% and one at 93.5%. He considers
+this the strongest support for a classroom demonstration and evidence that
+this environment, representation and final budget permit successful learning.
+It does not separate the algorithms or establish performance in B–D.
+Trym independently selects the ten perfect Q-learning agents as the strongest
+finding and regards this as grounds for confidence in a classroom demo in A.
 
-1. **Strongest evidence:** Is the matched ten-seed comparison in A (Q-learning
-   100% on every seed; PPO 99.4% ± 2.1) the strongest result, or does the
-   matched B comparison better support a useful recommendation despite its
-   larger seed variation? Why?
-2. **Configuration uncertainty:** Tuning selected Q-learning α = 0.3 on seeds
-   100–102, while the separate matched seeds 0–4 favour α = 0.1 by 19.2 points.
-   Should we keep the algorithm comparison explicitly conditional on the
-   selected configurations, and do we want a matched ten-seed α follow-up
-   before recommending an algorithm for B?
-3. **Outlying PPO run:** Does seed 6's non-monotone evaluation (11% at 250k,
-   39% at 500k) justify requiring a pre-deployment evaluation of each trained
-   agent? What trace or replay would we need before explaining why it failed?
-   The original ten selected episodes are unchanged; this is a separate
-   descriptive addition, not a replacement selection.
-4. **Diagnostic claim:** The forced action is followed by the agent policy to
-   episode end; still-versus-towards success differs by 8.0 points (Q-learning)
-   and 2.2 points (PPO), both below pooled SD. Do we agree this leaves the
-   effect unresolved without proving practical equivalence, given that three
-   Q-learning seeds lose 17–40 points after TOWARDS? Would a randomized S2
-   state sample materially improve the inference?
-5. **Generalisation and budget:** Is the revised claim appropriately narrow:
-   the state carries useful ball/paddle geometry across layouts but omits
-   brick positions and paddle width? Do we agree that solving A at 500k does
-   not establish sufficient training in B or D?
-6. **Predictions and recommendations:** After checking
-   `results/analysis/verdicts/verdicts.md` against the submitted rules, do we
-   accept its component-wise P1–P7 and S1–S3 classifications? Do the proposed
-   recommendations distinguish training time from evaluation, tuning and
-   inference cost, and do we want them changed?
+Eivind also notes that Q-learning seeds 0 and 6 reached 0% at some late checkpoints:
+the final result hides sensitivity to when training stops. The independent
+training replications are the ten agents, not 2,000 independent training runs;
+A's 200 evaluation seeds average about 33 distinct trajectories per agent.
 
-## Human record (to complete after discussion)
+## 2. Claims that went beyond the evidence
 
-- Date, attendees, and brief version reviewed:
-- Strongest evidence and why:
-- Claim revised or retained, with supported wording:
-- Alternative explanation and observation that would distinguish it:
-- Prediction verdicts changed, if any, with reason:
-- Recommendation changes agreed by both:
-- Resulting edits and commit:
+Eivind challenges a broad reading of P2 as showing greater PPO seed variation.
+His short answer accepts A's formal classification, whereas his longer review
+proposes saying P2 is not supported because A's entire spread comes from one
+PPO agent and B is inconclusive. The interpretation concern is distinguished
+from the original classification. The technical check confirms:
+A is formally supported under the explicit SD threshold (2.1 ≥ 1.5 × 0),
+while B is inconclusive (17.5/16.7 = 1.05). Greater PPO variability in both
+settings is not established. No new formal classification is introduced.
+Trym explicitly retains A's preregistered classification and narrows the
+conclusion: he would tone down the claim that PPO generally varies more
+between training runs. This preserves the rule while addressing Eivind's
+concern about the strength of the interpretation.
 
-No human judgement has been recorded yet. The evidence brief and annotations
-contain AI-prepared analysis and proposed wording for the team to review; they
-do not constitute the discussion or approval required for Part 5.
+Eivind also challenges the classroom explainability argument. Q-values can be
+inspected, but PPO's action probabilities are visible too. Neither student
+understanding nor comparative explainability was measured. The brief now
+states what a student can inspect and treats easier understanding as an
+untested assumption.
+
+## 3. A plausible alternative explanation
+
+Eivind proposes that PPO's higher B success reflects the selected Q-learning
+configuration rather than an intrinsic algorithm advantage. On the matched
+training seeds 0–4, selected PPO scores 94.3%, selected Q-learning (α 0.3)
+67.2%, and Q-learning with only α changed to 0.1 scores 86.4%. The PPO lead
+shrinks from 27.1 to 7.9 percentage points. All five Q pairs favour α 0.1;
+α 0.3 seeds 0 and 1 deteriorate in the last 100,000 steps.
+
+He proposes retuning both agents on new tuning seeds, then evaluating new
+trained agents on fresh evaluation seeds. The current comparison demonstrates
+configuration sensitivity, not which algorithm is best tuned. Tuning seeds
+100–102 favoured α 0.3 (83.7% versus 53.5%, with final ε 0.01 for both).
+Choosing α 0.1 now using evaluation results would violate comparison rule 7.
+A future study must keep selection separate from final assessment; crossing
+the descriptive pooled-SD threshold alone would not establish a causal
+explanation for a remaining gap.
+Trym likewise interprets the shrinking gap as sensitivity to the chosen
+settings. His proposed next experiment gives both methods the same tuning
+budget, then compares the selected configurations on fresh training seeds.
+This is future work, not a new experiment claimed in this submission.
+
+## 4. Comparison with the original predictions
+
+Eivind generally favours retaining the component-wise verdicts and stating
+what each recommendation depends on. P1 is inconclusive at the specified
+small budget; P5's ranking/gap predictions and P4a–c are mostly inconclusive.
+P4d is contradicted: successful episodes shortened by about 2%, not 5%.
+P3a and the narrower-paddle success drop support the Q-learning predictions,
+while the corresponding PPO components are inconclusive. P7's predicted
+between-agent difference is also inconclusive. D had no prior prediction.
+
+The S2 majority-action predictions are contradicted for both agents; PPO's
+S1 threshold is contradicted, and three of four S3 components are supported.
+Eivind regards S2's consequences as unresolved. The technical distinction is
+between preferred action, catch after a forced action and subsequent episode
+success. Differences below pooled SD do not show practical equivalence;
+Q-learning seeds 2, 6 and 8 lose 17–40 points after TOWARDS.
+
+P6.2 was triggered: the worst observed PPO B agent scored 39%, versus 46% for
+Q-learning. Eivind weighs this alongside PPO's higher B mean (87.8% versus
+75.9%) and lower failure rate. He supports checking each agent before use
+when failures matter. These minima are not guaranteed lower bounds, and no
+acceptance threshold has been established.
+Trym would try PPO first if the specific trained agent can be tested on fresh
+episodes before use. Without such testing, he considers the evidence too weak
+to recommend either method unconditionally when failures matter. This is a
+conditional preference, not evidence that screening has already been validated.
+
+Eivind's seed-6 GIF observation is retained as supplemental evidence. Existing
+step logs corroborate a catch followed by stationary FIRE requests in one
+episode; neither source explains all 122 failures. The original ten episodes
+are unchanged.
+
+## What the review changed or retained
+
+The technical revision retains the original verdict rules and selected
+configurations; qualifies explainability, generalisation and timing claims;
+withdraws unconditional PPO deployment; and separates S2 and seed-6
+observations from causal explanations. Trym's answers retain Q-learning for a
+demo in A and make PPO the first candidate to test in B, while withholding an
+unconditional recommendation. The review keeps A's formal P2 verdict with its
+single-run limitation rather than adopting the broader "P2 is not supported"
+wording from Eivind's longer review. Equal-budget retuning and fresh-seed
+assessment remain proposed follow-up work. No new training was required or run.

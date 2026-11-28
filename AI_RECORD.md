@@ -16,7 +16,7 @@ Routine autocomplete is not logged.
 | Second review of the code | A separate Claude instance read the code without having written it and reported seven points: overlapping PPO environment seeds, single-precision Q-table checkpoints, a missing Part 3 variant, a misleading `git_dirty` flag and three smaller ones | Eivind chose to fix them and to repeat the tuning that had already started. Each fix has a test: `verify.py` (8 checks pass), an exact save/load round trip of a Q-table, a PPO run that repeats exactly for the same seed, and a replay checked against its log. Details in `WORKLOG.md` |
 | Verdicts and probes | Claude wrote `src/verdicts.py` and `src/probes.py` and proposed how to read the sheet's rule where it is silent: the pooled SD formula, the class of P4c and of P2 in A, and the definition of a common launch bin | Eivind decided each point (listed in `WORKLOG.md`, 2026-11-17). He replaced "inconclusive" as a conclusion with a statement of the direction and the weak evidence. He kept the launch-bin definition that was fixed before the probe was run, although an alternative would have turned one verdict into supported. Checked by the probe's assertion that 40 evaluations reproduce the trajectories of `main` exactly |
 | Diagnostic experiment and episode inspection | Claude wrote `src/diagnostic.py` and `src/episodes.py`, proposed S2 as the case for the diagnostic experiment, and proposed the details of the Part 4 selection that the plan left open, including the replay of all four actions from every step | Eivind chose the S2 question and had it written down with its decision rule before the run, and accepted the selection details before the selection was run. Two errors in Claude's code were found and corrected the same day: the sticky noise after a state restore (the diagnostic experiment was run again; both results are in `WORKLOG.md`) and an undefined score that selected one episode wrongly (only that episode changed). Eivind kept the selection rule although three PPO episodes come from one trained agent. Checked with a ninth check in `verify.py` and by the assertion that every selected episode replays to its logged trajectory |
-| Evidence brief, first draft (pending) | Claude drafted `report/evidence_brief.md` from the result files, including proposals for the three recommendations in Part 6 | Pending: neither of us has accepted the text or the recommendations yet. The numbers were checked against the summary tables they cite. The review record (Part 5) is written by us without AI |
+| Evidence brief, first draft | Claude drafted `report/evidence_brief.md` from the result files, including proposals for the three recommendations in Part 6 | The first draft awaited human review; numbers were checked against its source summaries. Eivind later supplied his review and Trym supplied three written judgements. Codex assisted in consolidating their actual contributions into the final English Part 5 record; it did not generate their views. See the dated finalisation entry below |
 | Cost estimate | Claude first estimated 2–3 hours for all runs, then 4–12 hours after the smoke test | The first estimate was wrong: it ignored the cost of seeded resets and timeout episodes in evaluation. Measured times replace both after tuning |
 
 ## Trym-requested Codex review (2026-11-12; approval pending)
@@ -74,3 +74,44 @@ without new training. It regenerated the evidence brief HTML/PDF and visually
 inspected all nine PDF pages. The browser required execution outside the
 sandbox after Chromium crashed there with SIGTRAP. The review record remains
 open for Trym and Eivind; their answers or approval are not inferred.
+
+## Restructured brief headings (Claude, 2026-11-24)
+
+Eivind asked Claude to make the brief's headings follow the assignment text.
+Claude renamed the headings by assignment part, turned the bold lead-ins into
+the assignment's questions, added a table mapping each requirement to where it
+is answered, and restated the pre-registered competing explanation in Part 3.
+It also shortened four paragraphs (budget and runtime, α, classroom
+recommendation, closing scope) from 1,915 to 1,779 words. It changed no
+result, verdict or recommendation. Accepted or rejected by the team: pending.
+Checked: word count, the α claim against the checkpoint files, and a visual
+pass over all ten PDF pages.
+
+## Submission review and verification (Codex, 2026-11-28)
+
+Trym requested an evidence audit and concrete submission edits, using the
+Assignment 3 feedback on causal claims, independent replications and timing
+scope. Codex added a reproducible audit of saved episode rows, explicit
+Monte Carlo uncertainty for the existing Part 4 replays, and corroboration of
+Eivind's seed-6 GIF against pre-existing per-step probes. Implemented corrections
+distinguish P2's formal threshold from its limited support, configuration
+sensitivity from algorithm superiority, catches from episode success, and
+training time from evaluation, tuning and unmeasured inference. The original
+predictions, selected configurations, raw runs and ten-episode selection are
+preserved; no assessed training was added. The proposed replacement of P2's
+formal A verdict was not adopted because it would change the submitted rule.
+Codex asked Trym for his own review judgements; none is inferred from the
+technical edits. Final checks and remaining limitations are recorded in
+`report/requirements_check.md` and `WORKLOG.md`.
+
+## Finalising the supplied human review (Codex, 2026-11-28)
+
+Trym supplied his own three judgements. Codex merged them with Eivind's actual
+answers, retaining the formal P2 A classification, limiting the broader
+variability claim, and making PPO the first B candidate to test on fresh
+episodes before use. Trym's equal-budget retuning proposal remains future
+work. No new endorsement was attributed to Eivind. Checked: word limits,
+saved-result audit, attributed text, source/export agreement and final PDF
+readability. Original predictions and raw data are unchanged. The specifically
+named task attachment remains unavailable; no source-equivalence check is
+claimed for it.
