@@ -147,6 +147,13 @@ All verdicts with their calculations are in
   inferred from the current 39% and 46% minima. The equal-time P6.3 calculation
   uses training time only; it does not include tuning, evaluation or a measured
   inference-latency comparison.
+- **2026-11-28, human review outcome.** Trym would try PPO first if the
+  specific trained agent can be tested on fresh episodes before use. Without
+  such testing, he does not recommend either method unconditionally when
+  failures matter. This retains the P6.2 reversal of unconditional PPO advice;
+  it does not claim that an acceptance threshold or screening procedure has
+  already been validated. His equal-budget retuning and fresh-training-seed
+  comparison are proposed future work, not additional assessed experiments.
 
 ## P7
 

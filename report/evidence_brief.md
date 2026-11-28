@@ -272,12 +272,14 @@ checkpoint. Source: `results/analysis/episodes/ppo_seed6.md`.*
 
 | | Rapid classroom demonstration | Repeated operation in uncertainty | Operation after an environment change |
 | --- | --- | --- | --- |
-| Approach and configuration | Selected Q-learning, A, 500k steps, greedy table with random tie-breaks | Selected PPO, B, 500k steps, most-probable actions, only as a candidate for future screening | No deployment; selected frozen B agents are benchmark candidates only |
+| Approach and configuration | Selected Q-learning, A, 500k steps, greedy table with random tie-breaks | Try selected PPO first, B, 500k steps, most-probable actions, conditional on testing the specific trained agent on fresh episodes before use | No deployment; selected frozen B agents are benchmark candidates only |
 | Evidence 1 | Q: 100% on all 10 seeds | B failures: PPO 11.5%, Q 20.8%; C: 4.9% vs 20.9% | D: PPO −4.4 points, Q −24.5 |
 | Evidence 2 | Training 307 s vs PPO 375 s on M4; inspect four Q-values per state (Figure 3), but explainability was not measured | 9/10 PPO agents reach 85.5–97.0% in B | 12 px paddle: Q −22.5 points, PPO −18.9 |
 | Observed weakness | Q falls to 87–90% late in training | P6 trigger: worst PPO 39%, worst Q 46% | PPO ranges 24.0–99.5% in D |
 | We would change it if | A shorter deadline makes success unacceptable, students cannot explain decisions, or sticky actions are required | Fresh validation fails a prospectively chosen reliability requirement; without a validated screen, recommend neither | A candidate meets a prospectively chosen reliability requirement across held-out layouts and widths |
 | Further experiment before external use | Matched short-budget demo trial: measure full training/validation time and ask students to explain the same decisions from Q-values or PPO probabilities | Retune both agents on new tuning seeds; compare new training seeds with a prospective acceptance rule and independent evaluation, recording rejection rates and screening cost | Evaluate the frozen candidates on independently designed held-out layouts and widths; report failures per layout and agent, not only a pooled mean |
+
+These follow-ups are proposals before external use, not missing assessed experiments.
 
 **Rapid classroom demonstration.** Selected Q-learning in A has no observed
 final failures and shorter training (307 against 375 s). Students can inspect
@@ -294,10 +296,11 @@ finished at 39% after its 250,000-step evaluation was 11%. The sheet's P6
 reversal condition was met: the worst PPO seed scored below the worst
 Q-learning seed (39.0% against 46.0%). We therefore withdraw an unconditional
 PPO recommendation. Neither observed minimum bounds a future agent's result.
-PPO remains a candidate for future screening, with a prospectively agreed pass
-threshold and fresh validation. No threshold or successful screening procedure
-has been established. Without these, neither agent is adequately supported
-where failures matter.
+Following the review, PPO is the first candidate to test on fresh episodes
+before use. A pass threshold and screening validation remain future decisions;
+no successful screening procedure has been established. Without testing the
+specific trained agent, neither method is recommended unconditionally when
+failures matter.
 
 **Operation after an environment change.** Neither tested agent is adequately
 supported for reliable deployment. PPO loses less on this gap layout, but

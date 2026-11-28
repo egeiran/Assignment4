@@ -9,11 +9,13 @@ agents see the same compact Breakout state? See the [official task](<Assignment 
 Start with [WORKLOG.md](WORKLOG.md): scope, decisions, requirement status and handover.
 Consequential AI assistance is logged in [AI_RECORD.md](AI_RECORD.md).
 
-**Status, 28 November:** technical checks and exports are complete. Eivind's
-review has been consolidated, but Trym's answers and the final team review
-remain pending. The separately named task attachment also needs confirmation;
-see [the requirement audit](report/requirements_check.md). This is not yet a
-completed submission bundle.
+**Status, 28 November:** Eivind's recorded review and Trym's supplied written
+judgements are consolidated in Part 5. Technical checks and final exports are
+documented in [the requirement audit](report/requirements_check.md). The only
+remaining source check is the unavailable attachment `Assignment 4(1).pdf`:
+the requirement audit currently uses the repository's `Assignment 4.pdf`,
+which has the requested title. Confirm equivalence or supply the attachment
+before treating that final requirement check as complete.
 
 ## Part 1: prediction sheet
 
@@ -41,6 +43,11 @@ Pinned versions are in `uv.lock`. The ALE ROMs ship with `ale-py`.
 The setup is fixed in [plans/part2_3_plan.md](plans/part2_3_plan.md), committed
 before any agent was trained. Run the groups in this order; finished runs are
 skipped, so a group can be stopped and resumed.
+For an independent training replication, use a separate checkout and move that
+checkout's bundled `results/runs/` to a reference directory first. Keep the
+original records intact. The commands below then create new run directories;
+the saved-record-only sequence later in this file rebuilds the submitted
+analyses without training.
 
 ```bash
 uv run python -B src/verify.py              # environment and plumbing checks (about 1 min)

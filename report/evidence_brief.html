@@ -613,7 +613,7 @@ checkpoint. Source: <code>results/analysis/episodes/ppo_seed6.md</code>.</em></p
 <tr>
 <td>Approach and configuration</td>
 <td>Selected Q-learning, A, 500k steps, greedy table with random tie-breaks</td>
-<td>Selected PPO, B, 500k steps, most-probable actions, only as a candidate for future screening</td>
+<td>Try selected PPO first, B, 500k steps, most-probable actions, conditional on testing the specific trained agent on fresh episodes before use</td>
 <td>No deployment; selected frozen B agents are benchmark candidates only</td>
 </tr>
 <tr>
@@ -648,6 +648,7 @@ checkpoint. Source: <code>results/analysis/episodes/ppo_seed6.md</code>.</em></p
 </tr>
 </tbody>
 </table>
+<p>These follow-ups are proposals before external use, not missing assessed experiments.</p>
 <p><strong>Rapid classroom demonstration.</strong> Selected Q-learning in A has no observed
 final failures and shorter training (307 against 375 s). Students can inspect
 four Q-values and the chosen action beside the transition (Figure 3). PPO's
@@ -662,10 +663,11 @@ finished at 39% after its 250,000-step evaluation was 11%. The sheet's P6
 reversal condition was met: the worst PPO seed scored below the worst
 Q-learning seed (39.0% against 46.0%). We therefore withdraw an unconditional
 PPO recommendation. Neither observed minimum bounds a future agent's result.
-PPO remains a candidate for future screening, with a prospectively agreed pass
-threshold and fresh validation. No threshold or successful screening procedure
-has been established. Without these, neither agent is adequately supported
-where failures matter.</p>
+Following the review, PPO is the first candidate to test on fresh episodes
+before use. A pass threshold and screening validation remain future decisions;
+no successful screening procedure has been established. Without testing the
+specific trained agent, neither method is recommended unconditionally when
+failures matter.</p>
 <p><strong>Operation after an environment change.</strong> Neither tested agent is adequately
 supported for reliable deployment. PPO loses less on this gap layout, but
 single agents fall to 24%, and both lose about 20 points with a narrower

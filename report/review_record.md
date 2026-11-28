@@ -3,8 +3,9 @@
 **Evidence reviewed:** the submitted prediction sheet (`61bcabe`), its dated
 annotations, the evidence brief and saved analyses. Eivind supplied written
 answers and a review on 24 November 2026 (`4cd8bf7`). This consolidation is
-prepared on 28 November. Trym's answers to three follow-up questions are still
-pending; no discussion outcome, agreement or approval is attributed to him.
+based on those answers and Trym's three written judgements supplied on
+28 November. Their positions are attributed below; no additional meeting or
+unrecorded approval is implied.
 
 ## 1. Strongest supporting evidence
 
@@ -14,8 +15,10 @@ reached 99.4 ± 2.1%, with nine seeds at 100% and one at 93.5%. He considers
 this the strongest support for a classroom demonstration and evidence that
 this environment, representation and final budget permit successful learning.
 It does not separate the algorithms or establish performance in B–D.
+Trym independently selects the ten perfect Q-learning agents as the strongest
+finding and regards this as grounds for confidence in a classroom demo in A.
 
-He also notes that Q-learning seeds 0 and 6 reached 0% at some late checkpoints:
+Eivind also notes that Q-learning seeds 0 and 6 reached 0% at some late checkpoints:
 the final result hides sensitivity to when training stops. The independent
 training replications are the ten agents, not 2,000 independent training runs;
 A's 200 evaluation seeds average about 33 distinct trajectories per agent.
@@ -25,13 +28,17 @@ A's 200 evaluation seeds average about 33 distinct trajectories per agent.
 Eivind challenges a broad reading of P2 as showing greater PPO seed variation.
 His short answer accepts A's formal classification, whereas his longer review
 proposes saying P2 is not supported because A's entire spread comes from one
-PPO agent and B is inconclusive. These passages need distinguishing rather
-than silently replacing the original rule. The technical check confirms:
+PPO agent and B is inconclusive. The interpretation concern is distinguished
+from the original classification. The technical check confirms:
 A is formally supported under the explicit SD threshold (2.1 ≥ 1.5 × 0),
 while B is inconclusive (17.5/16.7 = 1.05). Greater PPO variability in both
 settings is not established. No new formal classification is introduced.
+Trym explicitly retains A's preregistered classification and narrows the
+conclusion: he would tone down the claim that PPO generally varies more
+between training runs. This preserves the rule while addressing Eivind's
+concern about the strength of the interpretation.
 
-He also challenges the classroom explainability argument. Q-values can be
+Eivind also challenges the classroom explainability argument. Q-values can be
 inspected, but PPO's action probabilities are visible too. Neither student
 understanding nor comparative explainability was measured. The brief now
 states what a student can inspect and treats easier understanding as an
@@ -54,6 +61,10 @@ Choosing α 0.1 now using evaluation results would violate comparison rule 7.
 A future study must keep selection separate from final assessment; crossing
 the descriptive pooled-SD threshold alone would not establish a causal
 explanation for a remaining gap.
+Trym likewise interprets the shrinking gap as sensitivity to the chosen
+settings. His proposed next experiment gives both methods the same tuning
+budget, then compares the selected configurations on fresh training seeds.
+This is future work, not a new experiment claimed in this submission.
 
 ## 4. Comparison with the original predictions
 
@@ -77,22 +88,24 @@ Q-learning. Eivind weighs this alongside PPO's higher B mean (87.8% versus
 75.9%) and lower failure rate. He supports checking each agent before use
 when failures matter. These minima are not guaranteed lower bounds, and no
 acceptance threshold has been established.
+Trym would try PPO first if the specific trained agent can be tested on fresh
+episodes before use. Without such testing, he considers the evidence too weak
+to recommend either method unconditionally when failures matter. This is a
+conditional preference, not evidence that screening has already been validated.
 
-His seed-6 GIF observation is retained as supplemental evidence. Existing
+Eivind's seed-6 GIF observation is retained as supplemental evidence. Existing
 step logs corroborate a catch followed by stationary FIRE requests in one
 episode; neither source explains all 122 failures. The original ten episodes
 are unchanged.
 
-## Changes and remaining decisions
+## What the review changed or retained
 
 The technical revision retains the original verdict rules and selected
 configurations; qualifies explainability, generalisation and timing claims;
 withdraws unconditional PPO deployment; and separates S2 and seed-6
-observations from causal explanations. These edits do not constitute joint
-human approval.
-
-Trym's pending input concerns the B risk trade-off and recommendation, his own
-strongest evidence and overclaim, and how configuration uncertainty should
-shape the conclusion and next experiment. These answers are needed to finish
-the team review, record agreement or dissent, and identify the final resulting
-edits. No additional training has been agreed or run.
+observations from causal explanations. Trym's answers retain Q-learning for a
+demo in A and make PPO the first candidate to test in B, while withholding an
+unconditional recommendation. The review keeps A's formal P2 verdict with its
+single-run limitation rather than adopting the broader "P2 is not supported"
+wording from Eivind's longer review. Equal-budget retuning and fresh-seed
+assessment remain proposed follow-up work. No new training was required or run.

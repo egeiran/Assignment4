@@ -14,13 +14,14 @@ The specifically requested attachment `Assignment 4(1).pdf` is not available
 in this workspace; its equivalence to the repository PDF has not been verified.
 The requirement mapping below therefore refers to the repository PDF.
 
-Trym was asked three open questions about the B recommendation, strongest
-evidence/overclaim, and configuration uncertainty. His answers have not yet
-been received. Eivind's review has been consolidated with overlapping answers
-into an attributed 806-word draft; his original wording remains in `4cd8bf7`.
-The draft records his P2 wording tension explicitly. Trym's input and a final
-team review remain necessary. The submission is not declared ready while
-these two items remain open.
+Trym supplied three written judgements on 28 November: test the specific PPO
+agent before conditional use in B, retain P2's formal A verdict with a narrow
+interpretation, and propose equal-budget retuning followed by fresh training
+seeds. These are incorporated alongside Eivind's recorded views, whose original
+wording remains in `4cd8bf7`. The record covers all four Part 5 requirements and
+attributes each view; no additional meeting or unrecorded approval is invented.
+The only outstanding delivery check is confirmation of the specifically named
+task PDF above. No new training is required by the accessible assignment.
 
 ## Requirement mapping
 
@@ -40,7 +41,7 @@ these two items remain open.
 | Part 4: 3 typical successes, 3 typical failures, 2 surprising successes, 2 surprising failures | Exact original `selection.csv` is unchanged; distribution-based reasons in `selection.md`. |
 | Part 4: three complete decisions per episode | `decisions.md` / `.pdf` contain 30 annotations, each with state/actions, chosen action and four values/probabilities, observed transition/outcome and four replay alternatives. Audit checks 100 confirmation replays per action; conditional Wilson intervals added from existing counts. |
 | Part 4: poor action versus unlucky outcome; aggregate limitation | TF1/TF3/SF1 versus TF2/SF2, brief Table 6 and Figure 3. Seed 6 contributes 122/230 PPO failures but was not in the fixed selection; its analysis/GIF remain supplemental. Existing step probes corroborate the one GIF episode without diagnosing all failures. |
-| Part 5: strongest evidence, overclaim, alternative explanation, prediction comparison | Eivind has supplied all four, consolidated to 806 words; Trym's response and final discussion record are still required. No agreement or human review completion is inferred. |
+| Part 5: strongest evidence, overclaim, alternative explanation, prediction comparison | The final written review includes Eivind's actual answers and Trym's three supplied judgements; it covers all four requirements and identifies resulting edits/retained choices, without inventing a meeting or blanket agreement. |
 | Part 6: each of three decisions has approach/configuration, two findings, weakness, reversal condition, decision-relevant experiment | Brief Table 7 and situation paragraphs. P6.2 withdraws unconditional PPO; current minima are not lower bounds. Explainability is inspectability of four numbers, not a measured student outcome. Future screening thresholds are not presented as established. |
 | Broader scope | One altered layout, one implementation and shared hand-designed features; no claim of universal algorithm superiority or independent-team replication. |
 | Executable reproduction and records | `README.md` gives full experimental and saved-record-only command sequences, with actual scripts/configuration paths and a delivery manifest. Raw records include seeds, versions, hardware, checkpoint policies, actions and state traces. |
@@ -70,13 +71,17 @@ not benchmarked. No broader timing conclusion is drawn.
   50/100 → 40.4–59.6%. These are conditional replay intervals, not uncertainty
   across training seeds or environments.
 - Counter checks include multiline caption exclusion for the brief and complete
-  record counting for Part 5. The current brief is 1,933 words. Review record:
-  806 words, with Eivind's views attributed and Trym's answers pending.
+  record counting for Part 5. Final counts: evidence brief 1,954 words excluding
+  tables/captions; complete review record 967 words (976 whitespace-separated
+  source tokens, also below 1,000).
 - Raw runs/logs, selected configurations, the original ten-episode selection,
   submitted predictions and Eivind's original seed-6 GIF are unchanged.
 
-The brief and decision-annotation PDFs were rendered and visually inspected.
+The final brief, human-review and decision-annotation PDFs were rendered and
+visually inspected. The final review includes all three of Trym's supplied
+judgements and no stale pending-answer text.
 Extracted PDF text matches the rendered HTML after whitespace/Unicode
 normalisation, and no text spans lie outside page bounds. All figure-source
 paths resolve to saved configurations/logs. Final export details and repository
-checks are recorded in `WORKLOG.md`; the review remains a draft pending Trym.
+checks are recorded in `WORKLOG.md`. The named authoritative attachment remains
+unavailable; the final source-equivalence check is still open.

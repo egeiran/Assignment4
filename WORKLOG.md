@@ -8,9 +8,9 @@ the submission is complete. Planned work has no results.
 - **Part 1 was submitted on 2026-11-13**: the sheet in merge commit `61bcabe`
   (Trym's PR #1), unchanged. Never edit `predictions/predictions_v1.*`;
   interpretations go in `predictions/annotations.md`.
-- **Parts 2–6 (from 2026-11-14):** Eivind builds code, runs and the brief draft
-  with Claude (logged in AI_RECORD.md). Part 5 requires a human discussion by
-  Trym and Eivind; an AI-prepared question sheet is not that review.
+- **Parts 2–6 (from 2026-11-14):** Eivind built the code, runs and brief draft
+  with Claude (logged in AI_RECORD.md). The final Part 5 record now combines
+  Eivind's written review and Trym's supplied written judgements.
 - **Setting D is the 32 px gap layout** from the submitted sheet (Eivind,
   2026-11-14). The narrower paddle (P7) is reported as a separate probe.
 - **`plans/part2_3_plan.md` (commit `be8831c`, 2026-11-16) fixes the setup.** It
@@ -18,26 +18,27 @@ the submission is complete. Planned work has no results.
 - **Assessed runs, analyses and Part 4 records are complete.** The 2026-11-28
   saved-record audit and all nine environment/plumbing checks passed. No new
   assessed training or retuning was performed. See the final entry below.
-- **Human review:** Eivind's responses from `4cd8bf7` are present. Trym's three
-  review answers remain outstanding; neither agreement nor completion is
-  inferred. Eivind's answers have been consolidated into an 806-word draft.
+- **Human review:** Eivind's responses from `4cd8bf7` and Trym's three written
+  judgements from 28 November are consolidated, with attribution and resulting
+  changes. No additional meeting or unrecorded agreement is implied.
 - **Task-source check:** the repository PDF has the requested title, but the
   separately named attachment `Assignment 4(1).pdf` is not accessible here.
   Confirm the authoritative copy before declaring the submission ready.
-- Sections below dated 2026-11-12 are the record from before the submission;
-  where they say "pending" or "candidate", this handover is the current status.
+- Earlier entries retain the status at the time they were written. This
+  handover and the finalisation entry supersede older "pending" or "candidate"
+  statuses, including the earlier draft-review entry from 28 November.
 
 ## Requirement status
 
 | Part | Requirement                                                              | Points | Status      |
 | ---- | ------------------------------------------------------------------------ | ------ | ----------- |
 | 1    | Timestamped prediction sheet: 6 questions + 3 states                     | 30     | Done        |
-| 2    | Settings A–D, comparison rules, required evidence                        | 20     | Runs and tables done; in the brief draft |
-| 3    | Mechanisms: epsilon, gamma, entropy, learning rate, PPO epochs; ≥5 seeds | 20     | Runs, verdicts and diagnostic experiment done; in the brief draft |
+| 2    | Settings A–D, comparison rules, required evidence                        | 20     | Runs, tables and final brief checked against the accessible task PDF |
+| 3    | Mechanisms: epsilon, gamma, entropy, learning rate, PPO epochs; ≥5 seeds | 20     | Runs, verdicts and diagnostic experiment checked; final brief updated |
 | 4    | Ten annotated episodes                                                   | 20     | All 30 annotations checked, with conditional replay intervals and a PDF appendix |
-| 5    | Human review within the team (≤1,000 words)                              | 30     | Eivind's answers present; Trym's answers and final consolidation pending |
-| 6    | Three recommendations                                                    | 30     | Proposed in the brief draft; not yet decided by us |
-| –    | Code, experiment records, evidence brief (≤2,000 words), AI record       | –      | Technical audit completed; final human review and authoritative-PDF confirmation pending; AI record updated through 2026-11-28 |
+| 5    | Human review within the team (≤1,000 words)                              | 30     | Both written contributions recorded and consolidated within the limit |
+| 6    | Three recommendations                                                    | 30     | Final recommendations reflect the recorded review; all six elements checked per situation |
+| –    | Code, experiment records, evidence brief (≤2,000 words), AI record       | –      | Files complete; only confirmation of the unavailable authoritative attachment remains |
 
 ## Decisions so far (provisional, 2026-11-12)
 
@@ -846,3 +847,57 @@ reproduction/export tooling; `a075dd3` aligns evidence and recommendations;
 Trym. The regeneration/verification commit follows this record. No commit,
 export or successful technical check constitutes the outstanding human review
 or confirmation of the unavailable authoritative attachment.
+
+## Finalisation after Trym's written judgements (2026-11-28)
+
+Continued from `0fb771c`, with the four prior local commits intact and a clean
+worktree. Trym supplied his own three judgements in chat and authorised their
+use in the English review. They are now attributed alongside Eivind's actual
+answers from `4cd8bf7`; no additional meeting, new Eivind endorsement or blanket
+agreement is inferred. Both identify the A result as strongest. Trym retains
+P2's formal A classification while limiting its interpretation; he would try
+PPO first in B only with fresh-episode testing of the specific trained agent.
+Without such testing, he supports no unconditional recommendation where failures
+matter. His equal-budget retuning/fresh-training-seed proposal remains future
+work. The final review states what was changed or retained.
+
+The final requirement pass reread all six pages of the accessible task PDF,
+including Parts 2–6 and "What to submit". The three recommendation columns
+were checked individually for configuration/justification, two experimental
+findings, an observed weakness, a change condition and a decision-relevant
+follow-up. These proposals are explicitly distinguished from assessed work
+needed for the present submission. README now also explains independent
+training replication in a separate checkout while preserving the reference
+records. The original prediction sheet and raw data are unchanged.
+
+**Final counts:** `src/count_words.py` reports 1,954 words for the evidence
+brief excluding tables/captions and 967 for the complete review record using
+`--all`. A whitespace count of the review source is 976, also below 1,000.
+Updated the AI record to distinguish actual human judgements from AI-assisted
+consolidation and removed stale current-status claims that Trym's answers are
+pending. Earlier worklog entries remain historical and are explicitly
+superseded by this finalisation entry.
+
+**Final checks:** reran `verify.py` to completion, all nine checks passed;
+recomputed the saved-result audit, again 2,385 summaries / 477,000 episode
+rows, all 3,733 S2 states and 30 decisions. The new environment-check result
+was compared with the separately preserved submission verification record.
+No new training, retuning, episode selection, diagnostic collection or raw-log
+replacement was performed. Regenerated the brief (12 PDF pages) and final
+review (3 pages) with the pinned Markdown renderer and Chromium; the existing
+11-page decision appendix remains unchanged. All three HTML files match the
+current source and exporter. All three PDFs match their HTML text after
+Unicode/whitespace normalisation; no text spans lie outside page boundaries.
+Rendered the PDFs, opened all three final review pages and the affected
+recommendation pages, and verified readability, actual inclusion of Trym's
+three contributions, tables, figures and source references. Figure-source paths
+resolve, and `git diff --check` passes.
+
+**Only outstanding source check:** the requested `Assignment 4(1).pdf` is still
+not accessible in the workspace or available attachment paths. The repository
+PDF has the requested title and was checked in full, but identity with that
+named attachment is not asserted. Supplying the attachment or confirming its
+identity is needed to close the final authoritative-source check. No additional
+experiment is required for delivery under the accessible task text; the
+proposed follow-ups concern future external use. Push, merge and submission
+remain with Trym and Eivind.
