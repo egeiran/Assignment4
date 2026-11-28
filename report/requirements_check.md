@@ -71,7 +71,7 @@ not benchmarked. No broader timing conclusion is drawn.
   50/100 → 40.4–59.6%. These are conditional replay intervals, not uncertainty
   across training seeds or environments.
 - Counter checks include multiline caption exclusion for the brief and complete
-  record counting for Part 5. Final counts: evidence brief 1,954 words excluding
+  record counting for Part 5. Final counts: evidence brief 2,000 words excluding
   tables/captions; complete review record 967 words (976 whitespace-separated
   source tokens, also below 1,000).
 - Raw runs/logs, selected configurations, the original ten-episode selection,

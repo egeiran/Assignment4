@@ -79,7 +79,10 @@ and signed ball-to-paddle error; before launch, paddle position. There are
 and an in-play flag. Neither receives brick positions or paddle width.
 The previous executed sticky action is also omitted, leaving partial
 observability under sticky transitions.
-The sheet's pooled-SD rule is descriptive, not a significance or equivalence test.</p>
+The sheet's pooled-SD rule is descriptive, not a significance or equivalence test.
+B and C use sticky actions (probability 0.25 per emulator frame; four frames
+per agent step); C subtracts 0.001 reward per agent step, including the terminal
+step.</p>
 <p class="table-caption"><em>Table 1. Comparison rules. Sources: <code>plans/part2_3_plan.md</code>, <code>results/selected_config.json</code>, <code>results/logs/</code>.</em></p>
 <table>
 <thead>
@@ -119,12 +122,12 @@ The sheet's pooled-SD rule is descriptive, not a significance or equivalence tes
 </tr>
 </tbody>
 </table>
-<p>Both agents nearly solve A at the final checkpoint; this establishes neither
-convergence in B nor sufficient training for transfer. Equal interactions were
-not equal computation: PPO took 8–22% longer to train in A/B. Evaluation is
-extra: PPO B seed 6 took 399 s training and 696 s evaluating. Tuning took 36
-runs, 2 h 26 min on eight workers (<code>results/logs/tune.log</code>). Inference latency
-was not benchmarked; these are not end-to-end deployment timings.</p>
+<p>Both nearly solve A; this establishes neither convergence in B nor transfer
+sufficiency. Equal interactions did
+not mean equal computation: PPO took 8–22% longer in A/B. PPO B seed 6 took 399 s
+to train and 696 s to evaluate. Tuning took 2 h 26 min on eight workers
+(<code>results/logs/tune.log</code>). Inference latency was not benchmarked, so deployment
+time is unknown.</p>
 <h3>Settings A to D</h3>
 <p class="table-caption"><em>Table 2. Final greedy evaluation, 10 trained agents per row, mean ± sample SD between seeds. Lengths are means of per-agent outcome-specific medians, omitting agents with no such outcome. A averages about 33 distinct trajectories per 200 episodes; the training replication unit is the agent, not each evaluation episode. Success, failure and timeout sum to 100%. A/B return equals success rate; C return includes step penalties and is not compared with A/B. Source: <code>results/analysis/main/summary.md</code>; runs: <code>results/analysis/main/sources.txt</code>.</em></p>
 <table>
@@ -236,9 +239,12 @@ and PPO 11.6 (12.4). PPO ends 11.9 points above Q-learning, which is less than
 the variation between seeds (pooled SD 17.1). Each mean hides one trained
 agent: PPO seed 6 succeeds in 39%, and Q-learning seed 1 never launches the
 ball in 66 of 200 episodes.</p>
-<p><strong>C: Does the reward encourage the behaviour we want?</strong> The step penalty did not produce the behaviour it was meant
-to encourage. Successful episodes became 2% shorter for both agents, not the
-5% we required, and success did not fall. We compare outcome rates only.</p>
+<p><strong>C: Does the reward encourage the behaviour we want?</strong> Mean success was
+observed to be higher in C than B for Q-learning (79.1% vs 75.9%) and PPO
+(93.7% vs 87.8%). Successful episodes were about 2% shorter for both (72.2 vs
+73.8 and 70.4 vs 72.1 steps), below our pre-set 5% threshold. These observed
+differences do not establish causation. We compare outcome rates and duration;
+returns are not comparable because B and C use different reward definitions.</p>
 <p><strong>D: What survives a change in environment?</strong> The B agents were evaluated on a wall with a 32 px gap and,
 separately, with a 12 px paddle.</p>
 <p class="table-caption"><em>Table 3. Final B agents, 200 greedy episodes each, no updates or additional training; original training: 500,000 steps per agent (B timings in Table 2). Mean ± SD across 10 agents; lengths as in Table 2. Sources: <code>results/analysis/transfer/summary.md</code>, run list <code>results/analysis/transfer/sources.txt</code>. The combined D/P7 evaluation batch took 134 s on eight Apple M4 workers (<code>results/logs/transfer.log</code>); per-condition evaluation timings were not logged.</em></p>

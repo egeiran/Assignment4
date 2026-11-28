@@ -35,6 +35,9 @@ and an in-play flag. Neither receives brick positions or paddle width.
 The previous executed sticky action is also omitted, leaving partial
 observability under sticky transitions.
 The sheet's pooled-SD rule is descriptive, not a significance or equivalence test.
+B and C use sticky actions (probability 0.25 per emulator frame; four frames
+per agent step); C subtracts 0.001 reward per agent step, including the terminal
+step.
 
 *Table 1. Comparison rules. Sources: `plans/part2_3_plan.md`, `results/selected_config.json`, `results/logs/`.*
 
@@ -48,12 +51,12 @@ The sheet's pooled-SD rule is descriptive, not a significance or equivalence tes
 | Selected configuration | Q-learning: α 0.3, ε from 1 to 0.01 over the first half, γ 0.99. PPO: learning rate 1·10⁻³, entropy 0.01, 4 epochs, γ 0.99 |
 | Hardware | Apple M4, 8 runs in parallel, CPU only. Runtimes in Table 2 are training time without evaluation |
 
-Both agents nearly solve A at the final checkpoint; this establishes neither
-convergence in B nor sufficient training for transfer. Equal interactions were
-not equal computation: PPO took 8–22% longer to train in A/B. Evaluation is
-extra: PPO B seed 6 took 399 s training and 696 s evaluating. Tuning took 36
-runs, 2 h 26 min on eight workers (`results/logs/tune.log`). Inference latency
-was not benchmarked; these are not end-to-end deployment timings.
+Both nearly solve A; this establishes neither convergence in B nor transfer
+sufficiency. Equal interactions did
+not mean equal computation: PPO took 8–22% longer in A/B. PPO B seed 6 took 399 s
+to train and 696 s to evaluate. Tuning took 2 h 26 min on eight workers
+(`results/logs/tune.log`). Inference latency was not benchmarked, so deployment
+time is unknown.
 
 ### Settings A to D
 
@@ -93,9 +96,12 @@ the variation between seeds (pooled SD 17.1). Each mean hides one trained
 agent: PPO seed 6 succeeds in 39%, and Q-learning seed 1 never launches the
 ball in 66 of 200 episodes.
 
-**C: Does the reward encourage the behaviour we want?** The step penalty did not produce the behaviour it was meant
-to encourage. Successful episodes became 2% shorter for both agents, not the
-5% we required, and success did not fall. We compare outcome rates only.
+**C: Does the reward encourage the behaviour we want?** Mean success was
+observed to be higher in C than B for Q-learning (79.1% vs 75.9%) and PPO
+(93.7% vs 87.8%). Successful episodes were about 2% shorter for both (72.2 vs
+73.8 and 70.4 vs 72.1 steps), below our pre-set 5% threshold. These observed
+differences do not establish causation. We compare outcome rates and duration;
+returns are not comparable because B and C use different reward definitions.
 
 **D: What survives a change in environment?** The B agents were evaluated on a wall with a 32 px gap and,
 separately, with a 12 px paddle.

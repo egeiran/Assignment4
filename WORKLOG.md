@@ -870,9 +870,11 @@ needed for the present submission. README now also explains independent
 training replication in a separate checkout while preserving the reference
 records. The original prediction sheet and raw data are unchanged.
 
-**Final counts:** `src/count_words.py` reports 1,954 words for the evidence
+**Final counts at the 28 November 2026 finalization:** `src/count_words.py` reports 1,954 words for the evidence
 brief excluding tables/captions and 967 for the complete review record using
 `--all`. A whitespace count of the review source is 976, also below 1,000.
+The later wording clarification brings the current evidence brief to 2,000
+words by the same counter; the review record remains unchanged at 967.
 Updated the AI record to distinguish actual human judgements from AI-assisted
 consolidation and removed stale current-status claims that Trym's answers are
 pending. Earlier worklog entries remain historical and are explicitly
