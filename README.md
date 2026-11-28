@@ -9,6 +9,12 @@ agents see the same compact Breakout state? See the [official task](<Assignment 
 Start with [WORKLOG.md](WORKLOG.md): scope, decisions, requirement status and handover.
 Consequential AI assistance is logged in [AI_RECORD.md](AI_RECORD.md).
 
+**Status, 28 November:** technical checks and exports are complete. Eivind's
+review has been consolidated, but Trym's answers and the final team review
+remain pending. The separately named task attachment also needs confirmation;
+see [the requirement audit](report/requirements_check.md). This is not yet a
+completed submission bundle.
+
 ## Part 1: prediction sheet
 
 The [prediction sheet PDF](predictions/predictions_v1.pdf) was submitted on
