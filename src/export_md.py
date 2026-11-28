@@ -4,6 +4,7 @@ python-markdown with the A1 stylesheet, then headless Chrome.
 Usage: uv run python -B src/export_md.py predictions/predictions_v1.md
 """
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -17,9 +18,9 @@ STYLE = """<meta charset='utf-8'><style>
 body{font-family:Helvetica,Arial,sans-serif;font-size:11pt;line-height:1.45;max-width:17cm;margin:2cm auto;color:#222}
 h1,h2{border-bottom:1px solid #ccc;padding-bottom:.2em} h2{page-break-before:auto}
 table{border-collapse:collapse;margin:1em 0;font-size:9.5pt} th,td{border:1px solid #ccc;padding:4px 8px;text-align:left}
-th{background:#f2f2f2} code{background:#f4f4f4;padding:1px 4px;font-size:9.5pt} pre{background:#f4f4f4;padding:8px;font-size:9pt}
+th{background:#f2f2f2} code{background:#f4f4f4;padding:1px 4px;font-size:9.5pt;overflow-wrap:anywhere} pre{background:#f4f4f4;padding:8px;font-size:9pt;white-space:pre-wrap}
 img{max-width:100%} em{color:#555} hr{border:0;border-top:1px solid #ccc}
-@media print{body{margin:0;max-width:none} h1,h2,h3{break-after:avoid} tr,img{break-inside:avoid}}
+@media print{body{margin:0;max-width:none} h1,h2,h3,.table-caption{break-after:avoid} tr,img{break-inside:avoid} p:has(>img){break-after:avoid}.figure-caption{break-before:avoid}thead{display:table-header-group}}
 </style>"""
 MAC_CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
@@ -28,6 +29,9 @@ def main():
     source = Path(sys.argv[1]).resolve()
     html_path, pdf_path = source.with_suffix(".html"), source.with_suffix(".pdf")
     body = markdown.markdown(source.read_text(), extensions=["tables", "fenced_code"])
+    for kind in ("Table", "Figure"):
+        body = re.sub(rf"<p><em>({kind}\b.*?)</em></p>",
+                      rf'<p class="{kind.lower()}-caption"><em>\1</em></p>', body, flags=re.S)
     html_path.write_text(STYLE + body)
     chrome = (os.environ.get("CHROME") or shutil.which("google-chrome")
               or shutil.which("chromium") or shutil.which("chromium-browser")

@@ -5,8 +5,10 @@
 Prints a table and writes results/verification/verify.json. Exits with an error if a check fails.
 Uses fixed rules only, except one Q-learning run on a 5-state toy chain (not Breakout).
 """
+import argparse
 import json
 import sys
+from pathlib import Path
 
 import numpy as np
 
@@ -162,7 +164,11 @@ def check_saved_state():
 
 
 def main():
-    OUT.mkdir(parents=True, exist_ok=True)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=OUT / "verify.json",
+                        help="write a separate verification record without replacing the original")
+    args = parser.parse_args()
+    args.output.parent.mkdir(parents=True, exist_ok=True)
     checks = [("State cells", check_cells), ("Setting A deterministic", check_deterministic_a),
               ("Setting B replay", check_replay_b), ("Gap layout", check_gap),
               ("Outcomes and rewards", check_outcomes), ("Q-learning update (toy chain)", check_toy_q),
@@ -183,7 +189,7 @@ def main():
         reference[setting] = s
         print(f"| {setting:7} | {s['success_rate']:7.0%} | {s['failure_rate']:7.0%} | {s['timeout_rate']:7.0%} | "
               f"{s['median_steps_success']!s:22} | {s['distinct_trajectories']}")
-    (OUT / "verify.json").write_text(json.dumps({"checks": results, "tracking_reference": reference}, indent=2) + "\n")
+    args.output.write_text(json.dumps({"checks": results, "tracking_reference": reference}, indent=2) + "\n")
     sys.exit(1 if failed else 0)
 
 
