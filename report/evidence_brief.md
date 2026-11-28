@@ -2,8 +2,7 @@
 
 **Eivind Systad Geiran and Trym Andreas Johnsen** · IT3212 Assignment 4 · Option 2: Breakout
 
-Drafted 17 November 2026; revised with AI-assisted review on 19 November 2026,
-pending group review. Part 1, the prediction sheet
+Drafted 17 November 2026; revised 28 November 2026. Part 1, the prediction sheet
 (`predictions/predictions_v1.md`), was submitted before any agent was trained;
 its verdicts are in `predictions/annotations.md`. Part 5, the team review, is
 in `report/review_record.md`. Run records are under `results/runs/`.
@@ -29,15 +28,18 @@ in `report/review_record.md`. Run records are under `results/runs/`.
 
 An episode is one life of ALE Breakout. It succeeds when two bricks are hit,
 fails when the ball is lost, and times out after 2,000 agent steps. Both agents
-see the same state: binned ball height, ball direction, paddle zone and the
-horizontal distance from ball to paddle, 4,760 cells in all. Q-learning uses
-the cell as its table index; PPO receives the same bins as a vector.
+see the same state: binned ball height, direction, brick-hit count, paddle zone
+and signed ball-to-paddle error; before launch, paddle position. There are
+4,760 cells. Q-learning indexes a table; PPO receives the ordered, scaled bins
+and an in-play flag. Neither receives brick positions or paddle width.
+The previous executed sticky action is also omitted, leaving partial
+observability under sticky transitions.
 
 *Table 1. Comparison rules. Sources: `plans/part2_3_plan.md`, `results/selected_config.json`, `results/logs/`.*
 
 | Rule | Choice |
 | --- | --- |
-| Interaction budget | 500,000 agent steps per run for both agents, fixed in the sheet. PPO's steps are counted over its 8 parallel environments |
+| Interaction budget | 500,000 agent steps per run for both agents, fixed before training using inspection throughput to make repeated runs feasible; not a convergence claim. One step = 4 frames. PPO counts steps across its 8 environments. Random reset moves are excluded |
 | Training seeds | 0–9 in Part 2 and 0–4 in Part 3, the same list for both agents |
 | Evaluation | Seeds 10,000–10,199: 200 episodes at 0, 5, 10, 20, …, 100% of the budget, no updates |
 | Evaluation policy | Greedy Q-values with random tie-breaks; PPO's most probable action. Sampled PPO actions are reported separately |
@@ -45,15 +47,16 @@ the cell as its table index; PPO receives the same bins as a vector.
 | Selected configuration | Q-learning: α 0.3, ε from 1 to 0.01 over the first half, γ 0.99. PPO: learning rate 1·10⁻³, entropy 0.01, 4 epochs, γ 0.99 |
 | Hardware | Apple M4, 8 runs in parallel, CPU only. Runtimes in Table 2 are training time without evaluation |
 
-Both agents solve Setting A within the budget, but that does not show that
-they have converged in B: several B agents end far below their own best
-checkpoint. Equal interactions were not equal computation: PPO needed 8 to 22%
-more training time in A and B. Runtimes exclude evaluation. Tuning took 36
-full-budget runs, 2 h 26 min on eight workers (`results/logs/tune.log`).
+Both agents nearly solve A at the final checkpoint; this establishes neither
+convergence in B nor sufficient training for transfer. Equal interactions were
+not equal computation: PPO took 8–22% longer to train in A/B. Evaluation is
+extra: PPO B seed 6 took 399 s training and 696 s evaluating. Tuning took 36
+runs, 2 h 26 min on eight workers (`results/logs/tune.log`). Inference latency
+was not benchmarked; these are not end-to-end deployment timings.
 
 ### Settings A to D
 
-*Table 2. Final evaluation, 10 trained agents per row, mean ± SD between seeds. Success, failure and timeout sum to 100%. Mean return equals the success rate in A and B; in C it includes the step penalty and is not compared with them. Source: `results/analysis/main/summary.md` (runs in `sources.txt` there).*
+*Table 2. Final greedy evaluation, 10 trained agents per row, mean ± sample SD between seeds. Lengths are means of per-agent outcome-specific medians, omitting agents with no such outcome. A averages about 33 distinct trajectories per 200 episodes; the training replication unit is the agent, not each evaluation episode. Success, failure and timeout sum to 100%. A/B return equals success rate; C return includes step penalties and is not compared with A/B. Source: `results/analysis/main/summary.md`; runs: `results/analysis/main/sources.txt`.*
 
 | Setting | Agent | Success % | Range over seeds | Failure % | Timeout % | Mean return | Median steps, success | Median steps, failure | Training time (s) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -78,6 +81,11 @@ still explores, then falls to 87–90% between 350,000 and 450,000 steps before
 it ends at 100%. PPO rises more slowly and steadily. A Q-learning agent stopped
 at an arbitrary point is therefore less dependable than its final score shows.
 
+P2 is formally supported in A: PPO SD 2.1 exceeds 1.5 × Q-learning SD 0.
+All variation comes from one PPO agent at 93.5%; the other 19 agents reach
+100%. In B, SDs 17.5/16.7 give ratio 1.05: inconclusive. The prediction of
+greater PPO variation in both settings is therefore not established.
+
 **B: How does uncertainty affect learning and behaviour?** Sticky actions cost Q-learning 24.1 points (pooled SD 11.8)
 and PPO 11.6 (12.4). PPO ends 11.9 points above Q-learning, which is less than
 the variation between seeds (pooled SD 17.1). Each mean hides one trained
@@ -91,12 +99,14 @@ to encourage. Successful episodes became 2% shorter for both agents, not the
 **D: What survives a change in environment?** The B agents were evaluated on a wall with a 32 px gap and,
 separately, with a 12 px paddle.
 
-*Table 3. Agents trained in B, evaluated without further training. Source: `results/analysis/transfer/summary.md`.*
+*Table 3. Final B agents, 200 greedy episodes each, no updates or additional training; original training: 500,000 steps per agent (B timings in Table 2). Mean ± SD across 10 agents; lengths as in Table 2. Sources: `results/analysis/transfer/summary.md`, run list `results/analysis/transfer/sources.txt`. The combined D/P7 evaluation batch took 134 s on eight Apple M4 workers (`results/logs/transfer.log`); per-condition evaluation timings were not logged.*
 
-| Agent | B, original | D, gap layout | Range in D | 12 px paddle |
-| --- | --- | --- | --- | --- |
-| Q-learning | 75.9 ± 16.7 | 51.5 ± 16.5 | 15.0–68.5 | 53.4 ± 9.3 |
-| PPO | 87.8 ± 17.5 | 83.4 ± 27.8 | 24.0–99.5 | 68.9 ± 21.6 |
+| Setting | Agent | Success % | Range | Failure % | Timeout % | Mean return | Median steps, success / failure |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| D, gap | Q-learning | 51.5 ± 16.5 | 15.0–68.5 | 45.2 ± 18.4 | 3.3 ± 10.4 | 0.515 | 61.9 / 52.5 |
+| D, gap | PPO | 83.4 ± 27.8 | 24.0–99.5 | 16.0 ± 28.0 | 0.7 ± 2.2 | 0.834 | 60.5 / 43.6 |
+| P7, 12 px | Q-learning | 53.4 ± 9.3 | 38.0–68.0 | 43.3 ± 12.8 | 3.3 ± 10.4 | 0.534 | 71.0 / 55.6 |
+| P7, 12 px | PPO | 68.9 ± 21.6 | 13.5–91.5 | 30.4 ± 21.5 | 0.7 ± 2.2 | 0.689 | 71.5 / 53.0 |
 
 Q-learning loses 24.5 points on the new layout (pooled SD 16.6), PPO 4.4
 (23.2).
@@ -108,14 +118,15 @@ across layouts. The gap can change the ball's return path and state occupancy;
 the claim that it sends agents into rarely visited cells is plausible but not
 tested here. A table has no learned values in unseen cells; PPO can interpolate
 over the shared features, but the 24.0–99.5% range in D shows this does not
-guarantee reliable transfer.
+guarantee reliable transfer. Ten training seeds on one altered layout are not
+ten independent tests of generalisation to unfamiliar layouts.
 
 ## Part 3: Mechanisms
 
 One factor changes at a time in Setting B; every other value is the selected
 configuration. Five seeds each.
 
-*Table 4. Final greedy success in B, mean ± SD over 5 seeds. Bold: the selected value, taken from the Part 2 runs with seeds 0–4. Source: `results/analysis/mechanisms/summary.md`.*
+*Table 4. Final greedy success in B, mean ± SD over seeds 0–4, 500,000 steps each. Only the named factor changes; environment, state, budget, evaluation seeds/policy and remaining hyperparameters stay fixed. Bold values reuse the matched Part 2 agents. Sources: `results/analysis/mechanisms/summary.md`, run list `results/analysis/mechanisms/sources.txt`.*
 
 | Investigation | Agent | Values and success % |
 | --- | --- | --- |
@@ -138,31 +149,34 @@ configuration. Five seeds each.
   (19.5–94.0%).
 - **Update size.** Too small is the clear failure for both. PPO at 3·10⁻⁵ times
   out in every greedy episode.
-- **Data reuse.** One epoch learns too little from each rollout; ten adds
-  nothing over four.
+- **Data reuse.** One epoch scores 69.4%, four 94.3%, ten 91.2%. More
+  optimisation did not monotonically improve this configuration; this does not
+  identify underfitting or overfitting as the cause.
 
-Tuning chose α 0.3 on three seeds (83.7% against 53.5% for α 0.1). On seeds
-0–4, α 0.1 scores 86.4% and α 0.3 67.2%. α 0.1 is higher on all five seeds,
-mostly through seeds 0 and 1, where α 0.3 collapses in the last 100,000 steps.
-The tuning choice is therefore uncertain, and the PPO lead in B holds for the
-selected configurations, not necessarily for the best ones.
+Tuning favoured α 0.3 on seeds 100–102 (83.7% against 53.5% for α 0.1,
+both with final ε 0.01). On matched seeds 0–4, changing only α to 0.1 raises
+Q-learning from 67.2% to 86.4%; selected PPO scores 94.3%, shrinking its lead
+from 27.1 to 7.9 points. α 0.1 wins all five Q pairs, particularly seeds 0/1.
+This shows configuration sensitivity, not a best-tuned algorithm ranking.
+Retaining the tuning choice avoids selecting a new winner on evaluation data.
 
 **Does the result support the prediction?** S2 predicted that with the ball
 falling 4–8 px from the paddle centre, Q-learning would stay still and PPO
-would move towards the ball. The result is the reverse: Q-learning stays still
-in 43% of such observations, PPO in 61%. The predicted preference is
-contradicted for both agents.
+would move towards the ball. Q-learning favours stationary in 43% of shared
+visits, PPO in 61%; PPO favours towards in 30%. Both predicted majority
+preferences are contradicted; this does not mean most Q decisions move towards.
 
-**A case that does not fit.** Our explanation assumed that the action decides
-the catch. The reversed preference does not fit it.
+**A case that does not fit.** The majority preferences fail, but this alone
+does not show whether centring changes catch probability.
 
-**Competing explanation.** The action does not decide the catch, so the
-favoured action is a choice between near-equal values.
+**Competing explanation.** Different first actions may lead to similar catch
+rates. Alternatively, effects may depend on the agent and visited state.
+These are hypotheses, not established equivalence.
 
 **Diagnostic experiment.** Each action was forced for one step from 3,733
 saved S2 states, 20 times each with new noise.
 
-*Table 5. Outcomes after one forced action, mean ± SD over 10 seeds; S = stationary, T = towards, A = away. The agent's greedy policy continues to episode end. The question and decision rule were committed before the run. Source: `results/analysis/diagnostic/summary.md`.*
+*Table 5. Outcomes after one forced action, mean ± SD over 10 seeds; S = stationary, T = towards, A = away. The greedy policy then continues: catch means the ball rises before loss, success means reaching two bricks. The question and decision rule preceded the run. Sources: `results/analysis/diagnostic/summary.md`, run list `results/analysis/diagnostic/sources.txt`.*
 
 | Agent | Catch S/T/A | Success S/T/A | S − T, catch / success (pooled SD) |
 | --- | --- | --- | --- |
@@ -195,7 +209,7 @@ the action changes the success rate most were replayed 100 times per action.
 
 *Figure 2. Episode length by outcome and algorithm, 2,000 episodes each. Dark bar: most common range. Labels: the selected episodes. Source: `results/analysis/episodes/sources.txt`.*
 
-*Table 6. The ten episodes. Start: successes in 100 replays from the first step. The four-row annotation of every decision is in `results/analysis/episodes/decisions.md`, the videos in `results/videos/episodes/`.*
+*Table 6. The ten episodes. Start: successes in 100 replays from the first step. All 30 decision annotations (state/actions, values/probabilities, transition/outcome, alternatives with conditional 95% Wilson intervals) are in `results/analysis/episodes/decisions.md` / `.pdf`; videos: `results/videos/episodes/`. Intervals concern replay noise, not new training seeds or states. Selection and source runs: `results/analysis/episodes/selection.md`.*
 
 | ID | Agent (seed) | Outcome, steps | Start | What decided it |
 | --- | --- | --- | --- | --- |
@@ -232,8 +246,10 @@ checkpoints (Table 6a) shows that its 39% final success followed a low point of
 often such a seed occurs. At the final checkpoint, 121 of its 122 failures
 launch at step 1, none time out, and failure length has a median of 53 steps;
 the saved episode rows locate failure after launch but do not show the state
-sequence that explains it. That would require inspecting additional traces and
-replays.
+sequence that explains it. Eivind's supplemental GIF of evaluation seed 10001
+shows a catch followed by a stationary paddle requesting FIRE. One trajectory
+does not establish the cause of all 122 failures; that needs alternative-action
+replays. It does not replace the original ten episodes.
 
 *Table 6a. Supplemental, not part of the original ten-episode selection:
 PPO seed 6 in B, greedy evaluation on the same 200 fixed seeds at each
@@ -248,27 +264,26 @@ checkpoint. Source: `results/analysis/episodes/ppo_seed6.md`.*
 | 250,000 | 11.0% | 89.0% | 0.0% |
 | 500,000 | 39.0% | 61.0% | 0.0% |
 
-<div style="break-before: page; page-break-before: always;"></div>
-
 ## Part 6: Recommendations
 
-*Table 7. One row per situation.*
+*Table 7. Decisions for the three situations. "Selected" means the exact hyperparameters in Table 1; Q-learning is tabular and PPO uses the 2 × 64 tanh network. Evidence: Tables 2–3 and `results/analysis/episodes/decisions.md`.*
 
 | | Rapid classroom demonstration | Repeated operation in uncertainty | Operation after an environment change |
 | --- | --- | --- | --- |
-| Approach | Q-learning, selected, in A | PPO only as a screened candidate | None; PPO is less affected |
+| Approach and configuration | Selected Q-learning, A, 500k steps, greedy table with random tie-breaks | Selected PPO, B, 500k steps, most-probable actions, only as a candidate for future screening | No deployment; selected frozen B agents are benchmark candidates only |
 | Evidence 1 | Q: 100% on all 10 seeds | B failures: PPO 11.5%, Q 20.8%; C: 4.9% vs 20.9% | D: PPO −4.4 points, Q −24.5 |
-| Evidence 2 | Four Q-values are readable per state (Figure 3) | 9/10 PPO agents reach 85.5–97.0% in B | With 12 px paddle, both lose about 20 points |
+| Evidence 2 | Training 307 s vs PPO 375 s on M4; inspect four Q-values per state (Figure 3), but explainability was not measured | 9/10 PPO agents reach 85.5–97.0% in B | 12 px paddle: Q −22.5 points, PPO −18.9 |
 | Observed weakness | Q falls to 87–90% late in training | P6 trigger: worst PPO 39%, worst Q 46% | PPO ranges 24.0–99.5% in D |
-| We would change it if | Sticky actions are required | No pre-use threshold or fresh validation set is available | State includes layout and paddle width |
-| Further experiment | 10 seeds at 50k–200k steps in A | 30 seeds; set a screen threshold; validate on fresh seeds | Train on varied layouts and paddle widths; test unseen changes |
+| We would change it if | A shorter deadline makes success unacceptable, students cannot explain decisions, or sticky actions are required | Fresh validation fails a prospectively chosen reliability requirement; without a validated screen, recommend neither | A candidate meets a prospectively chosen reliability requirement across held-out layouts and widths |
+| Further experiment before external use | Matched short-budget demo trial: measure full training/validation time and ask students to explain the same decisions from Q-values or PPO probabilities | Retune both agents on new tuning seeds; compare new training seeds with a prospective acceptance rule and independent evaluation, recording rejection rates and screening cost | Evaluate the frozen candidates on independently designed held-out layouts and widths; report failures per layout and agent, not only a pooled mean |
 
-**Rapid classroom demonstration.** Q-learning in Setting A is the only
-combination with no failed episode on any seed, and its decisions can be read
-from the table: Figure 3 shows a wrong decision next to the Q-values that
-caused it. Explainable is not the same as correct, and training is only
-slightly shorter than PPO's (307 against 375 s). PPO is the better choice if
-the demonstration must show sticky actions.
+**Rapid classroom demonstration.** Selected Q-learning in A has no observed
+final failures and shorter training (307 against 375 s). Students can inspect
+four Q-values and the chosen action beside the transition (Figure 3). PPO's
+four action probabilities are also inspectable: easier understanding was not
+measured. At 50k steps neither performs well, and intermediate Q checkpoints
+can collapse. A short-budget demo therefore needs its own validation; A's
+evidence does not apply when sticky actions are required.
 
 **Repeated operation in uncertainty.** PPO fails less often in B and C, but in
 B the difference is smaller than the variation between seeds, so this is weak
@@ -276,16 +291,17 @@ evidence. PPO seed 6 also shows why a mean-only recommendation is risky: it
 finished at 39% after its 250,000-step evaluation was 11%. The sheet's P6
 reversal condition was met: the worst PPO seed scored below the worst
 Q-learning seed (39.0% against 46.0%). We therefore withdraw an unconditional
-PPO recommendation. PPO remains a candidate only with an agreed pre-use pass
-threshold and validation on a fresh evaluation set; the current analysis shows
-that seed 6 is an outlier but sets no rejection threshold. Without screening
-and independent validation neither agent is adequately supported where
-failures matter.
+PPO recommendation. Neither observed minimum bounds a future agent's result.
+PPO remains a candidate for future screening, with a prospectively agreed pass
+threshold and fresh validation. No threshold or successful screening procedure
+has been established. Without these, neither agent is adequately supported
+where failures matter.
 
-**Operation after an environment change.** Neither agent is reliable on
-conditions it has not seen. PPO keeps more of its success on the gap layout,
-but single agents fall to 24%, and both lose about 20 points with the narrower
-paddle. The agents had no information about what changed.
+**Operation after an environment change.** Neither tested agent is adequately
+supported for reliable deployment. PPO loses less on this gap layout, but
+single agents fall to 24%, and both lose about 20 points with a narrower
+paddle. They see ball/paddle geometry but no explicit layout or width. One
+altered layout cannot establish reliability across unknown environments.
 
 ### Specific to this implementation, and broader principles
 

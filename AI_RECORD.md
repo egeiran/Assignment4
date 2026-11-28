@@ -86,3 +86,20 @@ recommendation, closing scope) from 1,915 to 1,779 words. It changed no
 result, verdict or recommendation. Accepted or rejected by the team: pending.
 Checked: word count, the α claim against the checkpoint files, and a visual
 pass over all ten PDF pages.
+
+## Submission review and verification (Codex, 2026-11-28)
+
+Trym requested an evidence audit and concrete submission edits, using the
+Assignment 3 feedback on causal claims, independent replications and timing
+scope. Codex added a reproducible audit of saved episode rows, explicit
+Monte Carlo uncertainty for the existing Part 4 replays, and corroboration of
+Eivind's seed-6 GIF against pre-existing per-step probes. Implemented corrections
+distinguish P2's formal threshold from its limited support, configuration
+sensitivity from algorithm superiority, catches from episode success, and
+training time from evaluation, tuning and unmeasured inference. The original
+predictions, selected configurations, raw runs and ten-episode selection are
+preserved; no assessed training was added. The proposed replacement of P2's
+formal A verdict was not adopted because it would change the submitted rule.
+Codex asked Trym for his own review judgements; none is inferred from the
+technical edits. Final checks and remaining limitations are recorded in
+`report/requirements_check.md` and `WORKLOG.md`.
