@@ -9,14 +9,6 @@ agents see the same compact Breakout state? See the [official task](<Assignment 
 Start with [WORKLOG.md](WORKLOG.md): scope, decisions, requirement status and handover.
 Consequential AI assistance is logged in [AI_RECORD.md](AI_RECORD.md).
 
-**Status, 28 November:** Eivind's recorded review and Trym's supplied written
-judgements are consolidated in Part 5. Technical checks and final exports are
-documented in [the requirement audit](report/requirements_check.md). The only
-remaining source check is the unavailable attachment `Assignment 4(1).pdf`:
-the requirement audit currently uses the repository's `Assignment 4.pdf`,
-which has the requested title. Confirm equivalence or supply the attachment
-before treating that final requirement check as complete.
-
 ## Part 1: prediction sheet
 
 The [prediction sheet PDF](predictions/predictions_v1.pdf) was submitted on
